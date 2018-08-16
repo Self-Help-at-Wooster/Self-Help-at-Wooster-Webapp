@@ -1,30 +1,73 @@
 ﻿using SelfHelpManager;
 using System;
 using System.Collections.Generic;
-using static Source_Code_Project.Program;
+using static SelfHelpOpenSourceEditor.Program;
 
-namespace Source_Code_Project
+namespace SelfHelpOpenSourceEditor
 {
+    /// <summary>
+    /// <para>
+    /// This class is used to interface with the SelfHelpManager library.
+    /// This class' implementation really should not be modified to ensure the program handles your code smoothly.
+    /// </para>
+    /// <para>
+    /// The methods contained within this class are wrapped in Try-Catch statements to prevent any (unlikely) errors from
+    /// propagating to the program.
+    /// These 
+    /// </para>
+    /// </summary>
     public static class LibraryController
     {
+        /// <summary>
+        /// Stores the versions found of your script project.
+        /// </summary>
+        private static List<Google.Apis.Script.v1.Data.Version> versions;
+
+        /// <summary>
+        /// Determines whether or not the given version number corresponds to an actual version.
+        /// </summary>
+        /// <param name="VersionNumber">The exact version number you are attempting to use</param>
+        /// <returns>Boolean result</returns>
+        public static bool VersionFound(int VersionNumber)
+        {
+            return versions?.Find(v => v.VersionNumber == VersionNumber) != null;
+        }
+
+        /// <summary>
+        /// Determines whether or not to display error or normal result
+        /// </summary>
+        /// <param name="str">String of task result</param>
+        /// <param name="success">Bool indicating its success</param>
+        private static void printTaskResult(string str, bool success)
+        {
+            if (success)
+                PrintCentered(str);
+            else
+                PrintErrorCentered(str);
+        }
+
         public static void InitializeLibrary()
         {
             try
             {
                 var res = AppsScriptsSourceCodeManager.Initialize(SourceCode).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
                 DisplayInfo();
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
         public static void DisplayInfo()
         {
-            foreach (string str in AppsScriptsSourceCodeManager.GetScriptInfo())
-                PrintCentered(str);
+            try
+            {
+                foreach (string str in AppsScriptsSourceCodeManager.GetScriptInfo())
+                    PrintCentered(str);
+            }
+            catch { }
         }
 
         public static void ProvideScriptID(string ID)
@@ -37,7 +80,7 @@ namespace Source_Code_Project
             catch (AppsScriptsSourceCodeManager.InfoException ex)
             {
                 PrintAgain = false;
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -46,11 +89,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.CreateNewGASProject(Name).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -59,11 +102,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.DownloadFiles().Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -72,24 +115,26 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.DownloadFiles(VersionNumber).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
-        public static void UploadFiles()
+        public static bool UploadFiles()
         {
             try
             {
                 var res = AppsScriptsSourceCodeManager.SyncChanges().Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
+                return res.IsSuccess;
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
+                return false;
             }
         }
 
@@ -98,11 +143,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.DownloadSelfHelpSourceFiles().Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -111,11 +156,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.AddNewSourceFile(Name, F, Sync).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -123,73 +168,82 @@ namespace Source_Code_Project
         {
             try
             {
-                AppsScriptsSourceCodeManager.CreateNewAppsScriptManifestJSONFile().Wait();
-                //PrintCentered(res.MyResult);
+                var res = AppsScriptsSourceCodeManager.CreateNewAppsScriptManifestJSONFile().Result;
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
-        public static void CreateNewVersion(string Description)
+        public static bool CreateNewVersion(string Description)
         {
             try
             {
                 var res = AppsScriptsSourceCodeManager.CreateVersion(Description).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
+                return res.IsSuccess;
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
+                return false;
             }
         }
 
-        public static void CreateNewVersionAndUpdateDeployment(string Description)
+        public static bool CreateNewVersionAndUpdateDeployment(string Description)
         {
             try
             {
                 var res = AppsScriptsSourceCodeManager.CreateNewVersionAndUpdateDeployment(Description).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
+                return res.IsSuccess;
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
+                return false;
             }
+        }
+
+        public static void UploadAndCreateNewVersion(string Description)
+        {
+            if (UploadFiles() && CreateNewVersion(Description))
+                PrintCentered("Operation Successful!");
         }
 
         public static void SyncAndDeployForTesting()
         {
-            UploadFiles();
-            DeployForTesting();
+            if (UploadFiles() && DeployForTesting())
+                PrintCentered("Operation Successful!");
         }
 
         public static void SyncAndDeployForLiveVersion(string Description)
         {
-            UploadFiles();
-            CreateNewVersionAndUpdateDeployment(Description);
+            if (UploadFiles() && CreateNewVersionAndUpdateDeployment(Description))
+                PrintCentered("Operation Successful!");
         }
 
-        public static void DeployForTesting()
+        public static bool DeployForTesting()
         {
             try
             {
                 var res = AppsScriptsSourceCodeManager.DeveloperUpdateDeployment().Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
+                return res.IsSuccess;
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
+                return false;
             }
         }
 
-        private static List<Google.Apis.Script.v1.Data.Version> versions;
-
-        public static bool VersionFound(int VersionNumber)
-        {
-            return versions?.Find(v => v.VersionNumber == VersionNumber) != null;
-        }
-
+        /// <summary>
+        /// Lists the versions of your project
+        /// </summary>
+        /// <returns>Boolean representing the success of this execution.</returns>
         public static bool ListProjectVersions()
         {
             try
@@ -203,13 +257,13 @@ namespace Source_Code_Project
                 }
                 else
                 {
-                    PrintCentered(result.AdditionalInformation);
+                    PrintErrorCentered(result.AdditionalInformation);
                     return false;
                 }
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
                 return false;
             }
         }
@@ -219,11 +273,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.UpdateDeploymentVersionNumber(VersionNumber).Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
 
@@ -232,11 +286,11 @@ namespace Source_Code_Project
             try
             {
                 var res = AppsScriptsSourceCodeManager.ClearCredentials().Result;
-                PrintCentered(res.MyResult);
+                printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
             {
-                PrintCentered(ex.Message);
+                PrintErrorCentered(ex.Message);
             }
         }
     }

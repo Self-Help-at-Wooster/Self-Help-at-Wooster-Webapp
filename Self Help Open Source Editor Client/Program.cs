@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 
-namespace Source_Code_Project
+namespace SelfHelpOpenSourceEditor
 {
     public static class Program
     {
@@ -89,6 +88,13 @@ namespace Source_Code_Project
             Console.ForegroundColor = ConsoleColor.Cyan;
         }
 
+        public static void PrintErrorCentered(string Text)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(string.Format("{0," + ((Console.WindowWidth / 2) + (Text.Length / 2)) + "}", Text));
+            Console.ForegroundColor = ConsoleColor.Cyan;
+        }
+
         public static bool PrintAgain = true;
 
         public static void Main()
@@ -118,30 +124,30 @@ namespace Source_Code_Project
                     case METHODS.Scriptid:
                         PrintCentered("Find your Script ID at File->Project properties->Script ID");
                         PrintCentered("Please paste your Google Apps Script Script ID Below:");
-                        getResult(LibraryController.ProvideScriptID);
+                        getInput(LibraryController.ProvideScriptID);
                         break;
                     case METHODS.CreateProject:
                         PrintCentered("Enter a name for your new project below:");
-                        getResult(LibraryController.CreateGASProject);
+                        getInput(LibraryController.CreateGASProject);
                         break;
                     case METHODS.Downloadselfhelp:
-                        confirmAction(LibraryController.DownloadSelfHelpSourceCode,
+                        getConfirmInput(LibraryController.DownloadSelfHelpSourceCode,
                         "This will download the source code of the Self-Help program (not your project).", "This action will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
                     case METHODS.Download:
-                        confirmAction(LibraryController.DownloadFiles,
+                        getConfirmInput(LibraryController.DownloadFiles,
                         "This will download your project's source code, which will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
                     case METHODS.DownloadVersion:
                         if (LibraryController.ListProjectVersions())
                         {
                             PrintCentered("Enter a version number:");
-                            version = getIntResult();
+                            version = getIntInput();
                             if (version != null)
                             {
                                 if (LibraryController.VersionFound(version.Value))
                                 {
-                                    confirmAction(() => LibraryController.DownloadFilesVersion(version.Value),
+                                    getConfirmInput(() => LibraryController.DownloadFilesVersion(version.Value),
                                     "This will download your project's source code for this specific version.", "This action will overwrite files of the same name in your solution.", "Are you sure ?");
                                 }
                                 else
@@ -152,17 +158,19 @@ namespace Source_Code_Project
                         }
                         break;
                     case METHODS.Upload:
-                        confirmAction(LibraryController.UploadFiles,
+                        getConfirmInput(() => LibraryController.UploadFiles(),
                         "This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?");
                         break;
                     case METHODS.UploadAndVersion:
-                        confirmAction(LibraryController.UploadFiles,
-                        "This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?");
-                        goto case METHODS.CreateVersion;
+                        if (getConfirmInput("This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?"))
+                        {
+                            goto case METHODS.CreateVersion;
+                        }
+                        break;
                     case METHODS.CreateFile:
                         PrintCentered("1 to create a server-side Javascript file (.js)");
                         PrintCentered("2 to create a html file (.html)");
-                        version = getIntResult();
+                        version = getIntInput();
                         if (version != null)
                         {
                             SelfHelpManager.AppsScriptsSourceCodeManager.FILE_TYPES? f = null;
@@ -176,10 +184,10 @@ namespace Source_Code_Project
                             if (f != null)
                             {
                                 PrintCentered("Enter a non-empty new file name.");
-                                string name = getResult();
+                                string name = getInput();
                                 if (name != null)
                                 {
-                                    bool sync = confirmAction("Do you also want to upload your changes + the new file?");
+                                    bool sync = getConfirmInput("Do you also want to upload your changes + the new file?");
                                     LibraryController.CreateSourceCodeFile(name, f.Value, sync);
                                 }
                             }
@@ -190,10 +198,10 @@ namespace Source_Code_Project
                         break;
                     case METHODS.CreateVersion:
                         PrintCentered("Enter a non-empty description for this version:");
-                        getResult(LibraryController.CreateNewVersion);
+                        getInput((s) => LibraryController.CreateNewVersion(s));
                         break;
                     case METHODS.CreateVersionUpdateDeployment:
-                        getResult(LibraryController.CreateNewVersionAndUpdateDeployment);
+                        getInput();
                         break;
                     case METHODS.DeployTest:
                         LibraryController.DeployForTesting();
@@ -202,15 +210,19 @@ namespace Source_Code_Project
                         LibraryController.SyncAndDeployForTesting();
                         break;
                     case METHODS.SyncDeployLive:
-                        getResult(LibraryController.SyncAndDeployForLiveVersion);
+                        getInput(LibraryController.SyncAndDeployForLiveVersion);
                         break;
                     case METHODS.ListVersions:
                         LibraryController.ListProjectVersions();
                         break;
                     case METHODS.ChangeDeploymentVersionNum:
-                        version = getIntResult();
-                        if (version != null)
-                            LibraryController.DownloadFilesVersion(version.Value);
+                        if (LibraryController.ListProjectVersions())
+                        {
+                            PrintCentered("Please enter a version for your web-app to use.");
+                            version = getIntInput();
+                            if (version != null)
+                                LibraryController.DownloadFilesVersion(version.Value);
+                        }
                         break;
                     case METHODS.ClearConsole:
                         Console.Clear();
@@ -314,7 +326,7 @@ namespace Source_Code_Project
             PrintCentered(box);
         }
 
-        private static string getResult()
+        private static string getInput()
         {
             Console.ForegroundColor = ConsoleColor.White;
             string s = Console.ReadLine();
@@ -325,7 +337,7 @@ namespace Source_Code_Project
             return null;
         }
 
-        private static int? getIntResult()
+        private static int? getIntInput()
         {
             Console.ForegroundColor = ConsoleColor.White;
             string s = Console.ReadLine();
@@ -336,7 +348,7 @@ namespace Source_Code_Project
             return null;
         }
 
-        private static void getResult(Action<string> onComplete)
+        private static void getInput(Action<string> onComplete)
         {
             Console.ForegroundColor = ConsoleColor.White;
             string s = Console.ReadLine();
@@ -347,7 +359,7 @@ namespace Source_Code_Project
                 operationCancelled();
         }
 
-        private static bool confirmAction(params string[] warning)
+        private static bool getConfirmInput(params string[] warning)
         {
             foreach (string str in warning)
                 PrintCentered(str);
@@ -361,7 +373,7 @@ namespace Source_Code_Project
             return false;
         }
 
-        private static void confirmAction(Action onComplete, params string[] warning)
+        private static void getConfirmInput(Action onComplete, params string[] warning)
         {
             foreach (string str in warning)
                 PrintCentered(str);
