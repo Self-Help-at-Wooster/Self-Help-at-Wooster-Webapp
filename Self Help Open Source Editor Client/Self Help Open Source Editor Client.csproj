@@ -20,4 +20,10 @@
     <Folder Include="Properties\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="SelfHelpManager">
+      <HintPath>..\..\Self Help Manager\SelfHelpManager\bin\Debug\netcoreapp2.1\SelfHelpManager.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
