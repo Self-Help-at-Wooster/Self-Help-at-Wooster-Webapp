@@ -178,12 +178,14 @@ namespace SelfHelpOpenSourceEditor
                         break;
                     case METHODS.CLEAR_CONSOLE:
                         Console.Clear();
+                        Console.ForegroundColor = DisplayInstruction;
                         LibraryController.DisplayInfo();
                         printQuestionBox();
                         break;
                     case METHODS.LOGOUT:
                         Console.Clear();
                         LibraryController.ClearCredentials();
+                        printQuestionBox();
                         break;
                     case METHODS.EXIT:
                         Environment.Exit(0);
@@ -203,13 +205,16 @@ namespace SelfHelpOpenSourceEditor
             while (true)
             {
                 Console.ForegroundColor = UserInput;
-                if (int.TryParse(Console.ReadLine(), out answer))
+                string typed = Console.ReadLine();
+                if (int.TryParse(typed, out answer))
                 {
                     Console.ForegroundColor = DisplayInstruction;
                     return (METHODS)answer;
                 }
                 else
                 {
+                    if (string.IsNullOrEmpty(typed))
+                        return METHODS.CLEAR_CONSOLE;
                     Console.ForegroundColor = DisplayInstruction;
                     PrintCentered("Invalid selection. Please use a number!");
                 }
