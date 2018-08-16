@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+    <!--<base target="_top">-->
+    
+    <head>
+     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+     <?!= include('css'); ?>
+     <?!= include('spinner'); ?>
+     <?!= include('modal'); ?>
+     <?!= include('main script'); ?>
+    </head>
+  
+    <body>
+
+        <img src="https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png" alt="Self Help">
+        <div><a target="_blank" href="https://docs.google.com/a/woosternet.org/document/d/1S71RUvH2TBOhQ3jZLC6_KkoeLk4k81re3mE4z07JmtI/edit?usp=sharing">Usage Policy</a></div>
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span onclick="document.getElementById('myModal').style.display='none';" class="close">&times;</span>
+                    <h4 id="modal-title">Self Help At Wooster</h4>
+                </div>
+                <div class="modal-body">
+                    <h3 id='modal-text'></h3>
+                    <input id="modal-btnYes" onclick="document.getElementById('myModal').style.display='none';" type="button" value="Yes" />
+                    <input id="modal-btnOkay" onclick="document.getElementById('myModal').style.display='none';" type="button" value="Okay" />
+                    <input id="modal-btnNo" onclick="document.getElementById('myModal').style.display='none';" type="button" value="No" />
+                </div>
+            </div>
+
+        </div>
+        <input class="btn" type="button" id="btnload" value="Enter Self Help At Wooster"
+               onclick="stopThat();" />
+
+        <p id="AuthenticationLevel">Access Level:</p>
+
+        <p id="mobile"> </p>
+
+        <div><a target="_blank" href="https://goo.gl/forms/HoLqNZ7SypTivcIL2">Please complete this questionnaire to provide feedback! Thank you!</a></div>
+        <br>
+        <div id="showfunc">
+            <form>
+                <h4>Please select a Function:</h4>
+                <select class="cbx" id="cbxFunction" onchange="getFunction();">
+                    <option value="0"></option>
+                </select>
+                <br><br><hr>
+            </form>
+        </div>
+
+        <div id="showcit">
+            <form>
+                <br>
+                <h4 id="citperlbl">Please select a Citizenship Period:</h4>
+                <select class="cbx" id="citper" oninput="getPeriod(); getSlipType();">
+                    <option value="0"></option>
+                    <option value="1">Citizenship 1</option>
+                    <option value="2">Citizenship 2</option>
+                    <option value="3">Citizenship 3</option>
+                    <option value="4">Citizenship 4</option>
+                    <option value="5">Citizenship 5</option>
+                    <option value="6">Citizenship 6</option>
+                    <option value="7">End of Year</option>
+                </select>
+            </form>
+        </div>
+
+        <?!= include('manageacts'); ?>
+
+        <div id="showstudents">
+
+            <br>
+
+            <h4 id="instr">Please select a student:</h4>
+            <form>
+                <input type="text" class="inbx" id="studentsearch" value="Type to Find!"
+                       onkeypress="if (event.keyCode == 13) { studentSearchKey(event); return false;}"
+                       onkeydown="if (event.keyCode == 38 || event.keyCode == 40) { studentSearchKey(event); return false;}"
+                       onfocus='document.getElementById("studentsearch").value = ""; searchforstudent();'
+                       oninput="searchforstudent();"
+                       onBlur='setTimeout(function(){if(document.activeElement != document.getElementById("student")){document.getElementById("studentsearch").value = ""; searchforstudent(); document.getElementById("studentsearch").value = "Type to Find!";}},100);'>
+                <input class="chbx" id="filter" onclick="clearSlipInfo(); addWorkers();" type="checkbox"><label id="filtername">Workers Only</label>
+                <select class="cbx" id="filterbyarea" onchange="getJobAreas();">
+                    <option value="0"></option>
+                </select>
+                <br>
+                <select class="cbx" id="student" onchange="getStudent();">
+                    <option value="0"></option>
+                </select>
+            </form>
+            <br>
+        </div>
+
+        <?!= include("assignments"); ?>
+        <?!= include("activityform"); ?>
+
+        <div id="showallslips">
+            <label>Please select by Slip Type:</label>
+            <select class="cbx" id="cbxallslips" onchange="getallslips();">
+                <option value="0"></option>
+                <option value="1">Good Slips</option>
+                <option value="2">Bad Slips</option>
+                <option value="3">Job Recs</option>
+            </select>
+            <br><br>
+        </div>
+
+        <div id="viewslips">
+            <table id="tableslips">
+                <tr>
+                    <th>Date</th>
+                    <th>Cit</th>
+                    <th>For</th>
+                    <th>Advisor</th>
+                    <th>Slip Type</th>
+                    <th>From</th>
+                    <th>Select</th>
+                </tr>
+            </table>
+            <br>
+            <div id="spins" class="loader"></div>
+            <br>
+        </div>
+
+        <form id="showsliptype">
+            <label><input class="rbtn" type="radio" name="SlipType" onclick="getSlipType();" value="1">Good Slip</label>
+            <label><input class="rbtn" type="radio" name="SlipType" onclick="getSlipType();" value="2">Bad Slip</label>
+            <label><input class="rbtn" type="radio" name="SlipType" onclick="getSlipType();" value="3">Job Rec</label><br><br>
+        </form>
+        <div id="showjobinfo">
+            <br>
+            <table id="jobinfo">
+                <tr>
+                    <th>Job Area</th>
+                    <th>Captain(s)</th>
+                </tr>
+            </table>
+            <br>
+        </div>
+
+        <div id="showadvdata">
+            <table id="advdata">
+                <tr>
+                    <th>Student</th>
+                    <th>Job Area</th>
+                    <th>Captain(s)</th>
+                    <th>Good Slips</th>
+                    <th>Bad Slips</th>
+                    <th>Has Job Rec</th>
+                    <th>Request Job Rec</th>
+                </tr>
+            </table>
+            <br>
+            <div id="spina" class="loader"></div>
+            <br>
+            <input class="btn" id="submitrequests" type="button" value="Submit Job Recommendation Requests" onclick="submitreqrecs();" />
+            <br>
+        </div>
+
+        <div id="showjdata">
+            <table id="jdata">
+                <tr>
+                    <th>Student</th>
+                    <th>Grade</th>
+                    <th>Advisor</th>
+                    <th>Has Job Rec</th>
+                    <th>Write Job Rec</th>
+                </tr>
+            </table>
+            <br>
+            <div id="spinj" class="loader"></div>
+            <br>
+        </div>
+        <div id="showrec">
+            <!--<hr>-->
+            <h4>Recommendation Grid:</h4>
+            <form id="completes">
+                <label><font color="blue">Completes Assigned Tasks:</font></label><br>
+                <label><input class="rbtn" type="radio" name="rating" value="5" onclick="checkSlipInputs();">Always</label>
+                <label><input class="rbtn" type="radio" name="rating" value="4" onclick="checkSlipInputs();">Mostly</label>
+                <label><input class="rbtn" type="radio" name="rating" value="3" onclick="checkSlipInputs();">Sometimes</label>
+                <label><input class="rbtn" type="radio" name="rating" value="2" onclick="checkSlipInputs();">Rarely</label>
+                <label><input class="rbtn" type="radio" name="rating" value="1" onclick="checkSlipInputs();">Never</label>
+                <br><br>
+            </form>
+            <form id="continuously">
+                <label><font color="blue">Works Continuously:</font></label><br>
+                <label><input class="rbtn" type="radio" name="rating" value="5" onclick="checkSlipInputs();">Always</label>
+                <label><input class="rbtn" type="radio" name="rating" value="4" onclick="checkSlipInputs();">Mostly</label>
+                <label><input class="rbtn" type="radio" name="rating" value="3" onclick="checkSlipInputs();">Sometimes</label>
+                <label><input class="rbtn" type="radio" name="rating" value="2" onclick="checkSlipInputs();">Rarely</label>
+                <label><input class="rbtn" type="radio" name="rating" value="1" onclick="checkSlipInputs();">Never</label>
+                <br><br>
+            </form>
+            <form id="initiative">
+                <label><font color="blue">Shows Initiative:</font></label><br>
+                <label><input class="rbtn" type="radio" name="rating" value="5" onclick="checkSlipInputs();">Always</label>
+                <label><input class="rbtn" type="radio" name="rating" value="4" onclick="checkSlipInputs();">Mostly</label>
+                <label><input class="rbtn" type="radio" name="rating" value="3" onclick="checkSlipInputs();">Sometimes</label>
+                <label><input class="rbtn" type="radio" name="rating" value="2" onclick="checkSlipInputs();">Rarely</label>
+                <label><input class="rbtn" type="radio" name="rating" value="1" onclick="checkSlipInputs();">Never</label>
+                <br><br>
+            </form>
+            <form id="behavior">
+                <label><font color="blue">Demonstrates Positive Behavior:</font></label><br>
+                <label><input class="rbtn" type="radio" name="rating" value="5" onclick="checkSlipInputs();">Always</label>
+                <label><input class="rbtn" type="radio" name="rating" value="4" onclick="checkSlipInputs();">Mostly</label>
+                <label><input class="rbtn" type="radio" name="rating" value="3" onclick="checkSlipInputs();">Sometimes</label>
+                <label><input class="rbtn" type="radio" name="rating" value="2" onclick="checkSlipInputs();">Rarely</label>
+                <label><input class="rbtn" type="radio" name="rating" value="1" onclick="checkSlipInputs();">Never</label>
+                <br>
+            </form>
+
+            <p><font color="blue">Job Rating:</font></p>
+            <form id="rating">
+                <label><input class="rbtn" type="radio" name="rating" value="5" onclick="checkSlipInputs();">Outstanding</label>
+                <label><input class="rbtn" type="radio" name="rating" value="4" onclick="checkSlipInputs();">Good</label>
+                <label><input class="rbtn" type="radio" name="rating" value="3" onclick="checkSlipInputs();">Met Expectations</label>
+                <label><input class="rbtn" type="radio" name="rating" value="2" onclick="checkSlipInputs();">Poor</label>
+                <label><input class="rbtn" type="radio" name="rating" value="1" onclick="checkSlipInputs();">Detrimental</label>
+                <br><br>
+            </form>
+
+        </div>
+
+        <div id="showblurb">
+            <h4 id="slipinfo"></h4>
+            <textarea class="tbx" id="blurb" name="message" oninput="checkSlipInputs();" rows="15" cols="110"></textarea>
+            <br><br>
+            <input class="btn" id="submiteslip" type="button" value="Submit" onclick="sendESlip();" />
+        </div>
+        <div id="showMsg">
+            <br>
+            <form>
+                <h4>Please Enter Your Message Below. A Link to the slip system will be automatically attached. </h4>
+                <hr>
+                <p>Recipients (Enter as comma separated list) Wooster emails only: </p> <input type="text" class="inbx" id="msgRecip">
+                <hr>
+                <p>Subject: </p> <input type="text" class="inbx" onkeypress="if (event.keyCode == 13) {return false;}" id="msgSub">
+                <hr>
+                <p>Text: </p> <textarea class="tbx" id="msgText" name="message" rows="15" cols="110"></textarea>
+
+                <br><br>
+                <input class="btn" id="submitMsg" type="button" value="Send Message" onclick="setMsg();" />
+            </form>
+        </div>
+        <div id="ftrcontainer">
+            <footer id="ftr">
+                <button onclick="topFunction();" id="topbtn" title="Go to top">Top</button>
+                <br><p id="myftrp">Self Help At Wooster Developed by <a target="_blank" href="https://plus.google.com/u/0/110468578355422470121">Ryan Toner</a></p>
+            </footer>
+        </div>
+    </body>
+
+</html>
