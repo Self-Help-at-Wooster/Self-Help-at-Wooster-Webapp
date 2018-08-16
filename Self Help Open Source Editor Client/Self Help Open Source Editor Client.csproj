@@ -13,6 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="SourceCode\JAVASCRIPT\abc.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Google.Apis.Script.v1" Version="1.35.1.1314" />
   </ItemGroup>
 

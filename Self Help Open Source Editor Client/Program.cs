@@ -3,112 +3,63 @@ using System.IO;
 
 namespace SelfHelpOpenSourceEditor
 {
-    public static class Program
+    /// <summary>
+    /// Console application that uses LibraryController to communicate with Google Apps Script API
+    /// You can, and probably should modify this to your liking if it does not fit your needs.
+    /// </summary>
+    public static partial class Program
     {
+        /// <summary>
+        /// DO NOT MODIFY. This tells the library where to place code from your Google Apps Script!
+        /// *note: This code escapes your bin/debug and uses your solution directory.
+        /// </summary>
         public static string SourceCode { get { return Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName; } }
 
-        private static readonly Action operationCancelled = new Action(() => PrintCentered("Operation Cancelled!"));
+        public static readonly ConsoleColor DisplayInstruction = ConsoleColor.Cyan;
+        public static readonly ConsoleColor DisplayError = ConsoleColor.Red;
+        public static readonly ConsoleColor UserInput = ConsoleColor.White;
+        public static readonly ConsoleColor BackgroundColor;
 
-        public enum METHODS
-        {
-            Init,
-            Scriptid,
-            CreateProject,
-            Downloadselfhelp,
-            Download,
-            DownloadVersion,
-            Upload,
-            UploadAndVersion,
-            CreateFile,
-            CreateManifest,
-            CreateVersion,
-            CreateVersionUpdateDeployment,
-            DeployTest,
-            SyncDeployTest,
-            SyncDeployLive,
-            ListVersions,
-            ChangeDeploymentVersionNum,
-            ClearConsole,
-            Logout,
-            Exit
-        }
-
-        public static string GetDescription(METHODS M)
-        {
-            switch (M)
-            {
-                case METHODS.Init:
-                    return "Login/ Initialize";
-                case METHODS.Scriptid:
-                    return "Provide Project Script ID";
-                case METHODS.CreateProject:
-                    return "Create A New Project";
-                case METHODS.Downloadselfhelp:
-                    return "Download Self-Help Source Code Files";
-                case METHODS.Download:
-                    return "Download Your Source Code";
-                case METHODS.DownloadVersion:
-                    return "Download Your Source Code for Version";
-                case METHODS.Upload:
-                    return "Upload Your Changes";
-                case METHODS.UploadAndVersion:
-                    return "Upload Changes w/ New Version";
-                case METHODS.CreateFile:
-                    return "Create Source Code File";
-                case METHODS.CreateManifest:
-                    return "Create Manifest File (appsscript.json)";
-                case METHODS.CreateVersion:
-                    return "Create New Version";
-                case METHODS.CreateVersionUpdateDeployment:
-                    return "Create New Version and Update Deployment";
-                case METHODS.DeployTest:
-                    return "Deploy for Testing";
-                case METHODS.SyncDeployTest:
-                    return "Sync and Deploy for Testing";
-                case METHODS.SyncDeployLive:
-                    return "Sync and Deploy for Live Version";
-                case METHODS.ListVersions:
-                    return "List Your Project's Version History";
-                case METHODS.ChangeDeploymentVersionNum:
-                    return "Change Deployment's Assoc. Version Number";
-                case METHODS.ClearConsole:
-                    return "Clear the Console";
-                case METHODS.Logout:
-                    return "Logout/ Remove Credentials";
-                case METHODS.Exit:
-                    return "Exit";
-                default:
-                    return "";
-            }
-        }
+        private static readonly Action operationCancelled = new Action(() => PrintErrorCentered("Operation Cancelled!"));
 
         public static void PrintCentered(string Text)
         {
             Console.WriteLine(string.Format("{0," + ((Console.WindowWidth / 2) + (Text.Length / 2)) + "}", Text));
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
         }
 
         public static void PrintErrorCentered(string Text)
         {
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = DisplayError;
             Console.WriteLine(string.Format("{0," + ((Console.WindowWidth / 2) + (Text.Length / 2)) + "}", Text));
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
         }
 
+        /// <summary>
+        /// Defines whether or not you want the program to keep printing instructions.
+        /// This gets pretty cluttered quickly, so it's best to disable it frequently.
+        /// </summary>
         public static bool PrintAgain = true;
 
-        public static void Main()
+        private static void printDefaultInfo()
         {
-            Console.Title = "Self Help Open Source Editor Client";
-            Console.SetWindowSize(Console.LargestWindowWidth * 2 / 3, Console.LargestWindowHeight * 2 / 3);
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.BackgroundColor = ConsoleColor.Black;
-
             PrintCentered("Welcome To The Self-Help Open Source Editor Client!");
             PrintCentered("You may use this application to manage your own Self-Help Client");
             PrintCentered("Please follow all instructions exactly to ensure you don't lose your code!");
             PrintCentered("By using this application, you agree to its code of conduct and license:");
             PrintCentered("https://docs.google.com/document/d/1TiT9CXUkvVxP8DQyyVfhkz1adzftrbIYvWgYzScaQ8U/edit?usp=sharing\n");
+        }
+
+        public static void Main()
+        {
+            #region DefaultInformation
+            Console.Title = "Self Help Open Source Editor Client";
+            Console.SetWindowSize(Console.LargestWindowWidth * 2 / 3, Console.LargestWindowHeight * 2 / 3);
+            Console.ForegroundColor = DisplayInstruction;
+            Console.BackgroundColor = BackgroundColor;
+
+            printDefaultInfo();
+            #endregion
 
             LibraryController.InitializeLibrary();
 
@@ -118,27 +69,27 @@ namespace SelfHelpOpenSourceEditor
             {
                 switch (getMethod())
                 {
-                    case METHODS.Init:
+                    case METHODS.INIT:
                         LibraryController.InitializeLibrary();
                         break;
-                    case METHODS.Scriptid:
+                    case METHODS.SCRIPT_ID:
                         PrintCentered("Find your Script ID at File->Project properties->Script ID");
                         PrintCentered("Please paste your Google Apps Script Script ID Below:");
                         getInput(LibraryController.ProvideScriptID);
                         break;
-                    case METHODS.CreateProject:
+                    case METHODS.CREATE_PROJECT:
                         PrintCentered("Enter a name for your new project below:");
                         getInput(LibraryController.CreateGASProject);
                         break;
-                    case METHODS.Downloadselfhelp:
+                    case METHODS.DOWNLOAD_SELF_HELP:
                         getConfirmInput(LibraryController.DownloadSelfHelpSourceCode,
                         "This will download the source code of the Self-Help program (not your project).", "This action will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
-                    case METHODS.Download:
+                    case METHODS.DOWNLOAD:
                         getConfirmInput(LibraryController.DownloadFiles,
                         "This will download your project's source code, which will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
-                    case METHODS.DownloadVersion:
+                    case METHODS.DOWNLOAD_VERSION:
                         if (LibraryController.ListProjectVersions())
                         {
                             PrintCentered("Enter a version number:");
@@ -157,17 +108,17 @@ namespace SelfHelpOpenSourceEditor
                             }
                         }
                         break;
-                    case METHODS.Upload:
+                    case METHODS.UPLOAD:
                         getConfirmInput(() => LibraryController.UploadFiles(),
                         "This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?");
                         break;
-                    case METHODS.UploadAndVersion:
+                    case METHODS.UPLOAD_AND_VERSION:
                         if (getConfirmInput("This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?"))
                         {
-                            goto case METHODS.CreateVersion;
+                            goto case METHODS.CREATE_VERSION;
                         }
                         break;
-                    case METHODS.CreateFile:
+                    case METHODS.CREATE_FILE:
                         PrintCentered("1 to create a server-side Javascript file (.js)");
                         PrintCentered("2 to create a html file (.html)");
                         version = getIntInput();
@@ -193,29 +144,30 @@ namespace SelfHelpOpenSourceEditor
                             }
                         }
                         break;
-                    case METHODS.CreateManifest:
+                    case METHODS.CREATE_MANIFEST:
                         LibraryController.CreateManifestFile();
                         break;
-                    case METHODS.CreateVersion:
+                    case METHODS.CREATE_VERSION:
                         PrintCentered("Enter a non-empty description for this version:");
                         getInput((s) => LibraryController.CreateNewVersion(s));
                         break;
-                    case METHODS.CreateVersionUpdateDeployment:
+                    case METHODS.CREATE_VERSION_UPDATE_DEPLOYMENT:
                         getInput();
                         break;
-                    case METHODS.DeployTest:
+                    case METHODS.DEPLOY_TEST:
                         LibraryController.DeployForTesting();
                         break;
-                    case METHODS.SyncDeployTest:
+                    case METHODS.SYNC_DEPLOY_TEST:
                         LibraryController.SyncAndDeployForTesting();
                         break;
-                    case METHODS.SyncDeployLive:
+                    case METHODS.SYNC_DEPLOY_LIVE:
+                        PrintCentered("Enter a non-empty description for this version:");
                         getInput(LibraryController.SyncAndDeployForLiveVersion);
                         break;
-                    case METHODS.ListVersions:
+                    case METHODS.LIST_VERSIONS:
                         LibraryController.ListProjectVersions();
                         break;
-                    case METHODS.ChangeDeploymentVersionNum:
+                    case METHODS.CHANGE_DEPLOYMENT_VERSION_NUM:
                         if (LibraryController.ListProjectVersions())
                         {
                             PrintCentered("Please enter a version for your web-app to use.");
@@ -224,16 +176,16 @@ namespace SelfHelpOpenSourceEditor
                                 LibraryController.DownloadFilesVersion(version.Value);
                         }
                         break;
-                    case METHODS.ClearConsole:
+                    case METHODS.CLEAR_CONSOLE:
                         Console.Clear();
                         LibraryController.DisplayInfo();
                         printQuestionBox();
                         break;
-                    case METHODS.Logout:
+                    case METHODS.LOGOUT:
                         Console.Clear();
                         LibraryController.ClearCredentials();
                         break;
-                    case METHODS.Exit:
+                    case METHODS.EXIT:
                         Environment.Exit(0);
                         break;
                 }
@@ -241,8 +193,6 @@ namespace SelfHelpOpenSourceEditor
                 PrintAgain = false;
             }
         }
-
-        private static readonly Array methods = Enum.GetValues(typeof(METHODS));
 
         private static METHODS getMethod()
         {
@@ -252,15 +202,15 @@ namespace SelfHelpOpenSourceEditor
             int answer = -1;
             while (true)
             {
-                Console.ForegroundColor = ConsoleColor.White;
+                Console.ForegroundColor = UserInput;
                 if (int.TryParse(Console.ReadLine(), out answer))
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = DisplayInstruction;
                     return (METHODS)answer;
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = DisplayInstruction;
                     PrintCentered("Invalid selection. Please use a number!");
                 }
             }
@@ -275,6 +225,9 @@ namespace SelfHelpOpenSourceEditor
 
         private static string hyphen(int i) => i < 10 ? "---" : "--";
 
+        /// <summary>
+        /// A rather ridiculous function to pretty print a selection box for the user.
+        /// </summary>
         private static void printQuestionBox()
         {
             System.Text.StringBuilder buffer = new System.Text.StringBuilder("+");
@@ -328,9 +281,9 @@ namespace SelfHelpOpenSourceEditor
 
         private static string getInput()
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = UserInput;
             string s = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
             if (!string.IsNullOrEmpty(s))
                 return s;
             operationCancelled();
@@ -339,9 +292,9 @@ namespace SelfHelpOpenSourceEditor
 
         private static int? getIntInput()
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = UserInput;
             string s = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
             if (!string.IsNullOrEmpty(s) && int.TryParse(s, out int o))
                 return o;
             operationCancelled();
@@ -350,9 +303,9 @@ namespace SelfHelpOpenSourceEditor
 
         private static void getInput(Action<string> onComplete)
         {
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = UserInput;
             string s = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
             if (!string.IsNullOrEmpty(s))
                 onComplete(s);
             else
@@ -364,9 +317,9 @@ namespace SelfHelpOpenSourceEditor
             foreach (string str in warning)
                 PrintCentered(str);
             PrintCentered("1 or y => Yes, Otherwise => No");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = UserInput;
             string s = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
             if (s.Equals("1") || s.Equals("y"))
                 return true;
             operationCancelled();
@@ -378,9 +331,9 @@ namespace SelfHelpOpenSourceEditor
             foreach (string str in warning)
                 PrintCentered(str);
             PrintCentered("1 or y => Yes, Otherwise => No");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = UserInput;
             string s = Console.ReadLine();
-            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.ForegroundColor = DisplayInstruction;
             if (s.Equals("1") || s.Equals("y"))
                 onComplete();
             else
