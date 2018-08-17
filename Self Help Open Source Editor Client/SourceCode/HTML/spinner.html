@@ -1,24 +1,63 @@
 <style>
 /*this is for the spinner :) */
-.loader {
-  display: none;
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid #3498db;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 1s linear infinite;
-  animation: spin 1s linear infinite;
-  margin: 0 auto;
-  text-align:center;
-}
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    .loader {
+        display: none;
+        border: 16px solid #8a484a;
+        border-radius: 50%;
+        border-top: 16px solid #3498db;
+        width: 80px;
+        height: 80px;
+        -webkit-animation: spin 500ms linear infinite/*, translate 5s linear infinite*/;
+        animation: spin 500ms linear infinite/*, translate 5s linear infinite*/;
+        margin: 0 auto;
+        text-align: center;
+    }
+    @-webkit-keyframes spin {
+      0% { -webkit-transform: rotate(0deg); }
+      100% { -webkit-transform: rotate(360deg); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @-webkit-keyframes translate {
+        0% {
+            margin-left: 50%;
+        }
+        25% {
+            margin-left: 45%;
+        }
+        50% {
+            margin-left: 50%;
+        }
+        75% {
+            margin-left: 55%;
+        }
+        100% {
+            margin-left: 50%;
+        }
+    }
+    @keyframes translate{
+        0% {
+            margin-left: 50%;
+        }
+
+        25% {
+            margin-left: 45%;
+        }
+
+        50% {
+            margin-left: 50%;
+        }
+
+        75% {
+            margin-left: 55%;
+        }
+
+        100% {
+            margin-left: 50%;
+        }
+    }
 /*                            */
 </style>

@@ -41,6 +41,11 @@ namespace SelfHelpOpenSourceEditor
         /// </summary>
         public static bool PrintAgain = true;
 
+        /// <summary>
+        /// This feature is dangerous. Only use it if you really know what you're doing!
+        /// </summary>
+        public static readonly bool AutoSync = true;
+
         private static void printDefaultInfo()
         {
             PrintCentered("Welcome To The Self-Help Open Source Editor Client!");
@@ -62,6 +67,7 @@ namespace SelfHelpOpenSourceEditor
             #endregion
 
             LibraryController.InitializeLibrary();
+            LibraryController.GetWatchers();
 
             int? version = null;
 
@@ -193,6 +199,8 @@ namespace SelfHelpOpenSourceEditor
                 }
 
                 PrintAgain = false;
+                if (AutoSync)
+                    LibraryController.GetWatchers();
             }
         }
 

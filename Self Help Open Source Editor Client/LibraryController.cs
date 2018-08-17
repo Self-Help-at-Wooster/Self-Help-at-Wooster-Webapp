@@ -1,6 +1,7 @@
 ﻿using SelfHelpManager;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using static SelfHelpOpenSourceEditor.Program;
 
 namespace SelfHelpOpenSourceEditor
@@ -31,6 +32,48 @@ namespace SelfHelpOpenSourceEditor
         public static bool VersionFound(int VersionNumber)
         {
             return versions?.Find(v => v.VersionNumber == VersionNumber) != null;
+        }
+
+        private static List<System.IO.FileSystemWatcher> watchers;
+
+        private static bool busyAutoUploading;
+
+        public static void GetWatchers()
+        {
+            if (AutoSync)
+            {
+                watchers = AppsScriptsSourceCodeManager.GetWatchers();
+
+                watchers.ForEach(fw =>
+                {
+                    fw.NotifyFilter = System.IO.NotifyFilters.LastWrite;
+                    fw.Changed += fw_Changed;
+
+                    fw.EnableRaisingEvents = true;
+                });
+            }
+        }
+
+        private static void fw_Changed(object sender, System.IO.FileSystemEventArgs e)
+        {
+            if (!busyAutoUploading && AutoSync)
+            {
+                watchers.ForEach(fw => fw.EnableRaisingEvents = false);
+
+                if (!busyAutoUploading)
+                {
+                    Debug.WriteLine("Auto Uploading...");
+
+                    busyAutoUploading = true;
+                    if (UploadFiles())
+                        PrintCentered("Auto Upload Complete!");
+                    else
+                        PrintCentered("Auto Upload Failed. Try again.");
+                    busyAutoUploading = false;
+                    watchers.ForEach(fw => fw.EnableRaisingEvents = true);
+                }
+
+            }
         }
 
         /// <summary>
