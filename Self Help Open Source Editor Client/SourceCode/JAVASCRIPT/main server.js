@@ -30,7 +30,7 @@ function doGet(e) {
 
     var client = HtmlService.createTemplateFromFile("main client").evaluate();
     client.setTitle("Self-Help at Wooster");
-    client.setFaviconUrl("https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png");
+    client.setFaviconUrl("https://image.ibb.co/e26hgn/new_Self_Help_Logo.png");
     client.addMetaTag('viewport', 'width=device-width, initial-scale=.35');
     return client; //Set current HTML UI
 }
@@ -187,7 +187,7 @@ function getColumnData(columnNum, value, translateadvisor) {
     var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL'));
     var cursheet = classlists.getActiveSheet();
 
-    if (columnNum !== getColumnDataLastCol) {
+    if (columnNum != getColumnDataLastCol) {
         var max = cursheet.getLastRow() - 1;
         getColumnDataLastData = cursheet.getSheetValues(2, columnNum, max, 1);
         getColumnDataLastCol = columnNum;
@@ -200,7 +200,7 @@ function getColumnData(columnNum, value, translateadvisor) {
     var num = 0;
     for (var check = 0; check < getColumnDataLastData.length; check++) {
 
-        if (getColumnDataLastData[check] === value) { //if the cell has the sought value
+        if (Object.is(getColumnDataLastData[check], value) ){ //if the cell has the sought value
             ColumnData[num] = cursheet.getSheetValues(check + 2, 1, 1, studentData["LENGTH"])[0];
             num++;
         }
@@ -321,9 +321,12 @@ function writeLog(log) {
         var cursheet = actlist.getActiveSheet();
         cursheet.insertRows(2);
         var time = new Date();
-        var targetRange = cursheet.getRange(2, 1, 1, 4).setValues([
+
+        cursheet.getRange(2, 1, 1, 4).setValues([
             [Session.getActiveUser().getEmail(), time.toLocaleTimeString(), time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear(), log]
         ]);
+
+        SpreadsheetApp.flush();
     }
 }
 

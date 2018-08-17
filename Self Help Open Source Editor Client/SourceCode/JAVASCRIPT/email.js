@@ -106,7 +106,7 @@ function notifyCaptain_(Capt, From, FromEmail, Cit, MissName) {
 //sends notice to student
 function writeEmail_(UUID, SlipType) {
 
-    var UserData = retrieveUserData();
+       var UserData = retrieveUserData();
     if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["CAPTAIN"]) {
 
         var siteURL = PropertiesService.getScriptProperties().getProperty('execURL');

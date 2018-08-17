@@ -1,10 +1,12 @@
 //writes a slip
 function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
     //preconditions to check slips for functions:
-    if (typeof SlipType === 'string' && P1.charAt(0) !== "=" || P1 == null)
+    if (P1 === null || typeof SlipType === 'string' && P1.charAt(0) !== "=" )
         console.log("type");
     if (typeof Text === 'string')
         Text = Text.trim();
+
+    UUID = String(UUID);
 
     if (
         typeof UUID === 'string' && UUID.charAt(0) !== "=" &&
@@ -21,12 +23,15 @@ function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
 
         const unableToWriteBadSlip = UserData[studentData["ACCESS"] - 1] == accessLevels["CAPTAIN"] && UserData[studentData["GRADE"] - 1] < 11 && SlipType === 2;
 
-        if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["CAPTAIN"] && unableToWriteBadSlip === true) {
+        if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["CAPTAIN"] && unableToWriteBadSlip === false) {
             //var lock = LockService.getPublicLock();
 
             //LOCK CODE FORMERLY USED TO INHIBIT REFIRING (GOOGLE PROBLEM) SEEMS TO HAVE BEEN FIXED.
             //var lock = LockService.getUserLock();
             //lock.waitLock(3000); //3 second delay
+
+            var lock = LockService.getScriptLock();
+            lock.waitLock(10000);
 
             var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL'));
             var cursheet = curslips.getActiveSheet();
@@ -36,11 +41,12 @@ function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
 
             var From = UserData[studentData["EMAIL"] - 1];
 
-            var targetRange = cursheet.getRange(2, 1, 1, eslipData["LENGTH"]).setValues([
-                [UUID, SlipType, From, Text, P1, P2, P3, P4, R, CitPer, time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear()]
-            ]);
+            var targetRange = cursheet.getRange(2, 1, 1, eslipData["LENGTH"]).setValues([[UUID, SlipType, From, Text, P1, P2, P3, P4, R, CitPer, time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear()]]);
+
+            SpreadsheetApp.flush();
 
             writeEmail_(UUID, numtoSlip[SlipType]);
+
 
         } else {
             writeLog("User lacks privilege: Write Slip");
@@ -121,7 +127,7 @@ function getSpecificSlip(Row) {
 
                 returndata[num][eslipData["UUID"] - 1] = classdata[check2][studentData["FIRST"] - 1] + " " + nick1 + classdata[check2][studentData["LAST"] - 1];
 
-                var grade = classdata[check2][studentData["GRADE"] - 1] == null ? " (" + classdata[check2][studentData["GRADE"] - 1] + ")" : "";
+                var grade = !classdata[check2][studentData["GRADE"] - 1] ? " (" + classdata[check2][studentData["GRADE"] - 1] + ")" : "";
 
                 if (alladv[classdata[check2][studentData["ADVISOR"] - 1]] != null) {
                     returndata[num][returndata[num].length] = alladv[classdata[check2][studentData["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
@@ -154,7 +160,7 @@ function getSpecificSlip(Row) {
 }
 
 function writeParamter(Row) {
-    Utilities.sleep(10);
+    //Utilities.sleep(10);
     writeLog("Slip Parameter Accessed: " + Row);
 }
 
@@ -238,7 +244,7 @@ function getSlips(UUID, SlipType, From) {
                         var grade = classdata[check2][studentData["GRADE"] - 1] ? " (" + classdata[check2][studentData["GRADE"] - 1] + ")" : "";
 
                         if (alladv[classdata[check2][studentData["ADVISOR"] - 1]] != null) {
-                            returndata[num][returndata[num].length] = alladv[classdata[check2][studentData["ADVISOR"] - 1]] + grade.trim(); //set grade as final (really cheaty method :) )
+                            returndata[num][returndata[num].length] = alladv[classdata[check2][studentData["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
                         } else {
                             returndata[num][returndata[num].length] = grade.trim(); //set grade as final (really cheaty method :) )
                         }
