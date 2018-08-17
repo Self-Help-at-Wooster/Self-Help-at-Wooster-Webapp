@@ -41,6 +41,11 @@ namespace SelfHelpOpenSourceEditor
         /// </summary>
         public static bool PrintAgain = true;
 
+        /// <summary>
+        /// Whether or not you want confirmations to be displayed
+        /// </summary>
+        public static bool ConfirmationsOff = true;
+
         private static void printDefaultInfo()
         {
             PrintCentered("Welcome To The Self-Help Open Source Editor Client!");
@@ -319,6 +324,9 @@ namespace SelfHelpOpenSourceEditor
 
         private static bool getConfirmInput(params string[] warning)
         {
+            if (ConfirmationsOff)
+                return true;
+
             foreach (string str in warning)
                 PrintCentered(str);
             PrintCentered("1 or y => Yes, Otherwise => No");
@@ -333,6 +341,12 @@ namespace SelfHelpOpenSourceEditor
 
         private static void getConfirmInput(Action onComplete, params string[] warning)
         {
+            if (ConfirmationsOff)
+            {
+                onComplete();
+                return;
+            }
+
             foreach (string str in warning)
                 PrintCentered(str);
             PrintCentered("1 or y => Yes, Otherwise => No");

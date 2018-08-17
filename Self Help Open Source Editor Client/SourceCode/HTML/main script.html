@@ -1,36 +1,36 @@
 <script>
-    //Dictionaries for Column Values test 1/12/18
-    const accessLevels = Object.freeze({ADMIN: 1, DEAN: 2, FACULTY: 3, PREFECT: 4, PROCTOR: 5, CAPTAIN: 6, STUDENT : 7});
-    const studentData = Object.freeze({UUID: 1, EMAIL: 2, ACCESS: 3, GRADE: 4, LAST: 5, FIRST : 6, NICKNAME: 7, ADVISOR: 8, JOB1: 9, JOB2: 10, JOB3: 11, JOB4: 12, JOB5: 13, JOB6: 14, LENGTH : 14});
-    //advisorData = studentData until First (where it ends)
-    const eslipData = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
-    const jobData = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
-    const numtoSlip = ["","Good Slip", "Bad Slip", "Job Rec"];
-    const setupData = Object.freeze({CURCIT: 1, C1: 2, C2: 3, C3: 4, C4: 5, C5: 6, C6: 7, CEND: 8, FALL: 9, WINTER: 10, SPRING: 11,
-        SOTWURL: 12, SOTWTXT: 13, CLASSLIST: 14, FACLIST: 15, JOBDAT: 16, ACTURL: 17, ESLIPDAT: 18, LOGURL: 19, EXECURL: 20, MAILGROUP: 21, REGISTER: 22, REGSPREAD: 23, LENGTH: 23});
-    const actData = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
-    const numtoAct = ["","Sport","Art Intensive","Monday Art","Independent Activity"];
-    
-    
-    function getAccessLevel(){
-        return activeUser[studentData["ACCESS"]-1];
-    }
+	//Dictionaries for Column Values
+	const accessLevels = Object.freeze({ADMIN: 1, DEAN: 2, FACULTY: 3, PREFECT: 4, PROCTOR: 5, CAPTAIN: 6, STUDENT : 7});
+	const studentData = Object.freeze({UUID: 1, EMAIL: 2, ACCESS: 3, GRADE: 4, LAST: 5, FIRST : 6, NICKNAME: 7, ADVISOR: 8, JOB1: 9, JOB2: 10, JOB3: 11, JOB4: 12, JOB5: 13, JOB6: 14, LENGTH : 14});
+	//advisorData = studentData until First (where it ends)
+	const eslipData = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
+	const jobData = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
+	const numtoSlip = ["","Good Slip", "Bad Slip", "Job Rec"];
+	const setupData = Object.freeze({CURCIT: 1, C1: 2, C2: 3, C3: 4, C4: 5, C5: 6, C6: 7, CEND: 8, FALL: 9, WINTER: 10, SPRING: 11,
+		SOTWURL: 12, SOTWTXT: 13, CLASSLIST: 14, FACLIST: 15, JOBDAT: 16, ACTURL: 17, ESLIPDAT: 18, LOGURL: 19, EXECURL: 20, MAILGROUP: 21, REGISTER: 22, REGSPREAD: 23, LENGTH: 23});
+	const actData = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
+	const numtoAct = ["","Sport","Art Intensive","Monday Art","Independent Activity"];
+	
+	
+	function getAccessLevel(){
+		return activeUser[studentData["ACCESS"]-1];
+	}
 
-    const FunctionType = Object.freeze({
-        ViewJob: 1, 
-        ViewSlips: 2, 
-        WriteSlips: 3, 
-        FacSlips: 4, 
-        AllSlips: 5, 
-        AdvSnap: 6, 
-        JobSnap: 7, 
-        WriteEmail: 8, 
-        CreateJobs: 9, 
-        CreateAdvs: 10, 
-        SetAct: 11,
-        DeanAct: 12
-        });
-    
+	const FunctionType = Object.freeze({
+		ViewJob: 1, 
+		ViewSlips: 2, 
+		WriteSlips: 3, 
+		FacSlips: 4, 
+		AllSlips: 5, 
+		AdvSnap: 6, 
+		JobSnap: 7, 
+		WriteEmail: 8, 
+		CreateJobs: 9, 
+		CreateAdvs: 10, 
+		SetAct: 11,
+		DeanAct: 12
+	    });
+	
     var SelectedFunction = 0;
 
     //SUPER FREEZY CHILLY SIBERIAN GULAG GOODNESS
@@ -63,7 +63,7 @@
         mailGroup: "",
         badcurcit: ""
     }
-    var registrationStatus;
+	var registrationStatus;
     
     var stop = 0;
 
@@ -173,12 +173,12 @@
     }
     
     function updateRegStatus(){
-        google.script.run.withSuccessHandler( function(x) {
-            document.getElementById("regstatus").innerHTML = "Registration is currently " + x;
-            document.getElementById("sturegstatus").innerHTML = "Registration is currently " + x;
-            registrationStatus = x;
-        } )
-        .getRegistrationStatus();
+    	google.script.run.withSuccessHandler( function(x) {
+    	    document.getElementById("regstatus").innerHTML = "Registration is currently " + x;
+   	        document.getElementById("sturegstatus").innerHTML = "Registration is currently " + x;
+   	     	registrationStatus = x;
+    	} )
+    	.getRegistrationStatus();
     }
 
     function getSetup(setup) {
@@ -204,7 +204,7 @@
        document.getElementById("regstatus").innerHTML = "Registration is currently " + setup[setupData["REGISTER"] - 1];
        document.getElementById("sturegstatus").innerHTML = "Registration is currently " + setup[setupData["REGISTER"] - 1];
        document.getElementById("regspread").innerHTML = '<a target="_blank" href=' + setup[setupData["REGSPREAD"]-1] + ">View Registration Spreadsheet</a>";
-    
+   	
        /*var seasons = setup.slice(setupData["FALL"] - 1, setupData["SPRING"]);
 
        //determine season
@@ -236,13 +236,13 @@
                t2.setMonth(month2 - 1);
 
                if(time > t1 && time > t2)
-                   document.getElementById("seasonselect").options[check + 1].disabled = true;
-    
+            	   document.getElementById("seasonselect").options[check + 1].disabled = true;
+	
            } catch (ex) {}
        }*/
 
        
-        //determine current citizenship period
+		//determine current citizenship period
         if (setup[setupData["CURCIT"] - 1]) //manual overide if not null
             citper = setup[setupData["CURCIT"] - 1];
         else {
@@ -338,7 +338,7 @@
                             adminOptions();
                         } else if (getAccessLevel() == accessLevels["DEAN"]) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Dean";
-                            deanOptions();
+							deanOptions();
                         } else if (getAccessLevel() == accessLevels["FACULTY"]) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Faculty";
                             facultyOptions();
@@ -372,44 +372,44 @@
     }
     
     function studentOptions(){
-        createOption("Where do I work?", FunctionType.ViewJob);
+    	createOption("Where do I work?", FunctionType.ViewJob);
         createOption("View Slips & Job Recs", FunctionType.ViewSlips);
     }
     function captainOptions(){
-        createOption("Write Slips & Job Recs", FunctionType.WriteSlips);
+    	createOption("Write Slips & Job Recs", FunctionType.WriteSlips);
         createOption("View Jobs Snapshot", FunctionType.JobSnap);
     }
     function proctorOptions(){
-        captainOptions();
-        createOption("View Slips & Job Recs", FunctionType.ViewSlips);
+    	captainOptions();
+    	createOption("View Slips & Job Recs", FunctionType.ViewSlips);
     }
     function prefectOptions(){
-        proctorOptions();
-        createOption("Create Job List", FunctionType.CreateJobs);
+    	proctorOptions();
+    	createOption("Create Job List", FunctionType.CreateJobs);
         createOption("Compose Email", FunctionType.WriteEmail);
     }
     function facultyOptions(){
-        createOption("View Advisory Snapshot", FunctionType.AdvSnap);
+    	createOption("View Advisory Snapshot", FunctionType.AdvSnap);
         createOption("View Student Slips & Job Recs", FunctionType.FacSlips);
         createOption("Write Slips & Job Recs", FunctionType.WriteSlips);
-        createOption("Compose Email", FunctionType.WriteEmail);
+    	createOption("Compose Email", FunctionType.WriteEmail);
     }
     function deanOptions(){
-        facultyOptions();
+    	facultyOptions();
         createOption("Create Job List", FunctionType.CreateJobs);
         createOption("Create Advisory List", FunctionType.CreateAdvs);
         createOption("View All Slips", FunctionType.AllSlips);
         createOption("Manage Activity Module", FunctionType.DeanAct);
     } 
     function createOption(message, value){
-        var cbxfunc = document.getElementById("cbxFunction");
+    	var cbxfunc = document.getElementById("cbxFunction");
         var option = document.createElement("option");
         option.text = message;
         option.value = value;
         cbxfunc.add(option);
     }
     function adminOptions(){
-        createOption("Manage Activity Module", FunctionType.DeanAct);
+    	createOption("Manage Activity Module", FunctionType.DeanAct);
         createOption("Create Job List", FunctionType.CreateJobs);
         createOption("Create Advisory List", FunctionType.CreateAdvs);
         createOption("Where do I work?", FunctionType.ViewJob);
@@ -472,7 +472,7 @@
                     document.getElementById("showallslips").style.display = "block";
                 }
             }
-            else if (SelectedFunction == FunctionType.JobSnap) { //job captain view job
+			else if (SelectedFunction == FunctionType.JobSnap) { //job captain view job
                 if (getAccessLevel() >= accessLevels["PREFECT"] && getAccessLevel() <= accessLevels["CAPTAIN"] || getAccessLevel() == accessLevels["ADMIN"]) {
                     document.getElementById("showcit").style.display = "block";
                     document.getElementById("showstudents").style.display = "block";
@@ -563,19 +563,19 @@
                 }
 
             } else if (SelectedFunction == FunctionType.SetAct) {
-                updateRegStatus();
-                document.getElementById("activities").style.display = "block";
-                if(registrationStatus == "Enabled")
-                    document.getElementById("actinstr").innerHTML = "You can review or change your info here";
-                else
-                    document.getElementById("actinstr").innerHTML = "Activity registration is currently disabled by registrar";
+            	updateRegStatus();
+           	  	document.getElementById("activities").style.display = "block";
+           	  	if(registrationStatus == "Enabled")
+           	  		document.getElementById("actinstr").innerHTML = "You can review or change your info here";
+           	  	else
+           	  		document.getElementById("actinstr").innerHTML = "Activity registration is currently disabled by registrar";
             }
-            else if (SelectedFunction == FunctionType.DeanAct) {
-                document.getElementById("manageact").style.display = "block";
-                document.getElementById("showstudents").style.display = "block";
-                document.getElementById("actinstr").innerHTML = "You can review or change student info here";
-                addWorkers();
-            }
+	        else if (SelectedFunction == FunctionType.DeanAct) {
+	        	document.getElementById("manageact").style.display = "block";
+	        	document.getElementById("showstudents").style.display = "block";
+	        	document.getElementById("actinstr").innerHTML = "You can review or change student info here";
+	        	addWorkers();
+	        }
 
         }
     }
@@ -599,8 +599,8 @@
                 cbxjobs.remove(i);
         }
         
-        document.getElementById("activities").style.display = "none";
-        document.getElementById("manageact").style.display = "none";
+       	document.getElementById("activities").style.display = "none";
+       	document.getElementById("manageact").style.display = "none";
 
         //remove all children from element, then hide it!!!
         document.getElementById("showMsg").style.display = "none";
@@ -742,7 +742,7 @@
     function getslips(UUID, t, f) {
         google.script.run.withSuccessHandler(
             function(slip) {
-                displaySlips(slip);		
+				displaySlips(slip);		
             }
         )
         .withFailureHandler(() => showModal(0, "Action Failed"))
@@ -750,7 +750,7 @@
     }
     
     function displaySlips(slip){
-        for (var i = slip.length - 1; i >= 0; i--) {
+    	for (var i = slip.length - 1; i >= 0; i--) {
 
             userSlips[i] = slip[i];
 
@@ -784,8 +784,8 @@
 
             sub.appendChild(radioInput);
             sub.addEventListener('click', function(e){
-                document.getElementsByName('selaslip')[e.target.value].checked = true;
-                getSelectedSlip();
+           		document.getElementsByName('selaslip')[e.target.value].checked = true;
+           		getSelectedSlip();
             });
             sub = null;
         }
@@ -843,9 +843,9 @@
                 document.getElementById("submiteslip").style.display = "none";
 
                 if(slipType == 3)
-                    document.getElementById("showrec").scrollIntoView(true);
+                	document.getElementById("showrec").scrollIntoView(true);
                 else
-                    document.getElementById("blurb").scrollIntoView(true);
+                	document.getElementById("blurb").scrollIntoView(true);
                 
                 // only one radio can be logically checked, don't check the rest
                 break;
@@ -1084,10 +1084,10 @@
         if (getAccessLevel() >= accessLevels["ADMIN"] && getAccessLevel() < accessLevels["STUDENT"]) {
 
             factClear();
-            
+			
             var cbxjobs = document.getElementById("filterbyarea");
             if (cbxjobs.length == 2) {
-                cbxjobs.selectedIndex = "1";
+            	cbxjobs.selectedIndex = "1";
                 seljob = cbxjobs.options[cbxjobs.selectedIndex].value;
             }
 
@@ -1104,7 +1104,7 @@
             if (filteron.checked && cbxjobs.selectedIndex > 0) {
 
                 if ((getAccessLevel() != accessLevels["FACULTY"] && getAccessLevel() != accessLevels["DEAN"] && getAccessLevel() != accessLevels["ADMIN"]) 
-                 || (getAccessLevel() == accessLevels["ADMIN"] && SelectedFunction == FunctionType.JobSnap) /*this bit is for admin testing*/) {
+              	 || (getAccessLevel() == accessLevels["ADMIN"] && SelectedFunction == FunctionType.JobSnap) /*this bit is for admin testing*/) {
                     if (SelectedFunction != FunctionType.JobSnap) {
                         google.script.run.withSuccessHandler(function(Workers) {FilterWorkers(Workers)})
                         .withFailureHandler(() => showModal(0, "Action Failed"))
@@ -1123,9 +1123,9 @@
                 } else {//Faculty Options *note seljob is actually the UFID here.
 
                     if (SelectedFunction == FunctionType.FacSlips || SelectedFunction == FunctionType.WriteSlips) {
-                        google.script.run.withSuccessHandler(function(Advisees){FilterAdvisees(Advisees)})
-                        .withFailureHandler(() => showModal(0, "Action Failed"))
-                        .getAdvisees(seljob);
+                    	google.script.run.withSuccessHandler(function(Advisees){FilterAdvisees(Advisees)})
+						.withFailureHandler(() => showModal(0, "Action Failed"))
+						.getAdvisees(seljob);
                     } else if (SelectedFunction == FunctionType.AdvSnap) {
                         document.getElementById("spina").style.display = "block";
                         loadingad = true;
@@ -1157,13 +1157,13 @@
     }
     
     function FilterAdvisees(Advisees){
-        PopulateAllStudents(Advisees);//these have same implementation
-        enableinput();
+		PopulateAllStudents(Advisees);//these have same implementation
+		enableinput();
     }
     
     function PopulateAllStudents(Students){
         for (var i = 0; i < Students.length; i++) {
-         var student = Students[i];
+       	 var student = Students[i];
             if (student[studentData["LAST"] - 1] != "" && student[studentData["FIRST"] - 1] != "") {
                 var option = document.createElement("option");
                 var nick = " ";
@@ -1181,22 +1181,22 @@
     
     function PopulateJobSnapshot(Workers){
         for (var set = Workers.length - 1; set >= 0; set--) {
-            var worker = Workers[set];
+			var worker = Workers[set];
             if (worker != [] && worker) {//empty array
                 var tab = document.getElementById("jdata");
-           
+  		   
                 var row = tab.insertRow(1);
                 var student = row.insertCell(0);
                 var grade = row.insertCell(1);
                 var advisor = row.insertCell(2);
                 var rec = row.insertCell(3);
                 var writebtn = row.insertCell(4);
-               
+ 			   
                 student.innerHTML = worker[0] + worker[1] + worker[2];
                 grade.innerHTML = worker[3];
                 advisor.innerHTML = worker[4];
                 rec.innerHTML = worker[5];
-                
+				
                 var radioInput = document.createElement('input');
                 radioInput.setAttribute('type', 'radio');
                 radioInput.setAttribute('class', "rbtn");
@@ -1210,13 +1210,13 @@
                 writebtn.style.textAlign = "center";
                 writebtn.appendChild(radioInput);
                 if (worker[5] == "No") {
-                    writebtn.addEventListener('click', function(e){
-                        document.getElementsByName('writeareq')[e.target.dataset.loopvalue].checked = true;
-                        submitrecwrites();
-                    });
+	                writebtn.addEventListener('click', function(e){
+	               		document.getElementsByName('writeareq')[e.target.dataset.loopvalue].checked = true;
+	               		submitrecwrites();
+	                });
                 }
                 else{
-                    radioInput.disabled = "true";
+                	radioInput.disabled = "true";
                 }
                 sub = null;
 
@@ -1228,9 +1228,9 @@
      }
     
     function PopulateAdvisorySnapshot(Advisees){
-        
+    	
         for (var set = Advisees.length - 1; set >= 0; set--) {
-            var advisee = Advisees[set];
+			var advisee = Advisees[set];
             if (advisee != [] && advisee) {
                 var tab = document.getElementById("advdata");
                 var row = tab.insertRow(1);
@@ -1259,8 +1259,8 @@
                 reqbtn.dataset.loopvalue = set; //set value for sub and radio button!
                 
                 radioInput.addEventListener('click', function(e){
-                    e.preventDefault();
-                    e = null;
+                	e.preventDefault();
+                	e = null;
                 });
                 
                 reqbtn.style.textAlign = "center";
@@ -1268,12 +1268,12 @@
 
                 if (advisee[5] == "No" && advisee[2] != "" && citper != 7) {
 
-                    reqbtn.addEventListener('mouseup', function(e){//use mouseup here so default checkbox behavior stops
-                        if(!document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked)
-                            document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked = true;
-                        else
-                            document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked = false;
-                        
+                	reqbtn.addEventListener('mouseup', function(e){//use mouseup here so default checkbox behavior stops
+                		if(!document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked)
+                			document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked = true;
+                		else
+                			document.getElementsByName('selareq')[e.target.dataset.loopvalue].checked = false;
+                		
                         var boxes = document.getElementsByName("selareq");
 
                         var clicked = false;
@@ -1291,7 +1291,7 @@
 
                     });
                 } else {
-                    radioInput.disabled = "true";
+                	radioInput.disabled = "true";
                 }
 
             }
@@ -1320,13 +1320,13 @@
 
         var cbxstud = document.getElementById("student");
         if (cbxstud.selectedIndex >= 1) {
-            
-            if (SelectedFunction == FunctionType.DeanAct) {
-                document.getElementById("activities").style.display = "block";
-                slipfor = cbxstud.options[cbxstud.selectedIndex].value;
-                getPeriodActivities();
-            }
-            else if (SelectedFunction != FunctionType.FacSlips) {
+			
+        	if (SelectedFunction == FunctionType.DeanAct) {
+        		document.getElementById("activities").style.display = "block";
+        		slipfor = cbxstud.options[cbxstud.selectedIndex].value;
+        		getPeriodActivities();
+        	}
+        	else if (SelectedFunction != FunctionType.FacSlips) {
                 if (cbxstud.options[cbxstud.selectedIndex].value != 0) {
                     var form = document.getElementById("showsliptype");
 
@@ -1574,7 +1574,7 @@
             if (typeof blurb === 'string' && blurb.charAt(0) === "=")
                 showModal(0, "Do not use = at beginning of text.");
             else if ((((P1 == "" || P2 == "" || P3 == "" || P4 == "" || R == "" || blurb == "") && slipType == 3) 
-                     || blurb == "" || cbxcit.selectedIndex < 1 || (cbxstud.selectedIndex < 1 && SelectedFunction != FunctionType.JobSnap)) || slipType < 1) {
+            		 || blurb == "" || cbxcit.selectedIndex < 1 || (cbxstud.selectedIndex < 1 && SelectedFunction != FunctionType.JobSnap)) || slipType < 1) {
                 showModal(0, "Please enter all fields!");
                 incompleteSlip = true;
                 checkSlipInputs();
@@ -1584,6 +1584,8 @@
                     document.getElementById('myModal').style.display = 'none';
 
                     document.getElementById("submiteslip").disabled = true;
+
+                    //alert(slipfor + " " + slipType + " " + blurb + " " + P1 + " " + P2 + " " + P3 + " " + P4 + " " + R + " " + citper );
                     
                     google.script.run.withSuccessHandler(() => {
 
@@ -1685,10 +1687,10 @@
             var slipradios = document.getElementsByName('writeareq');
             for (var dis = 0, dislength = slipradios.length; dis < dislength; dis++) {
                 if (slipradios[dis].checked) {
-                    
+                	
                     slipfor = slipradios[dis].value;
                     slipType = 3;
-                    
+					
                     var slipradios = document.getElementsByName("rating");
                     for (var dis = 0, dislength = slipradios.length; dis < dislength; dis++)
                         slipradios[dis].checked = false;
@@ -1787,7 +1789,7 @@
         }
 
         //CLEARS SLIP INFO WHEN PICKING NEW NAME
-        clearSlipInfo();
+		clearSlipInfo();
         /**************************************************************/
 
         var mytext = document.getElementById("studentsearch").value;
@@ -1797,18 +1799,18 @@
                 cbx.remove(each);
 
             for (var each = 1; each < studentoptions.length; each++) {
-                var split = mytext.toLowerCase().split(" "); //split string by spaces
-                var t = 0;
-                for(var check = 0; check < split.length; check++){//check each split string
-                    if (studentoptions[each].toLowerCase().includes(split[check]) )
-                        t++; //increment tally for each incuded word
-                    if(t==split.length){ //only show if tally is split size
-                        var option = document.createElement("option");
-                        option.text = studentoptions[each];
-                        option.value = studentvalues[each];
-                        cbx.add(option);
-                    }
-                }
+            	var split = mytext.toLowerCase().split(" "); //split string by spaces
+            	var t = 0;
+            	for(var check = 0; check < split.length; check++){//check each split string
+	                if (studentoptions[each].toLowerCase().includes(split[check]) )
+	                	t++; //increment tally for each incuded word
+            		if(t==split.length){ //only show if tally is split size
+            			var option = document.createElement("option");
+	                    option.text = studentoptions[each];
+	                    option.value = studentvalues[each];
+	                    cbx.add(option);
+            		}
+            	}
 
             }
 
@@ -1832,19 +1834,19 @@
     }
     
     function studentSearchKey(event){
-        var thestud = document.getElementById('student');
-        if (event.keyCode == 13) {//enter
-            if(thestud.options.length >= 2){
-                thestud.selectedIndex = 1; 
-                thestud.focus(); 
-                getStudent(); 
-            }
-        }	
-        else if (event.keyCode == 40)//down
-            thestud.selectedIndex = thestud.selectedIndex+1; 	
-        else if (event.keyCode == 38)//up
-            thestud.selectedIndex = thestud.selectedIndex-1;    	
-        return false;
+    	var thestud = document.getElementById('student');
+    	if (event.keyCode == 13) {//enter
+    		if(thestud.options.length >= 2){
+	   			thestud.selectedIndex = 1; 
+	    		thestud.focus(); 
+	    		getStudent(); 
+    		}
+    	}	
+    	else if (event.keyCode == 40)//down
+   			thestud.selectedIndex = thestud.selectedIndex+1; 	
+    	else if (event.keyCode == 38)//up
+   			thestud.selectedIndex = thestud.selectedIndex-1;    	
+    	return false;
     }
 
 
