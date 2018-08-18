@@ -8,7 +8,7 @@
 
 ## Features
 - [ Uses your Google Account ](#login)
-- [ Create or Use Existing Scripts ](#script access)
+- [ Create or Use Existing Scripts ](#script_access)
 - [ Get Useful Script Information ](#info)
 - [ Download your Source Code ]
 - [ Upload Your Changes ](#upload)
