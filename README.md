@@ -1,13 +1,17 @@
-<h1 align="center"> Self Help at Wooster Open Source Editor Client/ Webapp </h1>
 
-> Discover how the Self-Help System at Wooster Webapp was created!
+<p align="center"><img src="https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png" height="125" width="125"></p>
 
-> Edit and Modify it to your liking using the integrated client solution in Visual Studio IDE!
+<h1 align="center"> Self-Help at Wooster Open Source Editor Client/ Webapp </h1>
 
-## Self-Help Webapp Source Code Resides in /SourceCode
+### Discover how the Self-Help System at Wooster Webapp was created!
+###  Edit and Modify it to your liking using the integrated client solution in Visual Studio IDE!
+
+## Self-Help Webapp Source Code Resides in [Self Help Editor Client\SourceCode](https://github.com/Self-Help-at-Wooster/Self-Help-at-Wooster-Webapp/tree/master/Self%20Help%20Open%20Source%20Editor%20Client/SourceCode)
 
 ## First
   >[Enable the Google App Script API](https://script.google.com/home/usersettings)
+  >Make sure you review the basic of Apps Web Apps(https://developers.google.com/apps-script/guides/web)
+  >In particular, note the difference between the /exec and /dev URLS!
 
 ## Features
 - [ Uses your Google Account ](#login)
@@ -66,6 +70,10 @@ For your convenience, your Script ID will be stored and loaded automatically for
 #### - Download any versioned copy of your Source Code
 
   Useful for reverting, debugging, or retrieving your project history from a version.
+  
+#### - Download the Self-Help Source Code
+
+  You can easily access the [Source Code](https://github.com/Self-Help-at-Wooster/Self-Help-at-Wooster-Webapp/tree/master/Self%20Help%20Open%20Source%20Editor%20Client/SourceCode) from GitHub, but this feature easily allows you to download it directly from your app. It always comes from the current version reflected on the Self-Help website.
 
 ### Upload
 
@@ -77,7 +85,7 @@ For your convenience, your Script ID will be stored and loaded automatically for
 
   Same as above, and creates a new version.
   
-#### - Upload and Deploy for Live (link)
+#### - Upload and Deploy for Live (#Sync-and-Deploy-for-Live-Version)
 
 ### Smart File Management
 
@@ -94,10 +102,45 @@ For your convenience, your Script ID will be stored and loaded automatically for
   This lets you edit the file using Visual Studio's features for Javascript!
   When you sync your files back, no problem, it simply ignores the generated files and substitues their code back into the HTML
 
-### Auto Sync
-
 ### Create Source Code Files
+
+Creates a new HTML, Javascript, or JSON file with given name.
+- Automatically places the file in the correct subdirectory
+- Provides a basic code template in your file like on the Google App Scripts Edtior.
+- The JSON file (aka [manifest](https://developers.google.com/apps-script/concepts/manifests)) is downloaded directly from the Self-Help source, because they can be a little confusing to understand.
 
 ### Versions and Deployments
 
-###
+#### - Automatic Webapp deployment and retrieval
+    
+    The library handles accessing your current Webapp and Head Deployments.
+    > The Head is used to get the development URL
+    > The Webapp Deployment is how you can deploy the project, if desired.
+      The library will always use the latest webapp deployment. 
+      
+    > If this behavior is undesired, delete all unnecessary deployments through
+      Google App Script project-->Publish--Deploy from Manifest-->Delete (only if there's more than one webapp).
+      
+#### - List your Version History      
+    
+    Lists all saved versions of your project. This function gets ran automatically when certain other functions require you to provide a version number. If you want to delete unused versions, you may at Google App Script project-->File-->Manage Versions
+    
+#### - Create New Version
+
+  Creates a new version attached to the current copy of your source code on Google App Script. You can provide whatever name you want, but these are best used as incremental "commits," and not big feature backups. You can always download your project from a [specific version](#Download-any-versioned-copy-of-your-Source-Code) if needed, so the best philosophy here is early-and-oft!
+
+#### - Create New Version and Update Deployment
+
+  Creates a new version and attached your web-app's current deployment. This function first creates a new version, as above, then proceeds to update the deployment that your users see. Use this once a feature is completed/ tested and you want it deployed. 
+  
+#### - Change Deployment's Version Number
+
+  Changes your web-app's current version number. Use this in the event that a newer version has affected the live functionality of your application.
+
+#### - Sync and Deploy for Live Version
+
+  This is a chained-call that first [uploads](#Upload) your source code, then creates a new version and updates the deployment, as specified above.
+
+
+
+
