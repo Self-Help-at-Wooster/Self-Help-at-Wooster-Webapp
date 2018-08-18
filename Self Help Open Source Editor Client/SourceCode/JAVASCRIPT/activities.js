@@ -21,8 +21,8 @@ function getActivityList_(Period) {
 function getAllActivities(Period) {
 
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"])
-        return allActivities_(Period, UserData[studentData["UUID"] - 1]);
+    if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT)
+        return allActivities_(Period, UserData[STUDENT_DATA.UUID - 1]);
     else {
         writeLog("User lacks privilege: Get All Activities");
         throw new Error("User lacks privilege");
@@ -38,7 +38,7 @@ function getAllActivities(Period) {
 function deanAllActivities(Period, UUID) {
 
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"])
+    if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT)
         return allActivities_(Period, UUID);
     else {
         writeLog("User lacks privilege: Get All Activities");
@@ -62,14 +62,14 @@ function allActivities_(Period, UUID) {
 
         var maxact = actlists.getLastRow();
 
-        var ActivityData = actlists.getSheetValues(2, actData["UAID"], maxact, actData["LENGTH"]); //[[]]
+        var ActivityData = actlists.getSheetValues(2, ACTIVITY_DATA["UAID"], maxact, ACTIVITY_DATA["LENGTH"]); //[[]]
 
         var ReturnData = [
             []
         ];
         var num = 0;
         for (var set = 0; set < ActivityData.length; set++) {
-            if (ActivityData[set][actData["UAID"] - 1] && ActivityData[set][actData["NAME"] - 1]) {
+            if (ActivityData[set][ACTIVITY_DATA["UAID"] - 1] && ActivityData[set][ACTIVITY_DATA["NAME"] - 1]) {
                 ReturnData[num] = ActivityData[set];
                 num++;
             }
@@ -82,7 +82,7 @@ function allActivities_(Period, UUID) {
     if (ReturnData && ReturnData.length > 0) {
         ReturnData.sort(
             function (x, y) {
-                return x[actData["NAME"] - 1].localeCompare(y[actData["NAME"] - 1]);
+                return x[ACTIVITY_DATA["NAME"] - 1].localeCompare(y[ACTIVITY_DATA["NAME"] - 1]);
             }
         );
         return [ReturnData, myData];
@@ -98,8 +98,8 @@ function allActivities_(Period, UUID) {
  */
 function getUserActivities(Period) {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"])
-        return getActivities_(Period, UserData[studentData["UUID"] - 1]);
+    if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT)
+        return getActivities_(Period, UserData[STUDENT_DATA.UUID - 1]);
     else {
         writeLog("User lacks privilege: Get User Activities");
         throw new Error("User lacks privilege");
@@ -113,7 +113,7 @@ function getUserActivities(Period) {
  */
 function deanGetActivities(Period, UUID) {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] === accessLevels["DEAN"])
+    if (UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.DEAN)
         return getActivities_(Period, UUID);
     else {
         writeLog("User lacks privilege: Dean Get Activities");
@@ -124,11 +124,11 @@ function deanGetActivities(Period, UUID) {
 function getActivities_(Period, UUID) {
     var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
     var maxclass = classlists.getLastRow();
-    var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+    var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
     for (var i = 0; i < classdata.length; i++) {
-        if (classdata[i][studentData["UUID"] - 1] === UUID) {
-            var ret = classlists.getRange(2 + i, studentData[Period.toUpperCase()]).getValue();
+        if (classdata[i][STUDENT_DATA.UUID - 1] === UUID) {
+            var ret = classlists.getRange(2 + i, STUDENT_DATA[Period.toUpperCase()]).getValue();
             if (ret)
                 return JSON.parse(ret);
             return -1;
@@ -143,9 +143,9 @@ function getActivities_(Period, UUID) {
  */
 function setUserActivities(Period, Data) {
     var UserData = retrieveUserData();
-    if (getRegistrationStatus() === "Enabled" && UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] ||
-        UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"] && UserData[studentData["ACCESS"] - 1] >= accessLevels["PREFECT"])
-        setActivities_(Period, Data, UserData[studentData["UUID"] - 1]);
+    if (getRegistrationStatus() === "Enabled" && UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN ||
+        UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT && UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.PREFECT)
+        setActivities_(Period, Data, UserData[STUDENT_DATA.UUID - 1]);
     else {
         writeLog("User lacks privilege: Set User Activities");
         throw new Error("User lacks privilege");
@@ -161,7 +161,7 @@ function setUserActivities(Period, Data) {
  */
 function deanSetActivities(Period, Data, UUID) {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] === accessLevels["DEAN"])
+    if (UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.DEAN)
         setActivities_(Period, Data, UUID);
     else {
         writeLog("User lacks privilege: Dean Set Activities");
@@ -173,19 +173,19 @@ function deanSetActivities(Period, Data, UUID) {
 function setActivities_(Period, Data, UUID) {
     var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
     var maxclass = classlists.getLastRow();
-    var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+    var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
     var decrementInfo = {};
 
     for (var i = 0; i < classdata.length; i++) {
-        if (classdata[i][studentData["UUID"] - 1] === UUID) {
+        if (classdata[i][STUDENT_DATA.UUID - 1] === UUID) {
 
-            var ret = classdata[i][studentData[Period.toUpperCase()] - 1];
+            var ret = classdata[i][STUDENT_DATA[Period.toUpperCase()] - 1];
             if (ret)
-                decrementInfo = JSON.parse(classdata[i][studentData[Period.toUpperCase()] - 1]);
+                decrementInfo = JSON.parse(classdata[i][STUDENT_DATA[Period.toUpperCase()] - 1]);
 
             if (updateActivityEnrollment_(Period, decrementInfo, Data)) //check to make sure enrollment is valid
-                classlists.getRange(2 + i, studentData[Period.toUpperCase()]).setValue(JSON.stringify(Data)); //update all if so
+                classlists.getRange(2 + i, STUDENT_DATA[Period.toUpperCase()]).setValue(JSON.stringify(Data)); //update all if so
             else //otherwise break if one is off
                 throw new Error("One or more are full");
             break;
@@ -207,7 +207,7 @@ function updateActivityEnrollment_(Period, oldInfo, newInfo) {
     if (actlists) {
         var maxact = actlists.getLastRow();
 
-        var ActivityData = actlists.getSheetValues(2, actData["UAID"], maxact, actData["LENGTH"]);
+        var ActivityData = actlists.getSheetValues(2, ACTIVITY_DATA["UAID"], maxact, ACTIVITY_DATA["LENGTH"]);
 
         oldInfoVals = {};
         newInfoVals = {};
@@ -218,19 +218,19 @@ function updateActivityEnrollment_(Period, oldInfo, newInfo) {
 
         for (var set = 0; set < ActivityData.length; set++) {
 
-            var UAIDstr = String(ActivityData[set][actData["UAID"] - 1]);
+            var UAIDstr = String(ActivityData[set][ACTIVITY_DATA["UAID"] - 1]);
 
             if (oldInfoVals.indexOf(UAIDstr) != newInfoVals.indexOf(UAIDstr)) {
-                var curEnroll = ActivityData[set][actData["CUR"] - 1] ? parseInt(ActivityData[set][actData["CUR"] - 1]) : 0;
+                var curEnroll = ActivityData[set][ACTIVITY_DATA["CUR"] - 1] ? parseInt(ActivityData[set][ACTIVITY_DATA["CUR"] - 1]) : 0;
                 if (oldInfoVals.indexOf(UAIDstr) >= 0 && curEnroll >= 1)
-                    actlists.getRange(2 + set, actData["CUR"]).setValue(curEnroll - 1);
+                    actlists.getRange(2 + set, ACTIVITY_DATA["CUR"]).setValue(curEnroll - 1);
                 if (newInfoVals.indexOf(UAIDstr) >= 0) {
 
-                    var cap = ActivityData[set][actData["CAP"] - 1] ? parseInt(ActivityData[set][actData["CAP"] - 1]) : 0;
-                    var cur = ActivityData[set][actData["CUR"] - 1] ? parseInt(ActivityData[set][actData["CUR"] - 1]) : 0;
+                    var cap = ActivityData[set][ACTIVITY_DATA["CAP"] - 1] ? parseInt(ActivityData[set][ACTIVITY_DATA["CAP"] - 1]) : 0;
+                    var cur = ActivityData[set][ACTIVITY_DATA["CUR"] - 1] ? parseInt(ActivityData[set][ACTIVITY_DATA["CUR"] - 1]) : 0;
 
                     if (cap - cur > 0) //if spots are left
-                        actlists.getRange(2 + set, actData["CUR"]).setValue(curEnroll + 1);
+                        actlists.getRange(2 + set, ACTIVITY_DATA["CUR"]).setValue(curEnroll + 1);
                     else
                         return false;
                 }
@@ -250,17 +250,17 @@ function updateActivityEnrollment_(Period, oldInfo, newInfo) {
  */
 function getActivityMembers(Period, UAID) {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] === accessLevels["DEAN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.DEAN) {
         var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
         var maxclass = classlists.getLastRow();
-        var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+        var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
         var ReturnData = [
             []
         ];
 
         for (var i = 0; i < classdata.length; i++) {
-            if (classdata[i][studentData[Period.toUpperCase()] - 1] === UAID) {
+            if (classdata[i][STUDENT_DATA[Period.toUpperCase()] - 1] === UAID) {
                 ReturnData[ReturnData.length] = classdata[i];
             }
         }
@@ -292,7 +292,7 @@ function getRegistrationStatus() {
  */
 function toggleRegistration() {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] === accessLevels["DEAN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.DEAN) {
         var setuplist = SpreadsheetApp.openByUrl("https://docs.google.com/a/woosternet.org/spreadsheets/d/1-h7EDv0-fxFdrfmaZtpMHA2oABKIRQ3uMSCixJ89-b4/edit?usp=sharing"); //CONSTANT URL FOR SETUP LIST! DO NOT MODIFY
         var cursheet = setuplist.getActiveSheet();
         var max = cursheet.getLastRow();
@@ -315,13 +315,13 @@ function toggleRegistration() {
  */
 function makeActivitySpreadsheet() {
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] === accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] === accessLevels["DEAN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] === ACCESS_LEVELS.DEAN) {
 
         var actsheet = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('regURL'));
 
         var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
         var maxclass = classlists.getLastRow();
-        var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+        var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
         var Periods = ["Fall", "Winter", "Spring"];
 
@@ -332,22 +332,22 @@ function makeActivitySpreadsheet() {
             var actlists = getActivityList_(Period);
             var maxact = actlists.getLastRow();
 
-            var ActivityData = actlists.getSheetValues(2, actData["UAID"], maxact, actData["LENGTH"]); //[[]]
+            var ActivityData = actlists.getSheetValues(2, ACTIVITY_DATA["UAID"], maxact, ACTIVITY_DATA["LENGTH"]); //[[]]
 
             ActivityData.sort(function (a, b) {
-                if (a[actData["TYPE"] - 1] < b[actData["TYPE"] - 1])
+                if (a[ACTIVITY_DATA["TYPE"] - 1] < b[ACTIVITY_DATA["TYPE"] - 1])
                     return -1;
-                else if (a[actData["TYPE"] - 1] > b[actData["TYPE"] - 1])
+                else if (a[ACTIVITY_DATA["TYPE"] - 1] > b[ACTIVITY_DATA["TYPE"] - 1])
                     return 1;
-                return String(a[actData["NAME"] - 1]).localeCompare(String(b[actData["NAME"] - 1]));
+                return String(a[ACTIVITY_DATA["NAME"] - 1]).localeCompare(String(b[ACTIVITY_DATA["NAME"] - 1]));
             });
 
             var activityDict = {};
 
             for (var set = 0; set < ActivityData.length; set++) {
-                if (ActivityData[set][actData["UAID"] - 1] && ActivityData[set][actData["NAME"] - 1]) {
-                    activityDict[ActivityData[set][actData["UAID"] - 1]] = ActivityData[set]; //set activity ID as index of activity data
-                    activityDict[ActivityData[set][actData["UAID"] - 1]].people = [];
+                if (ActivityData[set][ACTIVITY_DATA["UAID"] - 1] && ActivityData[set][ACTIVITY_DATA["NAME"] - 1]) {
+                    activityDict[ActivityData[set][ACTIVITY_DATA["UAID"] - 1]] = ActivityData[set]; //set activity ID as index of activity data
+                    activityDict[ActivityData[set][ACTIVITY_DATA["UAID"] - 1]].people = [];
                 }
             }
 
@@ -361,14 +361,14 @@ function makeActivitySpreadsheet() {
             //append students to activities
             for (var i = 0; i < classdata.length; i++) {
 
-                var ret = classdata[i][studentData[Period.toUpperCase()] - 1];
+                var ret = classdata[i][STUDENT_DATA[Period.toUpperCase()] - 1];
                 if (ret) {
                     var actdata = JSON.parse(ret);
 
-                    var name = classdata[i][studentData["FIRST"] - 1] + " ";
-                    if (classdata[i][studentData["NICKNAME"] - 1])
-                        name += "(" + classdata[i][studentData["NICKNAME"] - 1] + ") ";
-                    name += classdata[i][studentData["LAST"] - 1] + " - " + classdata[i][studentData["GRADE"] - 1];
+                    var name = classdata[i][STUDENT_DATA["FIRST"] - 1] + " ";
+                    if (classdata[i][STUDENT_DATA["NICKNAME"] - 1])
+                        name += "(" + classdata[i][STUDENT_DATA["NICKNAME"] - 1] + ") ";
+                    name += classdata[i][STUDENT_DATA["LAST"] - 1] + " - " + classdata[i][STUDENT_DATA["GRADE"] - 1];
 
                     if (activityDict[actdata.Activity])
                         activityDict[actdata.Activity].people.push(name);
@@ -388,16 +388,16 @@ function makeActivitySpreadsheet() {
 
                 //place each activity type in its own column
                 if (!type)
-                    type = act[actData["TYPE"] - 1];
-                else if (type != act[actData["TYPE"] - 1]) {
-                    type = act[actData["TYPE"] - 1];
+                    type = act[ACTIVITY_DATA["TYPE"] - 1];
+                else if (type != act[ACTIVITY_DATA["TYPE"] - 1]) {
+                    type = act[ACTIVITY_DATA["TYPE"] - 1];
                     i = 0;
                     horiz++;
                 }
-                var openslots = parseInt(act[actData["CAP"] - 1]) - parseInt(act[actData["CUR"] - 1]);
+                var openslots = parseInt(act[ACTIVITY_DATA["CAP"] - 1]) - parseInt(act[ACTIVITY_DATA["CUR"] - 1]);
                 if (!openslots) //if it's null just make it the cap
-                    openslots = parseInt(act[actData["CAP"] - 1]);
-                registry.getRange(i + 1, 1 + horiz * 2).setValue(act[actData["NAME"] - 1] + ": " + openslots + " slots left");
+                    openslots = parseInt(act[ACTIVITY_DATA["CAP"] - 1]);
+                registry.getRange(i + 1, 1 + horiz * 2).setValue(act[ACTIVITY_DATA["NAME"] - 1] + ": " + openslots + " slots left");
                 registry.getRange(i + 1, 1 + horiz * 2).setBackground("#ffff00");
                 for (var j = 0; j < act.people.length; j++) {
                     i++;

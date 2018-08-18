@@ -8,21 +8,21 @@
 function setAdvAssignments(students, advs, school, spreadlink) {
 
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] == accessLevels["DEAN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.DEAN) {
 
         try {
             var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
             var maxclass = classlists.getLastRow();
-            var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+            var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
             for (var i = 0; i < classdata.length; i++) {
                 for (var j = 0; j < students.length; j++) {
-                    if (students[j][studentData["UUID"] - 1] == classdata[i][studentData["UUID"] - 1]) {
+                    if (students[j][STUDENT_DATA.UUID - 1] == classdata[i][STUDENT_DATA.UUID - 1]) {
                         //check if advisory assignment is different
                         if (classdata[i][
-                            [studentData["ADVISOR"] - 1]
-                        ] != students[j][studentData["ADVISOR"] - 1])
-                            classlists.getRange(2 + i, studentData["ADVISOR"]).setValue(students[j][studentData["ADVISOR"] - 1]);
+                            [STUDENT_DATA["ADVISOR"] - 1]
+                        ] != students[j][STUDENT_DATA["ADVISOR"] - 1])
+                            classlists.getRange(2 + i, STUDENT_DATA["ADVISOR"]).setValue(students[j][STUDENT_DATA["ADVISOR"] - 1]);
                         break;
                     }
                 }
@@ -48,7 +48,7 @@ function setAdvAssignments(students, advs, school, spreadlink) {
 function advMake(school, spreadlink) {
 
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"] - 1] == accessLevels["DEAN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.DEAN) {
 
         try {
             var thespread = SpreadsheetApp.openByUrl(spreadlink);
@@ -74,11 +74,11 @@ function advMake(school, spreadlink) {
 
                 var maxfac = faclist.getLastRow();
 
-                var facdata = faclist.getSheetValues(2, studentData["UUID"], maxfac, studentData["FIRST"]);
+                var facdata = faclist.getSheetValues(2, STUDENT_DATA.UUID, maxfac, STUDENT_DATA["FIRST"]);
 
                 var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
                 var maxclass = classlists.getLastRow();
-                var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+                var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
                 classdata.sort(function (x, y) {
                     return sortStudents_(x, y);
@@ -96,30 +96,30 @@ function advMake(school, spreadlink) {
 
                 for (var check = 0; check < facdata.length; check++) {
 
-                    if ((school == "US" && parseInt(facdata[check][studentData["GRADE"] - 1]) >= 9 ||
-                        school == "MS" && parseInt(facdata[check][studentData["GRADE"] - 1]) < 9) &&
-                        facdata[check][studentData["GRADE"] - 1] &&
-                        (facdata[check][studentData["FIRST"] - 1] || facdata[check][studentData["LAST"] - 1])) {
+                    if ((school == "US" && parseInt(facdata[check][STUDENT_DATA["GRADE"] - 1]) >= 9 ||
+                        school == "MS" && parseInt(facdata[check][STUDENT_DATA["GRADE"] - 1]) < 9) &&
+                        facdata[check][STUDENT_DATA["GRADE"] - 1] &&
+                        (facdata[check][STUDENT_DATA["FIRST"] - 1] || facdata[check][STUDENT_DATA["LAST"] - 1])) {
 
                         if (!lastgrade) //if lastgrade is null
-                            lastgrade = facdata[check][studentData["GRADE"] - 1];
-                        else if (lastgrade != facdata[check][studentData["GRADE"] - 1]) {
-                            lastgrade = facdata[check][studentData["GRADE"] - 1];
+                            lastgrade = facdata[check][STUDENT_DATA["GRADE"] - 1];
+                        else if (lastgrade != facdata[check][STUDENT_DATA["GRADE"] - 1]) {
+                            lastgrade = facdata[check][STUDENT_DATA["GRADE"] - 1];
                             hspace++;
                             down = 0; //reset down
                         }
 
-                        newList.getRange(1 + down, 1 + 2 * hspace, 1, 1).setValue([facdata[check][studentData["FIRST"] - 1]] + " " + [facdata[check][studentData["LAST"] - 1]] + " - " + [facdata[check][studentData["GRADE"] - 1]]);
+                        newList.getRange(1 + down, 1 + 2 * hspace, 1, 1).setValue([facdata[check][STUDENT_DATA["FIRST"] - 1]] + " " + [facdata[check][STUDENT_DATA["LAST"] - 1]] + " - " + [facdata[check][STUDENT_DATA["GRADE"] - 1]]);
 
                         var locdown = down;
                         var captains = "";
                         for (var workerpop = 0; workerpop < classdata.length; workerpop++) {
 
-                            if (classdata[workerpop][studentData["ADVISOR"] - 1] != "" && classdata[workerpop][studentData["ADVISOR"] - 1] == facdata[check][studentData["UUID"] - 1]) {
+                            if (classdata[workerpop][STUDENT_DATA["ADVISOR"] - 1] != "" && classdata[workerpop][STUDENT_DATA["ADVISOR"] - 1] == facdata[check][STUDENT_DATA.UUID - 1]) {
                                 locdown++;
                                 var person = "";
-                                var nick = classdata[workerpop][studentData["NICKNAME"] - 1] != "" ? " (" + classdata[workerpop][studentData["NICKNAME"] - 1] + ") " : " ";
-                                person = classdata[workerpop][studentData["FIRST"] - 1] + nick + classdata[workerpop][studentData["LAST"] - 1] + " - " + classdata[workerpop][studentData["GRADE"] - 1];
+                                var nick = classdata[workerpop][STUDENT_DATA["NICKNAME"] - 1] != "" ? " (" + classdata[workerpop][STUDENT_DATA["NICKNAME"] - 1] + ") " : " ";
+                                person = classdata[workerpop][STUDENT_DATA["FIRST"] - 1] + nick + classdata[workerpop][STUDENT_DATA["LAST"] - 1] + " - " + classdata[workerpop][STUDENT_DATA["GRADE"] - 1];
                                 newList.getRange(1 + locdown, 1 + 2 * hspace, 1, 1).setValue(person);
                             }
 

@@ -87,8 +87,8 @@
 		position: relative;
 		margin-top: 30px;
 		margin-bottom: 30px;
-		margin-left:30px;
-		margin-right:30px;;
+		margin-left: 30px;
+		margin-right: 30px;
 		background-color: #800000;
 		color: #FFFFFF;
 		border-radius: 10px;
@@ -145,40 +145,5 @@
 	}
 </style>
 
-<script>
-	function showModal(modaltype, message) {
-		if (modaltype == 1) {
-	
-			if (isMobile) {
-				var message = message.replace("<br>", " ");//format for mobile
-				var rsp = confirm(message);
-				if (rsp) {
-					setTimeout(function() {
-						document.getElementById("modal-btnYes").click();
-					}, 10);
-				}
-			} else {
-				document.getElementById("modal-btnYes").style.display = "inline";
-				document.getElementById("modal-btnNo").style.display = "inline";
-				document.getElementById("modal-btnOkay").style.display = "none";
-			}
-		} else {
-			if (isMobile)
-				alert(message);
-			else {
-				document.getElementById("modal-btnYes").style.display = "none";
-				document.getElementById("modal-btnNo").style.display = "none";
-				document.getElementById("modal-btnOkay").style.display = "block";
-			}
-		}
-	
-		if (!isMobile) {
-			document.getElementById("modal-text").innerHTML = message;
-	
-			setTimeout(function() {
-				document.getElementById("myModal").style.display = "table";
-			}, 10);
-		}
-	}
-</script>
+<script data-placeholder="modal_JS.js"></script>
 

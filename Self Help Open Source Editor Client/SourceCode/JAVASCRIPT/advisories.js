@@ -6,12 +6,12 @@
 function getAdvisees(UFID){
 
   var UserData = retrieveUserData();
-  if(UserData[studentData["ACCESS"]-1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"]-1] <= accessLevels["FACULTY"] ){
+  if(UserData[STUDENT_DATA.ACCESS-1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS-1] <= ACCESS_LEVELS.FACULTY ){
   
-    var adv = getFacultyData(studentData["UUID"], UFID);
+    var adv = getFacultyData(STUDENT_DATA.UUID, UFID);
     if(adv != -1){
 	
-      var advname = adv[0][studentData["FIRST"]-1] + " " + adv[0][studentData["LAST"]-1];
+      var advname = adv[0][STUDENT_DATA["FIRST"]-1] + " " + adv[0][STUDENT_DATA["LAST"]-1];
       
       var Advisees = [[]];
       
@@ -19,13 +19,13 @@ function getAdvisees(UFID){
       
       var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
       var maxclass = classlists.getLastRow();
-      var classdata = classlists.getSheetValues(2, 1,maxclass, studentData["LENGTH"]);
+      var classdata = classlists.getSheetValues(2, 1,maxclass, STUDENT_DATA["LENGTH"]);
       
       for(var check = 0; check < classdata.length ; check++){
         
-        if( (classdata[check][studentData["FIRST"]-1] || classdata[check][studentData["LAST"]-1] ) && classdata[check][studentData["ADVISOR"]-1] == UFID){
+        if( (classdata[check][STUDENT_DATA["FIRST"]-1] || classdata[check][STUDENT_DATA["LAST"]-1] ) && classdata[check][STUDENT_DATA["ADVISOR"]-1] == UFID){
           Advisees[num] = classdata[check];
-          Advisees[num][studentData["ADVISOR"]-1] = advname;
+          Advisees[num][STUDENT_DATA["ADVISOR"]-1] = advname;
           num++
         }
         
@@ -51,15 +51,15 @@ function getAdvisees(UFID){
 function getAllAdvisories(){
   
 	var UserData = retrieveUserData();
-    if(UserData[studentData["ACCESS"]-1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"]-1] <= accessLevels["FACULTY"] ){
+    if(UserData[STUDENT_DATA.ACCESS-1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS-1] <= ACCESS_LEVELS.FACULTY ){
 	    var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
 	    var maxadvisor = advisorlists.getLastRow();
-	    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]+1);
+	    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]+1);
 	    
 	    var userdata = [[]];
 	    var num = 0;
 	      for(var set = 0; set < advisordata.length ; set++){     
-	        if(advisordata[set][studentData["FIRST"]-1] != "" || advisordata[set][studentData["LAST"]-1] != ""){
+	        if(advisordata[set][STUDENT_DATA["FIRST"]-1] != "" || advisordata[set][STUDENT_DATA["LAST"]-1] != ""){
 	        	userdata[num] = advisordata[set];
 	        	num++;
 	        }
@@ -69,14 +69,14 @@ function getAllAdvisories(){
 		      userdata.sort(
 	              function(x, y)
 	              {
-	                if(x[studentData["GRADE"]-1] < y[studentData["GRADE"]-1]){
+	                if(x[STUDENT_DATA["GRADE"]-1] < y[STUDENT_DATA["GRADE"]-1]){
 	                 return 1; 
 	                }
-	                else if(x[studentData["GRADE"]-1] > y[studentData["GRADE"]-1]){
+	                else if(x[STUDENT_DATA["GRADE"]-1] > y[STUDENT_DATA["GRADE"]-1]){
 	                return -1;
 	                }
 	                  else{
-	                    return x[studentData["FIRST"]-1].localeCompare(y[studentData["FIRST"]-1]);
+	                    return x[STUDENT_DATA["FIRST"]-1].localeCompare(y[STUDENT_DATA["FIRST"]-1]);
 	                  }
 	                  
 	              }
@@ -99,38 +99,38 @@ function getAllAdvisories(){
 function getAdvSnapshot(advisorID, citper){		
 
 	  var UserData = retrieveUserData();
-	  if(UserData[studentData["ACCESS"]-1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"]-1] == accessLevels["DEAN"] || UserData[studentData["ACCESS"]-1] == accessLevels["FACULTY"]){
+	  if(UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.DEAN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.FACULTY){
 	
 		  var theret = [["X"]];		
 		  
 		  var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
 		  var maxclass = classlists.getLastRow();
-		  var classdata = classlists.getSheetValues(2, 1,maxclass, studentData["LENGTH"]);
+		  var classdata = classlists.getSheetValues(2, 1,maxclass, STUDENT_DATA["LENGTH"]);
 		  
 		  var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL')).getActiveSheet();
 		  var maxslips = curslips.getLastRow();
-		  var slipdata = curslips.getSheetValues(2, 1,maxslips, eslipData["LENGTH"]);
+		  var slipdata = curslips.getSheetValues(2, 1,maxslips, SLIP_DATA.LENGTH);
 		  
 		  var num = 0;
 		  for(var get = 0; get < classdata.length; get++){
-		    if(classdata[get][studentData["ADVISOR"]-1] == advisorID){
+		    if(classdata[get][STUDENT_DATA["ADVISOR"]-1] == advisorID){
 		      
 		        var stud = classdata[get];
-		         if(stud[studentData["FIRST"]-1] != "" || stud[studentData["LAST"]-1] != ""){
+		         if(stud[STUDENT_DATA["FIRST"]-1] != "" || stud[STUDENT_DATA["LAST"]-1] != ""){
 		          
 		          var loctheret = ["X"];		
 		          var nick = "";		
-		          if(stud[studentData["NICKNAME"]-1])		
-		        	  nick = "(" + stud[studentData["NICKNAME"]-1] + ") ";		
-		          loctheret[0] = stud[studentData["FIRST"]-1] + " " + nick + stud[studentData["LAST"]-1];		
+		          if(stud[STUDENT_DATA["NICKNAME"]-1])		
+		        	  nick = "(" + stud[STUDENT_DATA["NICKNAME"]-1] + ") ";		
+		          loctheret[0] = stud[STUDENT_DATA["FIRST"]-1] + " " + nick + stud[STUDENT_DATA["LAST"]-1];		
 		          
 		          if(citper != 7){
-		            var studjob = getJobData(stud[studentData["JOB" + citper]-1],true,stud[studentData["UUID"]-1], citper);		
-		            Logger.log(stud[studentData["JOB" + citper]-1]);		
-		            loctheret[1] = studjob[jobData["NAME"]-1];		
-		            loctheret[2] = studjob[jobData["C1"]-1];		
-		            if(studjob[jobData["C2"]-1] != ""){		
-		              loctheret[2] +=  " & " + studjob[jobData["C2"]-1];		
+		            var studjob = getJobData(stud[STUDENT_DATA["JOB" + citper]-1],true,stud[STUDENT_DATA.UUID-1], citper);		
+		            Logger.log(stud[STUDENT_DATA["JOB" + citper]-1]);		
+		            loctheret[1] = studjob[JOB_DATA.NAME-1];		
+		            loctheret[2] = studjob[JOB_DATA.C1-1];		
+		            if(studjob[JOB_DATA.C2-1] != ""){		
+		              loctheret[2] +=  " & " + studjob[JOB_DATA.C2-1];		
 		            }		
 		          }
 		          
@@ -142,12 +142,12 @@ function getAdvSnapshot(advisorID, citper){
 		        	  HasJobRec = "N/A";
 		          
 		          for(var check = 0; check < slipdata.length ; check++){
-		            if(stud[studentData["UUID"]-1] == slipdata[check][eslipData["UUID"]-1]){
-		              if(slipdata[check][eslipData["SLIPTYPE"]-1] == 1 && (citper == slipdata[check][eslipData["CIT"]-1] ^ citper == 7))
+		            if(stud[STUDENT_DATA.UUID-1] == slipdata[check][SLIP_DATA.UUID-1]){
+		              if(slipdata[check][SLIP_DATA.SLIPTYPE-1] == 1 && (citper == slipdata[check][SLIP_DATA.CIT-1] ^ citper == 7))
 		                  TotalGood++;
-		              else if(slipdata[check][eslipData["SLIPTYPE"]-1] == 2 && (citper == slipdata[check][eslipData["CIT"]-1] ^ citper == 7))
+		              else if(slipdata[check][SLIP_DATA.SLIPTYPE-1] == 2 && (citper == slipdata[check][SLIP_DATA.CIT-1] ^ citper == 7))
 		                  TotalBad++
-		              else if(slipdata[check][eslipData["SLIPTYPE"]-1] == 3 && citper == slipdata[check][eslipData["CIT"]-1])
+		              else if(slipdata[check][SLIP_DATA.SLIPTYPE-1] == 3 && citper == slipdata[check][SLIP_DATA.CIT-1])
 		                  HasJobRec = "Yes";
 		              
 		            }
@@ -155,7 +155,7 @@ function getAdvSnapshot(advisorID, citper){
 		          loctheret[3] = TotalGood;		
 		          loctheret[4] = TotalBad;		
 		          loctheret[5] = HasJobRec;
-		          loctheret[6] = stud[studentData["UUID"]-1];		
+		          loctheret[6] = stud[STUDENT_DATA.UUID-1];		
 		          
 		          theret[num] = loctheret;		
 		          num++;

@@ -1,8 +1,12 @@
+function test(){
+ SubmitSlip("1", "1", "Test", null, null, null, null, null, "1"); 
+}
+
 //writes a slip
 function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
     //preconditions to check slips for functions:
-    if (P1 === null || typeof SlipType === 'string' && P1.charAt(0) !== "=" )
-        console.log("type");
+    //if (P1 === null || typeof SlipType === 'string' && P1.charAt(0) !== "=" )
+    //    console.log("type");
     if (typeof Text === 'string')
         Text = Text.trim();
 
@@ -21,9 +25,9 @@ function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
 
         var UserData = retrieveUserData();
 
-        const unableToWriteBadSlip = UserData[studentData["ACCESS"] - 1] == accessLevels["CAPTAIN"] && UserData[studentData["GRADE"] - 1] < 11 && SlipType === 2;
+        const unableToWriteBadSlip = UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.CAPTAIN && UserData[STUDENT_DATA["GRADE"] - 1] < 11 && SlipType === 2;
 
-        if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["CAPTAIN"] && unableToWriteBadSlip === false) {
+        if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.CAPTAIN && unableToWriteBadSlip === false) {
             //var lock = LockService.getPublicLock();
 
             //LOCK CODE FORMERLY USED TO INHIBIT REFIRING (GOOGLE PROBLEM) SEEMS TO HAVE BEEN FIXED.
@@ -39,13 +43,13 @@ function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
 
             var time = new Date();
 
-            var From = UserData[studentData["EMAIL"] - 1];
+            var From = UserData[STUDENT_DATA["EMAIL"] - 1];
 
-            var targetRange = cursheet.getRange(2, 1, 1, eslipData["LENGTH"]).setValues([[UUID, SlipType, From, Text, P1, P2, P3, P4, R, CitPer, time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear()]]);
+            var targetRange = cursheet.getRange(2, 1, 1, SLIP_DATA.LENGTH).setValues([[UUID, SlipType, From, Text, P1, P2, P3, P4, R, CitPer, time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear()]]);
 
             SpreadsheetApp.flush();
 
-            writeEmail_(UUID, numtoSlip[SlipType]);
+            writeEmail_(UUID, NUM_TO_SLIP[SlipType]);
 
 
         } else {
@@ -66,13 +70,13 @@ function getSpecificSlip(Row) {
 
     var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
     var maxadvisor = advisorlists.getLastRow();
-    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]);
+    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
 
     var alladv = {}; //associative object
     var num = 0;
     for (var setadv = 0; setadv < advisordata.length; setadv++) {
-        if (!advisordata[setadv][studentData["FIRST"] - 1] || !advisordata[setadv][studentData["LAST"] - 1]) {
-            alladv[advisordata[setadv][studentData["UUID"] - 1]] = advisordata[setadv][studentData["FIRST"] - 1] + " " + advisordata[setadv][studentData["LAST"] - 1];
+        if (!advisordata[setadv][STUDENT_DATA["FIRST"] - 1] || !advisordata[setadv][STUDENT_DATA["LAST"] - 1]) {
+            alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA["FIRST"] - 1] + " " + advisordata[setadv][STUDENT_DATA["LAST"] - 1];
             num++;
         }
     }
@@ -84,14 +88,14 @@ function getSpecificSlip(Row) {
     var slipdata;
 
     if (!Row && curslips.getLastRow() - Row >= 1 && Row >= 1) {
-        slipdata = curslips.getSheetValues(curslips.getLastRow() - Row + 1, 1, 1, eslipData["LENGTH"]);
+        slipdata = curslips.getSheetValues(curslips.getLastRow() - Row + 1, 1, 1, SLIP_DATA.LENGTH);
     } else {
         //throw new Error( "Slip Index out of Range. Please Reload Script with " + PropertiesService.getScriptProperties().getProperty('execURL') );
         console.log("Slip Index out of Range: " + Row);
         return -1;
     }
 
-    var slipID = slipdata[0][eslipData["UUID"] - 1];
+    var slipID = slipdata[0][SLIP_DATA.UUID - 1];
 
     var returndata = [
         ["X"]
@@ -112,25 +116,25 @@ function getSpecificSlip(Row) {
         if (num == 0) {
             classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
             maxclass = classlists.getLastRow();
-            classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+            classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
         }
 
 
         //Translate UUID To Name 
         for (var check2 = 0; check2 < classdata.length; check2++) {
 
-            if (classdata[check2][studentData["UUID"] - 1] == slipdata[check][eslipData["UUID"] - 1]) {
+            if (classdata[check2][STUDENT_DATA.UUID - 1] == slipdata[check][SLIP_DATA.UUID - 1]) {
                 var nick1 = "";
-                if (classdata[check2][studentData["NICKNAME"] - 1] != "") {
-                    nick1 = " (" + classdata[check2][studentData["NICKNAME"] - 1] + ") ";
+                if (classdata[check2][STUDENT_DATA["NICKNAME"] - 1] != "") {
+                    nick1 = " (" + classdata[check2][STUDENT_DATA["NICKNAME"] - 1] + ") ";
                 }
 
-                returndata[num][eslipData["UUID"] - 1] = classdata[check2][studentData["FIRST"] - 1] + " " + nick1 + classdata[check2][studentData["LAST"] - 1];
+                returndata[num][SLIP_DATA.UUID - 1] = classdata[check2][STUDENT_DATA["FIRST"] - 1] + " " + nick1 + classdata[check2][STUDENT_DATA["LAST"] - 1];
 
-                var grade = !classdata[check2][studentData["GRADE"] - 1] ? " (" + classdata[check2][studentData["GRADE"] - 1] + ")" : "";
+                var grade = !classdata[check2][STUDENT_DATA["GRADE"] - 1] ? " (" + classdata[check2][STUDENT_DATA["GRADE"] - 1] + ")" : "";
 
-                if (alladv[classdata[check2][studentData["ADVISOR"] - 1]] != null) {
-                    returndata[num][returndata[num].length] = alladv[classdata[check2][studentData["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
+                if (alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] != null) {
+                    returndata[num][returndata[num].length] = alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
                 } else {
                     returndata[num][returndata[num].length] = grade; //set grade as final (really cheaty method :) )
                 }
@@ -145,7 +149,7 @@ function getSpecificSlip(Row) {
 
     if (num > 0) {
 
-        if (slipID != UserData[studentData["UUID"] - 1] && UserData[studentData["ACCESS"] - 1] > accessLevels["FACULTY"]) {
+        if (slipID != UserData[STUDENT_DATA.UUID - 1] && UserData[STUDENT_DATA.ACCESS - 1] > ACCESS_LEVELS.FACULTY) {
             writeLog("User lacks privilege: View Slip Parameter: " + Row);
             //throw new Error( "User lacks privilege");
             console.log("User lacks privilege: View Slip Parameter: " + Row);
@@ -170,17 +174,17 @@ function writeParamter(Row) {
 function getSlips(UUID, SlipType, From) {
 
     var UserData = retrieveUserData();
-    if ((UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["DEAN"]) || (UUID != null && UserData[studentData["ACCESS"] - 1] == accessLevels["FACULTY"]) || (UUID != null && UserData[studentData["UUID"] - 1] == UUID && UserData[studentData["ACCESS"] - 1] >= accessLevels["PREFECT"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"])) {
+    if ((UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.DEAN) || (UUID != null && UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.FACULTY) || (UUID != null && UserData[STUDENT_DATA.UUID - 1] == UUID && UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.PREFECT && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT)) {
 
         var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
         var maxadvisor = advisorlists.getLastRow();
-        var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]);
+        var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
 
         var alladv = {}; //associative object
         var num = 0;
         for (var setadv = 0; setadv < advisordata.length; setadv++) {
-            if (advisordata[setadv][studentData["FIRST"] - 1] != "" || advisordata[setadv][studentData["LAST"] - 1] != "") {
-                alladv[advisordata[setadv][studentData["UUID"] - 1]] = advisordata[setadv][studentData["FIRST"] - 1] + " " + advisordata[setadv][studentData["LAST"] - 1];
+            if (advisordata[setadv][STUDENT_DATA["FIRST"] - 1] != "" || advisordata[setadv][STUDENT_DATA["LAST"] - 1] != "") {
+                alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA["FIRST"] - 1] + " " + advisordata[setadv][STUDENT_DATA["LAST"] - 1];
                 num++;
             }
         }
@@ -192,17 +196,17 @@ function getSlips(UUID, SlipType, From) {
         var seach;
         var columnnum;
         if (UUID != null) {
-            columnnum = eslipData["UUID"];
+            columnnum = SLIP_DATA.UUID;
             search = UUID;
         } else if (SlipType != null) {
-            columnnum = eslipData["SLIPTYPE"];
+            columnnum = SLIP_DATA.SLIPTYPE;
             search = SlipType;
         } else if (From != null) {
-            columnnum = eslipData["FROM"];
+            columnnum = SLIP_DATA.FROM;
             search = From;
         }
 
-        var slipdata = curslips.getSheetValues(2, 1, maxslips, eslipData["LENGTH"]);
+        var slipdata = curslips.getSheetValues(2, 1, maxslips, SLIP_DATA.LENGTH);
 
         var returndata = [
             ["X"]
@@ -226,25 +230,25 @@ function getSlips(UUID, SlipType, From) {
                 if (num == 0) {
                     classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
                     maxclass = classlists.getLastRow();
-                    classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+                    classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
                 }
 
 
                 //Translate UUID To Name 
                 for (var check2 = 0; check2 < classdata.length; check2++) {
 
-                    if (classdata[check2][studentData["UUID"] - 1] == slipdata[check][eslipData["UUID"] - 1]) {
+                    if (classdata[check2][STUDENT_DATA.UUID - 1] == slipdata[check][SLIP_DATA.UUID - 1]) {
                         var nick1 = "";
-                        if (classdata[check2][studentData["NICKNAME"] - 1] != "") {
-                            nick1 = " (" + classdata[check2][studentData["NICKNAME"] - 1] + ") ";
+                        if (classdata[check2][STUDENT_DATA["NICKNAME"] - 1] != "") {
+                            nick1 = " (" + classdata[check2][STUDENT_DATA["NICKNAME"] - 1] + ") ";
                         }
 
-                        returndata[num][eslipData["UUID"] - 1] = classdata[check2][studentData["FIRST"] - 1] + " " + nick1 + classdata[check2][studentData["LAST"] - 1];
+                        returndata[num][SLIP_DATA.UUID - 1] = classdata[check2][STUDENT_DATA["FIRST"] - 1] + " " + nick1 + classdata[check2][STUDENT_DATA["LAST"] - 1];
 
-                        var grade = classdata[check2][studentData["GRADE"] - 1] ? " (" + classdata[check2][studentData["GRADE"] - 1] + ")" : "";
+                        var grade = classdata[check2][STUDENT_DATA["GRADE"] - 1] ? " (" + classdata[check2][STUDENT_DATA["GRADE"] - 1] + ")" : "";
 
-                        if (alladv[classdata[check2][studentData["ADVISOR"] - 1]] != null) {
-                            returndata[num][returndata[num].length] = alladv[classdata[check2][studentData["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
+                        if (alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] != null) {
+                            returndata[num][returndata[num].length] = alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )
                         } else {
                             returndata[num][returndata[num].length] = grade.trim(); //set grade as final (really cheaty method :) )
                         }

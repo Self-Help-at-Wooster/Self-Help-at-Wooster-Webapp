@@ -7,48 +7,48 @@
 function getWorkers(UJID, CIT){
 
   var UserData = retrieveUserData();
-  if(UserData[studentData["ACCESS"]-1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"]-1] <= accessLevels["CAPTAIN"] ){
+  if(UserData[STUDENT_DATA.ACCESS-1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS-1] <= ACCESS_LEVELS.CAPTAIN ){
   
-    var Workers = [[]];
-    
-    var num = 0;
+	var Workers = [[]];
+	
+	var num = 0;
 
-      var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
-      var maxclass = classlists.getLastRow();
-      var classdata = classlists.getSheetValues(2, 1,maxclass, studentData["LENGTH"]);
-      
-      var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
-      var maxadvisor = advisorlists.getLastRow();
-      var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]);
-      
-      for(var check = 0; check < classdata.length; check++){
-    
-        if(classdata[check][studentData["JOB" + CIT]-1] == UJID){
-        
-          Workers[num] = classdata[check];
-    	  //get the full advisor name and replace it
-          for(var check2 = 0; check2 < advisordata.length ; check2++){
-            if(advisordata[check2][studentData["UUID"]-1] == classdata[check][studentData["ADVISOR"]-1]){
-            	Workers[num][studentData["ADVISOR"]-1] = advisordata[check2][studentData["FIRST"]-1] + " " + advisordata[check2][studentData["LAST"]-1];
-                break;
-            }
-          }
-          num++  
-        }
-        
-      }
-    
-      if(num > 0){
-        Workers.sort(function (x, y) {return sortStudents_(x,y)} );
-        return Workers;    
-      }
-      else
-    	  return -1;
-    
-    }
+	  var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
+	  var maxclass = classlists.getLastRow();
+	  var classdata = classlists.getSheetValues(2, 1,maxclass, STUDENT_DATA["LENGTH"]);
+	  
+	  var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
+	  var maxadvisor = advisorlists.getLastRow();
+	  var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
+	  
+	  for(var check = 0; check < classdata.length; check++){
+	
+		if(classdata[check][STUDENT_DATA["JOB" + CIT]-1] == UJID){
+		
+		  Workers[num] = classdata[check];
+		  //get the full advisor name and replace it
+		  for(var check2 = 0; check2 < advisordata.length ; check2++){
+			if(advisordata[check2][STUDENT_DATA.UUID-1] == classdata[check][STUDENT_DATA["ADVISOR"]-1]){
+				Workers[num][STUDENT_DATA["ADVISOR"]-1] = advisordata[check2][STUDENT_DATA["FIRST"]-1] + " " + advisordata[check2][STUDENT_DATA["LAST"]-1];
+				break;
+			}
+		  }
+		  num++  
+		}
+		
+	  }
+	
+	  if(num > 0){
+		Workers.sort(function (x, y) {return sortStudents_(x,y)} );
+		return Workers;    
+	  }
+	  else
+		  return -1;
+	
+	}
   else{
-    writeLog("User lacks privilege: Get Workers");
-    throw new Error( "User lacks privilege");
+	writeLog("User lacks privilege: Get Workers");
+	throw new Error( "User lacks privilege");
   }
 
 }
@@ -60,13 +60,13 @@ function getWorkers(UJID, CIT){
  */
 function getJobList(Cit){
 	var jblist = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('jobdatURL')); 
-    var sheets = jblist.getSheets();
-     
-    for(var i = 0; i < sheets.length; i++){
-	     if(sheets[i].getName() == String("CIT" + Cit) )
-	    	 return sheets[i];
-    }
-    return null;
+	var sheets = jblist.getSheets();
+	 
+	for(var i = 0; i < sheets.length; i++){
+		 if(sheets[i].getName() == String("CIT" + Cit) )
+			 return sheets[i];
+	}
+	return null;
 }
 
 
@@ -77,50 +77,50 @@ function getJobList(Cit){
  * @returns Array of Jobs
  */
 function getJobs(UUID, Cit){
-    
+	
 	var UserData = retrieveUserData();
-    if(UserData[studentData["ACCESS"]-1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"]-1] <= accessLevels["CAPTAIN"] ){
-      
+	if(UserData[STUDENT_DATA.ACCESS-1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS-1] <= ACCESS_LEVELS.CAPTAIN ){
+	  
 	  var joblists = getJobList(Cit);
-      
-      var num = 0; 
-      if(joblists){
-      
-        var maxjob = joblists.getLastRow(); 
-        var jobdata = joblists.getSheetValues(2, jobData["UJID"], maxjob, jobData["LENGTH"]);
-         
-        var ReturnData = [[]];
-        
-        for(var check = 0; check < jobdata.length ; check++){
-          
-          //all captain, proctor, and prefect values
-          var positiondata = jobdata[check].slice(jobData["C1"]-1, jobData["P2"]); //noninclusive upper bound
+	  
+	  var num = 0; 
+	  if(joblists){
+	  
+		var maxjob = joblists.getLastRow(); 
+		var jobdata = joblists.getSheetValues(2, JOB_DATA["UJID"], maxjob, JOB_DATA["LENGTH"]);
+		 
+		var ReturnData = [[]];
+		
+		for(var check = 0; check < jobdata.length ; check++){
+		  
+		  //all captain, proctor, and prefect values
+		  var positiondata = jobdata[check].slice(JOB_DATA.C1-1, JOB_DATA["P2"]); //noninclusive upper bound
 
-            if(positiondata.indexOf(UUID) >= 0  || UserData[studentData["ACCESS"]-1] == accessLevels["ADMIN"]){
-            	ReturnData[num] = jobdata[check];
-            	num++;
-            }
-            
-        }
-      
-      }
-      
-      if(num > 0){
-    	ReturnData.sort(
-    		function(x, y) {
-    			return x[jobData["NAME"]-1].localeCompare(y[jobData["NAME"]-1]);
+			if(positiondata.indexOf(UUID) >= 0  || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.ADMIN){
+				ReturnData[num] = jobdata[check];
+				num++;
 			}
-        );
-      return ReturnData;
-      }
-      else
-    	  return -1;
-    }
+			
+		}
+	  
+	  }
+	  
+	  if(num > 0){
+		ReturnData.sort(
+			function(x, y) {
+				return x[JOB_DATA.NAME-1].localeCompare(y[JOB_DATA.NAME-1]);
+			}
+		);
+	  return ReturnData;
+	  }
+	  else
+		  return -1;
+	}
   else{
-    writeLog("User lacks privilege: Get Jobs");
-    throw new Error( "User lacks privilege");
+	writeLog("User lacks privilege: Get Jobs");
+	throw new Error( "User lacks privilege");
   }    
-    
+	
 }
 
 /**
@@ -129,44 +129,44 @@ function getJobs(UUID, Cit){
  * @returns Array of Jobs
  */
 function getAllJobs(Cit){
-    
+	
 	var UserData = retrieveUserData();
-    if(UserData[studentData["ACCESS"]-1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"]-1] <= accessLevels["PREFECT"] ){
-      
+	if(UserData[STUDENT_DATA.ACCESS-1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS-1] <= ACCESS_LEVELS.PREFECT ){
+	  
 	  var joblists = getJobList(Cit);
-      
-      var num = 0; 
-      if(joblists){
-      
-        var maxjob = joblists.getLastRow(); 
-        
-        var jobdata = joblists.getSheetValues(2, jobData["UJID"], maxjob, jobData["LENGTH"]);
-         
-        var ReturnData = [[]];
-        
-        for(var check = 0; check < jobdata.length ; check++){
-        	ReturnData[num] = jobdata[check];
-            num++;
-        }
-      
-      }
-      
-      if(num > 0){
-    	  ReturnData.sort(
-            function(x, y) {
-              return x[jobData["NAME"]-1].localeCompare(y[jobData["NAME"]-1]);
-            }
-          );
-    	  return ReturnData;
-      }
-      else
-    	  return -1;
-    }
+	  
+	  var num = 0; 
+	  if(joblists){
+	  
+		var maxjob = joblists.getLastRow(); 
+		
+		var jobdata = joblists.getSheetValues(2, JOB_DATA["UJID"], maxjob, JOB_DATA["LENGTH"]);
+		 
+		var ReturnData = [[]];
+		
+		for(var check = 0; check < jobdata.length ; check++){
+			ReturnData[num] = jobdata[check];
+			num++;
+		}
+	  
+	  }
+	  
+	  if(num > 0){
+		  ReturnData.sort(
+			function(x, y) {
+			  return x[JOB_DATA.NAME-1].localeCompare(y[JOB_DATA.NAME-1]);
+			}
+		  );
+		  return ReturnData;
+	  }
+	  else
+		  return -1;
+	}
   else{
-    writeLog("User lacks privilege: Get All Jobs");
-    throw new Error( "User lacks privilege");
+	writeLog("User lacks privilege: Get All Jobs");
+	throw new Error( "User lacks privilege");
   }    
-    
+	
 }
 
 /**
@@ -180,80 +180,80 @@ function getAllJobs(Cit){
 function getJobData(UJID, TranslateCaptNames, UUID, Cit) {
 
 	var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["STUDENT"]) {
-    	
-    	var joblists = getJobList(Cit);
+	if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.STUDENT) {
+		
+		var joblists = getJobList(Cit);
 
-        var returndata = [];
+		var returndata = [];
 
-        if (joblists) {
+		if (joblists) {
 
-            var maxjob = joblists.getLastRow();
+			var maxjob = joblists.getLastRow();
 
-            var jobdata = joblists.getSheetValues(2, jobData["UJID"], maxjob, jobData["LENGTH"]);
+			var jobdata = joblists.getSheetValues(2, JOB_DATA["UJID"], maxjob, JOB_DATA["LENGTH"]);
 
-            for (var check = 0; check < jobdata.length; check++) {
+			for (var check = 0; check < jobdata.length; check++) {
 
-                if (jobdata[check][jobData["UJID"]-1] == UJID) {
+				if (jobdata[check][JOB_DATA["UJID"]-1] == UJID) {
 
-                    returndata = jobdata[check];
+					returndata = jobdata[check];
 
-                    //if you are the captain, your slip writer is either p1 (proctor) or p2 (prefect)
-                    if (UUID) {
-                        if (returndata[jobData["P1"] - 1] != "" && (UUID == parseInt(returndata[jobData["C1"] - 1]) || UUID == parseInt(returndata[jobData["C2"] - 1]))) {
-                            returndata[jobData["C1"] - 1] = returndata[jobData["P1"] - 1];
-                            returndata[jobData["C2"] - 1] = "";
-                        } else if ((returndata[jobData["P1"] - 1] == "" && (UUID == parseInt(returndata[jobData["C1"] - 1]) || UUID == parseInt(returndata[jobData["C2"] - 1]))) || parseInt(UUID) == parseInt(returndata[jobData["P1"] - 1])) {
-                            returndata[jobData["C1"] - 1] = returndata[jobData["P2"] - 1];
-                            returndata[jobData["C2"] - 1] = "";
-                        }
-                    }
+					//if you are the captain, your slip writer is either p1 (proctor) or p2 (prefect)
+					if (UUID) {
+						if (returndata[JOB_DATA["P1"] - 1] != "" && (UUID == parseInt(returndata[JOB_DATA.C1 - 1]) || UUID == parseInt(returndata[JOB_DATA.C2 - 1]))) {
+							returndata[JOB_DATA.C1 - 1] = returndata[JOB_DATA["P1"] - 1];
+							returndata[JOB_DATA.C2 - 1] = "";
+						} else if ((returndata[JOB_DATA["P1"] - 1] == "" && (UUID == parseInt(returndata[JOB_DATA.C1 - 1]) || UUID == parseInt(returndata[JOB_DATA.C2 - 1]))) || parseInt(UUID) == parseInt(returndata[JOB_DATA["P1"] - 1])) {
+							returndata[JOB_DATA.C1 - 1] = returndata[JOB_DATA["P2"] - 1];
+							returndata[JOB_DATA.C2 - 1] = "";
+						}
+					}
 
 
-                    if (TranslateCaptNames == true) {//TranslateCaptNames captain names
+					if (TranslateCaptNames == true) {//TranslateCaptNames captain names
 
-                        if (returndata[jobData["C1"] - 1] || returndata[jobData["C2"] - 1] ) {
+						if (returndata[JOB_DATA.C1 - 1] || returndata[JOB_DATA.C2 - 1] ) {
 
-                            var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
-                            var maxclass = classlists.getLastRow();
-                            var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+							var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
+							var maxclass = classlists.getLastRow();
+							var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
-                            for (var check2 = 0; check2 < classdata.length; check2++) {
-                                if (classdata[check2][studentData["UUID"] - 1] == returndata[jobData["C1"] - 1] && returndata[jobData["C1"] - 1]) {
-                                    var nick1 = "";
-                                    if (classdata[check2][studentData["NICKNAME"] - 1] != "") 
-                                        nick1 = "(" + classdata[check2][studentData["NICKNAME"] - 1] + ") ";
-                                    returndata[jobData["C1"] - 1] = classdata[check2][studentData["FIRST"] - 1] + " " + nick1 + classdata[check2][studentData["LAST"] - 1];
+							for (var check2 = 0; check2 < classdata.length; check2++) {
+								if (classdata[check2][STUDENT_DATA.UUID - 1] == returndata[JOB_DATA.C1 - 1] && returndata[JOB_DATA.C1 - 1]) {
+									var nick1 = "";
+									if (classdata[check2][STUDENT_DATA["NICKNAME"] - 1] != "") 
+										nick1 = "(" + classdata[check2][STUDENT_DATA["NICKNAME"] - 1] + ") ";
+									returndata[JOB_DATA.C1 - 1] = classdata[check2][STUDENT_DATA["FIRST"] - 1] + " " + nick1 + classdata[check2][STUDENT_DATA["LAST"] - 1];
 
-                                    if (returndata[jobData["C2"] - 1] == "")
-                                        break;
-                                } else if (classdata[check2][studentData["UUID"] - 1] == returndata[jobData["C2"] - 1] && returndata[jobData["C2"] - 1]) {
-                                    var nick2 = "";
-                                    if (classdata[check2][studentData["NICKNAME"] - 1] != "")
-                                        nick2 = "(" + classdata[check2][studentData["NICKNAME"] - 1] + ") ";
-                                    returndata[jobData["C2"] - 1] = classdata[check2][studentData["FIRST"] - 1] + " " + nick2 + classdata[check2][studentData["LAST"] - 1];
-                                }
-                            }
-                        }
+									if (returndata[JOB_DATA.C2 - 1] == "")
+										break;
+								} else if (classdata[check2][STUDENT_DATA.UUID - 1] == returndata[JOB_DATA.C2 - 1] && returndata[JOB_DATA.C2 - 1]) {
+									var nick2 = "";
+									if (classdata[check2][STUDENT_DATA["NICKNAME"] - 1] != "")
+										nick2 = "(" + classdata[check2][STUDENT_DATA["NICKNAME"] - 1] + ") ";
+									returndata[JOB_DATA.C2 - 1] = classdata[check2][STUDENT_DATA["FIRST"] - 1] + " " + nick2 + classdata[check2][STUDENT_DATA["LAST"] - 1];
+								}
+							}
+						}
 
-                    }
+					}
 
-                    break;
-                }
+					break;
+				}
 
-            }
+			}
 
-        }
+		}
 
-        if (returndata.length > 1) 
-            return returndata;
-        else
-            return -1;
+		if (returndata.length > 1) 
+			return returndata;
+		else
+			return -1;
 
-    } else {
-        writeLog("User lacks privilege: Get Job Data");
-        throw new Error("User lacks privilege");
-    }
+	} else {
+		writeLog("User lacks privilege: Get Job Data");
+		throw new Error("User lacks privilege");
+	}
 
 }
 
@@ -269,60 +269,60 @@ function getJobData(UJID, TranslateCaptNames, UUID, Cit) {
 function getJobSnapshot(jobID, Cit){	
 	var JobSnapshot = [[]];		
 	  
-    var UserData = retrieveUserData();
-	if(UserData[studentData["ACCESS"]-1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"]-1] == accessLevels["PREFECT"] || UserData[studentData["ACCESS"]-1] == accessLevels["PROCTOR"] || UserData[studentData["ACCESS"]-1] == accessLevels["CAPTAIN"]){
+	var UserData = retrieveUserData();
+	if(UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.PREFECT || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.PROCTOR || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.CAPTAIN){
 
 	  var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL')).getActiveSheet();
 	  var maxslips = curslips.getLastRow();
-	  var slipdata = curslips.getSheetValues(2, 1,maxslips, eslipData["LENGTH"]);
+	  var slipdata = curslips.getSheetValues(2, 1,maxslips, SLIP_DATA.LENGTH);
 	  
 	  var myworkers = getWorkers(jobID,Cit);
 	  
 	  var num = 0;
 	  for(var get = 0; get < myworkers.length; get++){
-	    
-	    var stud = myworkers[get];
-	    if(stud[studentData["FIRST"]-1] || stud[studentData["LAST"]-1] ){
-	    
-	      var WorkerInfo = [];		
-	      var Nick = "";		
-	      if(stud[studentData["NICKNAME"]-1])
-	        Nick = "(" + stud[studentData["NICKNAME"]-1] + ") ";		
-	      
-	      WorkerInfo[0] = stud[studentData["FIRST"]-1] + " ";
-	      WorkerInfo[1] = Nick;
-	      WorkerInfo[2] = stud[studentData["LAST"]-1];	
-	      WorkerInfo[3] = stud[studentData["GRADE"]-1];
-	      WorkerInfo[4] = stud[studentData["ADVISOR"]-1];
-	      
-	      var jr = "No";	
-	      for(var check = 0; check < slipdata.length ; check++){
-	         if(stud[studentData["UUID"]-1] == slipdata[check][eslipData["UUID"]-1]){
-	            if(slipdata[check][eslipData["SLIPTYPE"]-1] == 3 && Cit == slipdata[check][eslipData["CIT"]-1]){
-	              jr = "Yes";
-	              break;
-	            }
-	         }
-	      }	
-	      WorkerInfo[5] = jr;
-	      WorkerInfo[6] = stud[studentData["UUID"]-1];		
-	      
-	      JobSnapshot[num] = WorkerInfo;		
-	      num++;	
-	    }
+		
+		var stud = myworkers[get];
+		if(stud[STUDENT_DATA["FIRST"]-1] || stud[STUDENT_DATA["LAST"]-1] ){
+		
+		  var WorkerInfo = [];		
+		  var Nick = "";		
+		  if(stud[STUDENT_DATA["NICKNAME"]-1])
+			Nick = "(" + stud[STUDENT_DATA["NICKNAME"]-1] + ") ";		
+		  
+		  WorkerInfo[0] = stud[STUDENT_DATA["FIRST"]-1] + " ";
+		  WorkerInfo[1] = Nick;
+		  WorkerInfo[2] = stud[STUDENT_DATA["LAST"]-1];	
+		  WorkerInfo[3] = stud[STUDENT_DATA["GRADE"]-1];
+		  WorkerInfo[4] = stud[STUDENT_DATA["ADVISOR"]-1];
+		  
+		  var jr = "No";	
+		  for(var check = 0; check < slipdata.length ; check++){
+			 if(stud[STUDENT_DATA.UUID-1] == slipdata[check][SLIP_DATA.UUID-1]){
+				if(slipdata[check][SLIP_DATA.SLIPTYPE-1] == 3 && Cit == slipdata[check][SLIP_DATA.CIT-1]){
+				  jr = "Yes";
+				  break;
+				}
+			 }
+		  }	
+		  WorkerInfo[5] = jr;
+		  WorkerInfo[6] = stud[STUDENT_DATA.UUID-1];		
+		  
+		  JobSnapshot[num] = WorkerInfo;		
+		  num++;	
+		}
 	  }
 	  
 	  JobSnapshot.sort(
-          function(x, y)
-          {
-            if(x[3] < y[3])
-            	return 1; 
-            else if(x[3] > y[3])
-            	return -1;
-            return x[0].localeCompare(y[0]);    
-          }
-       );
-      return JobSnapshot;
+		  function(x, y)
+		  {
+			if(x[3] < y[3])
+				return 1; 
+			else if(x[3] > y[3])
+				return -1;
+			return x[0].localeCompare(y[0]);    
+		  }
+	   );
+	  return JobSnapshot;
 	}
 	else{
 		writeLog("User lacks privilege: Job Snapshot");

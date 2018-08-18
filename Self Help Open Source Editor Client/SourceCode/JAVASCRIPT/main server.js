@@ -1,15 +1,15 @@
 //Dictionaries for Column Values.
-var accessLevels = Object.freeze({ADMIN: 1, DEAN: 2, FACULTY: 3, PREFECT: 4, PROCTOR: 5, CAPTAIN: 6, STUDENT: 7});
-var studentData = Object.freeze({UUID: 1, EMAIL: 2, ACCESS: 3, GRADE: 4, LAST: 5, FIRST : 6, NICKNAME: 7, ADVISOR: 8, 
+var ACCESS_LEVELS = Object.freeze({ADMIN: 1, DEAN: 2, FACULTY: 3, PREFECT: 4, PROCTOR: 5, CAPTAIN: 6, STUDENT: 7});
+var STUDENT_DATA = Object.freeze({UUID: 1, EMAIL: 2, ACCESS: 3, GRADE: 4, LAST: 5, FIRST : 6, NICKNAME: 7, ADVISOR: 8, 
 JOB1: 9, JOB2: 10, JOB3: 11, JOB4: 12, JOB5: 13, JOB6: 14, FALL: 15, WINTER: 16, SPRING: 17, LENGTH : 17});
-//advisorData = studentData until First (where it ends)
-var eslipData = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
-var jobData = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
-var numtoSlip = ["","Good Slip", "Bad Slip", "Job Rec"];
+//advisorData = STUDENT_DATA until First (where it ends)
+var SLIP_DATA = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
+var JOB_DATA = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
+var NUM_TO_SLIP = ["","Good Slip", "Bad Slip", "Job Rec"];
 var setupData = Object.freeze({CURCIT: 1, C1: 2, C2: 3, C3: 4, C4: 5, C5: 6, C6: 7, CEND: 8, FALL: 9, WINTER: 10, SPRING: 11,
 SOTWURL: 12, SOTWTXT: 13, CLASSLIST: 14, FACLIST: 15, JOBDAT: 16, ACTURL: 17, ESLIPDAT: 18, LOGURL: 19, EXECURL: 20, MAILGROUP: 21, REGISTER: 22, REGSPREAD: 23, LENGTH: 23});
-var actData = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
-var numtoAct = ["","Sport","Art Intensive","Monday Art","Independent Activity"];
+var ACTIVITY_DATA = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
+var NUM_TO_ACTIVITY = ["","Sport","Art Intensive","Monday Art","Independent Activity"];
 
 /**
  * HTML GET Method - mandated for Execution.
@@ -47,12 +47,12 @@ function destroyDuplicateSlips() {
 
     var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL')).getActiveSheet();
     var maxslips = curslips.getLastRow();
-    var slipdata = curslips.getSheetValues(2, 1, maxslips, eslipData["LENGTH"]);
+    var slipdata = curslips.getSheetValues(2, 1, maxslips, SLIP_DATA.LENGTH);
 
     for (var check = slipdata.length - 1; check >= 1; check--) {
-        if (slipdata[check][eslipData["UUID"] - 1] === slipdata[check - 1][eslipData["UUID"] - 1] && //same uuid
-            slipdata[check][eslipData["FROM"] - 1] === slipdata[check - 1][eslipData["FROM"] - 1] && //from same person
-            slipdata[check][eslipData["TEXT"] - 1] === slipdata[check - 1][eslipData["TEXT"] - 1] //same text
+        if (slipdata[check][SLIP_DATA.UUID - 1] === slipdata[check - 1][SLIP_DATA.UUID - 1] && //same uuid
+            slipdata[check][SLIP_DATA.FROM - 1] === slipdata[check - 1][SLIP_DATA.FROM - 1] && //from same person
+            slipdata[check][SLIP_DATA["TEXT"] - 1] === slipdata[check - 1][SLIP_DATA["TEXT"] - 1] //same text
         ) {
             //Logger.log(check);
             curslips.deleteRow(check + 1);
@@ -146,9 +146,9 @@ function getPermission() {
     if (email !== -1) {
         var activeUser;
         if (email.toLowerCase().indexOf("woosterschool.org") > 0) //look for faculty if woosterschool.org is domain
-            activeUser = getFacultyData(studentData["EMAIL"], email);
+            activeUser = getFacultyData(STUDENT_DATA["EMAIL"], email);
         else
-            activeUser = getColumnData(studentData["EMAIL"], email, false);
+            activeUser = getColumnData(STUDENT_DATA["EMAIL"], email, false);
 
         if (activeUser !== -1) {
             //only one instance of each email, so use the first index
@@ -187,7 +187,7 @@ function getColumnData(columnNum, value, translateadvisor) {
     var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL'));
     var cursheet = classlists.getActiveSheet();
 
-    if (columnNum != getColumnDataLastCol) {
+    if (columnNum !== getColumnDataLastCol) {
         var max = cursheet.getLastRow() - 1;
         getColumnDataLastData = cursheet.getSheetValues(2, columnNum, max, 1);
         getColumnDataLastCol = columnNum;
@@ -200,8 +200,8 @@ function getColumnData(columnNum, value, translateadvisor) {
     var num = 0;
     for (var check = 0; check < getColumnDataLastData.length; check++) {
 
-        if (Object.is(getColumnDataLastData[check], value) ){ //if the cell has the sought value
-            ColumnData[num] = cursheet.getSheetValues(check + 2, 1, 1, studentData["LENGTH"])[0];
+        if (getColumnDataLastData[check] == value ){ //if the cell has the sought value
+            ColumnData[num] = cursheet.getSheetValues(check + 2, 1, 1, STUDENT_DATA["LENGTH"])[0];
             num++;
         }
     }
@@ -216,7 +216,7 @@ function getFacultyData(column, value) {
 
     var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
     var maxadvisor = advisorlists.getLastRow() - 1;
-    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]);
+    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
 
     var userdata = [
         []
@@ -243,32 +243,32 @@ function getFacultyData(column, value) {
  * @returns {number} Integer Comparison
  */
 function sortStudents_(x, y) {
-    if (x[studentData["GRADE"] - 1] < y[studentData["GRADE"] - 1])
+    if (x[STUDENT_DATA["GRADE"] - 1] < y[STUDENT_DATA["GRADE"] - 1])
         return 1;
-    if (x[studentData["GRADE"] - 1] > y[studentData["GRADE"] - 1])
+    if (x[STUDENT_DATA["GRADE"] - 1] > y[STUDENT_DATA["GRADE"] - 1])
         return -1;
      
-    return x[studentData["LAST"] - 1].localeCompare(y[studentData["LAST"] - 1]);
+    return x[STUDENT_DATA["LAST"] - 1].localeCompare(y[STUDENT_DATA["LAST"] - 1]);
 }
 
 //gets every single student in the spreadsheet and convert advisor name
 function getAllStudents(convertadv) {
 
     var UserData = retrieveUserData();
-    if (UserData[studentData["ACCESS"] - 1] >= accessLevels["ADMIN"] && UserData[studentData["ACCESS"] - 1] <= accessLevels["CAPTAIN"]) {
+    if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.CAPTAIN) {
         var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
         var maxclass = classlists.getLastRow();
-        var classdata = classlists.getSheetValues(2, 1, maxclass, studentData["LENGTH"]);
+        var classdata = classlists.getSheetValues(2, 1, maxclass, STUDENT_DATA["LENGTH"]);
 
         var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
         var maxadvisor = advisorlists.getLastRow();
-        var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, studentData["FIRST"]);
+        var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
 
         var alladv = {}; //associative object
         var num = 0;
         for (var setadv = 0; setadv < advisordata.length; setadv++) {
-            if (advisordata[setadv][studentData["FIRST"] - 1] !== "" || advisordata[setadv][studentData["LAST"] - 1] !== "") {
-                alladv[advisordata[setadv][studentData["UUID"] - 1]] = advisordata[setadv][studentData["FIRST"] - 1] + " " + advisordata[setadv][studentData["LAST"] - 1];
+            if (advisordata[setadv][STUDENT_DATA["FIRST"] - 1] !== "" || advisordata[setadv][STUDENT_DATA["LAST"] - 1] !== "") {
+                alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA["FIRST"] - 1] + " " + advisordata[setadv][STUDENT_DATA["LAST"] - 1];
                 num++;
             }
         }
@@ -281,13 +281,13 @@ function getAllStudents(convertadv) {
 
         for (var set = 0; set < classdata.length; set++) {
             //ensure that this is actually a person
-            if (classdata[set][studentData["FIRST"] - 1] !== "" || classdata[set][studentData["LAST"] - 1] !== "") {
+            if (classdata[set][STUDENT_DATA["FIRST"] - 1] !== "" || classdata[set][STUDENT_DATA["LAST"] - 1] !== "") {
                 //because the row is returned as a multidimensional array, it must be taken at the 0 index (for only the row)...
                 userdata[num] = classdata[set];
 
                 //load corresponding advisor name
-                if (convertadv === true && alladv[userdata[num][studentData["ADVISOR"] - 1]] !== null) {
-                    userdata[num][studentData["ADVISOR"] - 1] = alladv[userdata[num][studentData["ADVISOR"] - 1]];
+                if (convertadv === true && alladv[userdata[num][STUDENT_DATA["ADVISOR"] - 1]] !== null) {
+                    userdata[num][STUDENT_DATA["ADVISOR"] - 1] = alladv[userdata[num][STUDENT_DATA["ADVISOR"] - 1]];
                 }
 
                 num++;

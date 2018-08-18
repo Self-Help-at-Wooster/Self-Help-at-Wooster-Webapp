@@ -54,26 +54,47 @@ namespace SelfHelpOpenSourceEditor
             }
         }
 
+        public static void SetHTMLScriptParse()
+        {
+            AppsScriptsSourceCodeManager.ParseHTMLScriptTagToJS = ParseScriptTag;
+        }
+
+
+        private static readonly object lockObj = new object();
+        private static TimeSpan autoUploadTimeout = TimeSpan.FromMilliseconds(500);
+
         private static void fw_Changed(object sender, System.IO.FileSystemEventArgs e)
         {
-            if (!busyAutoUploading && AutoSync)
+            if (System.Threading.Monitor.TryEnter(lockObj, autoUploadTimeout))
             {
-                watchers.ForEach(fw => fw.EnableRaisingEvents = false);
-
-                if (!busyAutoUploading)
+                try
                 {
-                    Debug.WriteLine("Auto Uploading...");
+                    if (!busyAutoUploading && AutoSync)
+                    {
+                        watchers.ForEach(fw => fw.EnableRaisingEvents = false);
 
-                    busyAutoUploading = true;
-                    if (UploadFiles())
-                        PrintCentered("Auto Upload Complete!");
-                    else
-                        PrintCentered("Auto Upload Failed. Try again.");
-                    busyAutoUploading = false;
-                    watchers.ForEach(fw => fw.EnableRaisingEvents = true);
+                        if (!busyAutoUploading)
+                        {
+                            Debug.WriteLine("Auto Uploading...");
+
+                            busyAutoUploading = true;
+                            if (UploadFiles())
+                                PrintCentered("Auto Upload Complete!");
+                            else
+                                PrintCentered("Auto Upload Failed. Try again.");
+                            busyAutoUploading = false;
+                            watchers.ForEach(fw => fw.EnableRaisingEvents = true);
+                        }
+
+                    }
                 }
-
+                finally
+                {
+                    // Ensure that the lock is released.
+                    System.Threading.Monitor.Exit(lockObj);
+                }
             }
+
         }
 
         /// <summary>

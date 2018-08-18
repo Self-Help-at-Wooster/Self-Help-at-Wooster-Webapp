@@ -17,7 +17,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="SelfHelpAtWoosterManagerLibrary" Version="1.0.3" />
+    <PackageReference Include="Google.Apis.Script.v1" Version="1.35.1.1314" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="SelfHelpManager">
+      <HintPath>..\..\Self Help Manager\SelfHelpManager\bin\Debug\netcoreapp2.1\SelfHelpManager.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

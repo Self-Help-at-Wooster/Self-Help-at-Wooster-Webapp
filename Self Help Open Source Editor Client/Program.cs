@@ -44,7 +44,26 @@ namespace SelfHelpOpenSourceEditor
         /// <summary>
         /// This feature is dangerous. Only use it if you really know what you're doing!
         /// </summary>
-        public static readonly bool AutoSync = true;
+        public static bool AutoSync = true;
+
+        /// <summary>
+        /// This feature allows extracting a single <script> tag from your .html files into their own Javascript files.
+        /// If you have multiple script tags in a single HTML file, you should consider breaking apart its functionality or merging the two.
+        /// </summary>
+        private static bool parseScriptTag = true;
+
+        public static bool ParseScriptTag
+        {
+            get
+            {
+                return parseScriptTag;
+            }
+            set
+            {
+                parseScriptTag = value;
+                LibraryController.SetHTMLScriptParse();
+            }
+        }
 
         private static void printDefaultInfo()
         {
@@ -73,6 +92,7 @@ namespace SelfHelpOpenSourceEditor
 
             while (true)
             {
+                AutoSync = true;
                 switch (getMethod())
                 {
                     case METHODS.INIT:
@@ -88,14 +108,17 @@ namespace SelfHelpOpenSourceEditor
                         getInput(LibraryController.CreateGASProject);
                         break;
                     case METHODS.DOWNLOAD_SELF_HELP:
+                        AutoSync = false;
                         getConfirmInput(LibraryController.DownloadSelfHelpSourceCode,
                         "This will download the source code of the Self-Help program (not your project).", "This action will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
                     case METHODS.DOWNLOAD:
+                        AutoSync = false;
                         getConfirmInput(LibraryController.DownloadFiles,
                         "This will download your project's source code, which will overwrite files of the same name in your solution.", "Are you sure?");
                         break;
                     case METHODS.DOWNLOAD_VERSION:
+                        AutoSync = false;
                         if (LibraryController.ListProjectVersions())
                         {
                             PrintCentered("Enter a version number:");
@@ -115,16 +138,19 @@ namespace SelfHelpOpenSourceEditor
                         }
                         break;
                     case METHODS.UPLOAD:
+                        AutoSync = false;
                         getConfirmInput(() => LibraryController.UploadFiles(),
                         "This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?");
                         break;
                     case METHODS.UPLOAD_AND_VERSION:
+                        AutoSync = false;
                         if (getConfirmInput("This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?"))
                         {
                             goto case METHODS.CREATE_VERSION;
                         }
                         break;
                     case METHODS.CREATE_FILE:
+                        AutoSync = false;
                         PrintCentered("1 to create a server-side Javascript file (.js)");
                         PrintCentered("2 to create a html file (.html)");
                         version = getIntInput();
@@ -151,6 +177,7 @@ namespace SelfHelpOpenSourceEditor
                         }
                         break;
                     case METHODS.CREATE_MANIFEST:
+                        AutoSync = false;
                         LibraryController.CreateManifestFile();
                         break;
                     case METHODS.CREATE_VERSION:
@@ -158,12 +185,13 @@ namespace SelfHelpOpenSourceEditor
                         getInput((s) => LibraryController.CreateNewVersion(s));
                         break;
                     case METHODS.CREATE_VERSION_UPDATE_DEPLOYMENT:
-                        getInput();
+                        PrintCentered("Enter a non-empty description for this version:");
+                        getInput((s) => LibraryController.CreateNewVersionAndUpdateDeployment(s));
                         break;
-                    case METHODS.DEPLOY_TEST:
+                    case METHODS.DEPLOY_TEST_DEP:
                         LibraryController.DeployForTesting();
                         break;
-                    case METHODS.SYNC_DEPLOY_TEST:
+                    case METHODS.SYNC_DEPLOY_TEST_DEP:
                         LibraryController.SyncAndDeployForTesting();
                         break;
                     case METHODS.SYNC_DEPLOY_LIVE:
@@ -179,7 +207,7 @@ namespace SelfHelpOpenSourceEditor
                             PrintCentered("Please enter a version for your web-app to use.");
                             version = getIntInput();
                             if (version != null)
-                                LibraryController.DownloadFilesVersion(version.Value);
+                                LibraryController.UpdateDeploymentVersionNumber(version.Value);
                         }
                         break;
                     case METHODS.CLEAR_CONSOLE:

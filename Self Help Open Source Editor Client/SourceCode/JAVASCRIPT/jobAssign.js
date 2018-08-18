@@ -10,23 +10,23 @@ function testURL(spreadlink){
 function setJobAssignments(students, jobs, citper, school, spreadlink){
 
 	var UserData = retrieveUserData();
-    if(UserData[studentData["ACCESS"]-1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"]-1] == accessLevels["DEAN"] || UserData[studentData["ACCESS"]-1] == accessLevels["PREFECT"] ){
+    if(UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.DEAN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.PREFECT ){
     
     try{
       var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
       var maxclass = classlists.getLastRow();
-      var classdata = classlists.getSheetValues(2, 1,maxclass, studentData["LENGTH"]);
+      var classdata = classlists.getSheetValues(2, 1,maxclass, STUDENT_DATA["LENGTH"]);
        
       for(var i = 0; i < classdata.length; i++){
         for(var j = 0; j < students.length; j++){
-          if(students[j][studentData["UUID"]-1] == classdata[i][studentData["UUID"]-1]){
+          if(students[j][STUDENT_DATA.UUID-1] == classdata[i][STUDENT_DATA.UUID-1]){
             //check if job assignment is different
-            if(classdata[i][[studentData["JOB" + citper]-1]] != students[j][studentData["JOB" + citper]-1] ){
-              classlists.getRange(2 + i, studentData["JOB" + citper]).setValue(students[j][studentData["JOB" + citper]-1]);
+            if(classdata[i][[STUDENT_DATA["JOB" + citper]-1]] != students[j][STUDENT_DATA["JOB" + citper]-1] ){
+              classlists.getRange(2 + i, STUDENT_DATA["JOB" + citper]).setValue(students[j][STUDENT_DATA["JOB" + citper]-1]);
             }
             //check if access level has been changes
-            if(classdata[i][[studentData["ACCESS"]-1]] != students[j][studentData["ACCESS"]-1] ){
-              classlists.getRange(2 + i, studentData["ACCESS"]).setValue(students[j][studentData["ACCESS"]-1]);
+            if(classdata[i][[STUDENT_DATA.ACCESS-1]] != students[j][STUDENT_DATA.ACCESS-1] ){
+              classlists.getRange(2 + i, STUDENT_DATA.ACCESS).setValue(students[j][STUDENT_DATA.ACCESS-1]);
             }
             break;
           }
@@ -49,14 +49,14 @@ function setJobAssignments(students, jobs, citper, school, spreadlink){
       
       if(joblists != null){
         var maxjob = joblists.getLastRow();
-        var jobsData = joblists.getSheetValues(2, 1,maxjob, jobData["LENGTH"]);
+        var jobsData = joblists.getSheetValues(2, 1,maxjob, JOB_DATA["LENGTH"]);
          
         for(var i = 0; i < jobsData.length; i++){
           for(var j = 0; j < jobs.length; j++){
-            if(jobs[j][jobData["UJID"]-1] == jobsData[i][jobData["UJID"]-1]){
+            if(jobs[j][JOB_DATA["UJID"]-1] == jobsData[i][JOB_DATA["UJID"]-1]){
               
               //C1 and C2
-              joblists.getRange(2 + i, jobData["C1"], 1, 2).setValues([[jobs[j][jobData["C1"]-1], jobs[j][jobData["C2"]-1]]]);
+              joblists.getRange(2 + i, JOB_DATA.C1, 1, 2).setValues([[jobs[j][JOB_DATA.C1-1], jobs[j][JOB_DATA.C2-1]]]);
               
               break;
             }
@@ -88,7 +88,7 @@ function setJobAssignments(students, jobs, citper, school, spreadlink){
 function jobMake(citper, school, spreadlink){
 
 	var UserData = retrieveUserData();
-     if(UserData[studentData["ACCESS"]-1] == accessLevels["ADMIN"] || UserData[studentData["ACCESS"]-1] == accessLevels["DEAN"] || UserData[studentData["ACCESS"]-1] == accessLevels["PREFECT"] ){
+     if(UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.DEAN || UserData[STUDENT_DATA.ACCESS-1] == ACCESS_LEVELS.PREFECT ){
 
        try{
           //Existing Spreadsheet for current session
@@ -141,11 +141,11 @@ function jobMake(citper, school, spreadlink){
             
               var maxjob = joblists.getLastRow(); 
               
-              var jobdata = joblists.getSheetValues(2, jobData["UJID"], maxjob, jobData["LENGTH"]);
+              var jobdata = joblists.getSheetValues(2, JOB_DATA["UJID"], maxjob, JOB_DATA["LENGTH"]);
               
                 var classlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('classlistURL')).getActiveSheet();
                 var maxclass = classlists.getLastRow();
-                var classdata = classlists.getSheetValues(2, 1,maxclass, studentData["LENGTH"]);
+                var classdata = classlists.getSheetValues(2, 1,maxclass, STUDENT_DATA["LENGTH"]);
                 
                 classdata.sort(function (x, y) {return sortStudents_(x,y)} );
               
@@ -164,30 +164,30 @@ function jobMake(citper, school, spreadlink){
               
                   for(var check = 0; check < jobdata.length ; check++){
                      
-                    if(jobdata[check][jobData["POINTER"]-1] == search){
+                    if(jobdata[check][JOB_DATA["POINTER"]-1] == search){
                       found = true;
-                      //Logger.log(jobdata[check][jobData["UJID"]-1]);
+                      //Logger.log(jobdata[check][JOB_DATA["UJID"]-1]);
                       
-                        newList.getRange(1 + down, 1 + across, 1, 1).setValues([[jobdata[check][jobData["NAME"]-1]]]);
+                        newList.getRange(1 + down, 1 + across, 1, 1).setValues([[jobdata[check][JOB_DATA.NAME-1]]]);
                         
                         var locdown = down;
                         var captains = "";
                         for(var workerpop = 0; workerpop < classdata.length ; workerpop++){
                           
-                          if( classdata[workerpop][studentData["UUID"]-1] != "" && (classdata[workerpop][studentData["UUID"]-1] == jobdata[check][jobData["C1"]-1] || classdata[workerpop][studentData["UUID"]-1] == jobdata[check][jobData["C2"]-1]) ){
-                             //newList.getRange(1 + down, 1 + across, 1, 1).setValue(newList.getRange(1 + down, 1 + across, 1, 1).getValue() + ": " + classdata[workerpop][studentData["FIRST"]-1] );
+                          if( classdata[workerpop][STUDENT_DATA.UUID-1] != "" && (classdata[workerpop][STUDENT_DATA.UUID-1] == jobdata[check][JOB_DATA.C1-1] || classdata[workerpop][STUDENT_DATA.UUID-1] == jobdata[check][JOB_DATA.C2-1]) ){
+                             //newList.getRange(1 + down, 1 + across, 1, 1).setValue(newList.getRange(1 + down, 1 + across, 1, 1).getValue() + ": " + classdata[workerpop][STUDENT_DATA["FIRST"]-1] );
                              if(captains != ""){
                              captains += " & ";
                              }
                              
-                             var nick = classdata[workerpop][studentData["NICKNAME"]-1] != "" ? " (" + classdata[workerpop][studentData["NICKNAME"]-1] + ") " : " ";
-                             captains += classdata[workerpop][studentData["FIRST"]-1] + nick + classdata[workerpop][studentData["LAST"]-1];
+                             var nick = classdata[workerpop][STUDENT_DATA["NICKNAME"]-1] != "" ? " (" + classdata[workerpop][STUDENT_DATA["NICKNAME"]-1] + ") " : " ";
+                             captains += classdata[workerpop][STUDENT_DATA["FIRST"]-1] + nick + classdata[workerpop][STUDENT_DATA["LAST"]-1];
                           }
-                          else if(classdata[workerpop][studentData["JOB" + citper]-1] == jobdata[check][jobData["UJID"]-1]){
+                          else if(classdata[workerpop][STUDENT_DATA["JOB" + citper]-1] == jobdata[check][JOB_DATA["UJID"]-1]){
                             locdown++;
                             var person = "";
-                             var nick = classdata[workerpop][studentData["NICKNAME"]-1] != "" ? " (" + classdata[workerpop][studentData["NICKNAME"]-1] + ") " : " ";
-                             person = classdata[workerpop][studentData["FIRST"]-1] + nick + classdata[workerpop][studentData["LAST"]-1] + " - " + classdata[workerpop][studentData["GRADE"]-1];
+                             var nick = classdata[workerpop][STUDENT_DATA["NICKNAME"]-1] != "" ? " (" + classdata[workerpop][STUDENT_DATA["NICKNAME"]-1] + ") " : " ";
+                             person = classdata[workerpop][STUDENT_DATA["FIRST"]-1] + nick + classdata[workerpop][STUDENT_DATA["LAST"]-1] + " - " + classdata[workerpop][STUDENT_DATA["GRADE"]-1];
                             newList.getRange(1 + locdown, 1 + across, 1, 1).setValue(person);
                           }
                           
@@ -208,22 +208,22 @@ function jobMake(citper, school, spreadlink){
                          newList.getRange(1 + down, 1, 1, 1).setFontColor("white");
                          down = locdown + 2;
                          
-                         functionOne(jobdata[check][jobData["UJID"]-1], 0);
+                         functionOne(jobdata[check][JOB_DATA["UJID"]-1], 0);
                       }
-                      else if(jobdata[check][jobData["NAME"]-1].toLowerCase().indexOf("prefect") > -1) {
+                      else if(jobdata[check][JOB_DATA.NAME-1].toLowerCase().indexOf("prefect") > -1) {
       
                         newList.getRange(1 + down, 1, 1, 1).setBackground("#ff0000");
                         newList.getRange(1 + down, 1, 1, 1).setFontColor("white");
                         down = locdown + 2;
       
-                        functionOne(jobdata[check][jobData["UJID"]-1], 1);
+                        functionOne(jobdata[check][JOB_DATA["UJID"]-1], 1);
                       }
-                      else if(jobdata[check][jobData["NAME"]-1].toLowerCase().indexOf("proctor") > -1) {
+                      else if(jobdata[check][JOB_DATA.NAME-1].toLowerCase().indexOf("proctor") > -1) {
       
                         newList.getRange(1 + down, 1 + across, 1, 1).setBackground("#ff9900");
                         down = locdown + 2;
       
-                        functionOne(jobdata[check][jobData["UJID"]-1], 2);
+                        functionOne(jobdata[check][JOB_DATA["UJID"]-1], 2);
                       }
                       else {
                         
