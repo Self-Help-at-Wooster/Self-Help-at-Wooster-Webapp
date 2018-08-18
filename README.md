@@ -35,7 +35,7 @@
 - [ Create Source Code Files ](#create-source-code-files)
 - [ Manage Deployments and Version ](#versions-and-deployments)
 
-## About
+## Usage
 
 ### Login
 
@@ -68,15 +68,13 @@ Clears all current resources from your application and destroys your access toke
 
 #### Displays the following each time you load a script
 
-#### - Script ID
-  
-#### - Project Tile ..., Created By ...
-  
-#### - Development URL
-  
-#### - Webapp URL
-  
-#### - Your Latest Project Version:
+Displayed | Details
+------------ | -------------
+Script ID | A string that identifies this script from the others.
+Project Tile, Created By | The project title (from Google Drive) and who created the project.
+Development URL | The URL that runs the current version of the code.
+Webapp URL | The URL that runs the web app deployment. It is intrinsically attached to a version.
+Latest Project Version, Current Deployment Version | The highest version your project has, and the current web app deployment version.
 
 ### Download
 
@@ -181,9 +179,7 @@ Creates a new version and attached your web-app's current deployment. This funct
 
 ### Installation
 
-#### Initial Setup
-
-### Obtain a Coffee
+### Initial Setup - Obtain a Coffee
 
 1. Downloading the [NuGet Package](https://script.google.com/a/woosterschool.org/macros/s/AKfycbxouHo31c8mhQNo6xik2iZgn-fWQ5Ik4zVfE4722wY8nfWqciNl/exec)
     * Download the package from the link above. The site is restricted to @woosternet.org and @woosterschool.org domain addresses only.
@@ -207,6 +203,9 @@ Creates a new version and attached your web-app's current deployment. This funct
     * Under Browse, you should see the package `SelfHelpAtWoosterManagerLibrary` > click on it
     * Press Install and go through the details or dialogs to accept.
     * You're Ready to Go!
+    
+### More Coffee
+
 1.
 
 ### Usage
