@@ -3,15 +3,16 @@
 
 <h1 align="center"> Self-Help at Wooster Open Source Editor Client/ Webapp </h1>
 
-### Discover how the Self-Help System at Wooster Webapp was created!
-###  Edit and Modify it to your liking using the integrated client solution in Visual Studio IDE!
+### *Discover how the Self-Help System at Wooster Webapp was created!*
 
-## Self-Help Webapp Source Code Resides in [Self Help Editor Client\SourceCode](https://github.com/Self-Help-at-Wooster/Self-Help-at-Wooster-Webapp/tree/master/Self%20Help%20Open%20Source%20Editor%20Client/SourceCode)
+###  *Edit and Modify* it to your liking using the integrated client solution in Visual Studio IDE!
+
+## Self-Help Webapp Source Code Resides in [Self Help Open Source Editor Client\SourceCode](https://github.com/Self-Help-at-Wooster/Self-Help-at-Wooster-Webapp/tree/master/Self%20Help%20Open%20Source%20Editor%20Client/SourceCode)
 
 ## First
   >[Enable the Google App Script API](https://script.google.com/home/usersettings)
   >Make sure you review the basic of Apps Web Apps(https://developers.google.com/apps-script/guides/web)
-  >In particular, note the difference between the /exec and /dev URLS!
+  >In particular, learn about the doGet(e) function and note the differences between the /exec and /dev URLS!
 
 ## Features
 - [ Uses your Google Account ](#login)
@@ -20,7 +21,6 @@
 - [ Download your Source Code ](#download)
 - [ Upload Your Changes ](#upload)
 - [ Smart File Management ](#smart-file-management)
-- [ Auto Sync ](#auto-sync)
 - [ Create Source Code Files ](#create-source-code-files)
 - [ Manage Deployments and Version ](#versions-and-deployments)
 
@@ -44,7 +44,7 @@ Clears all current resources from your application and destroys your access toke
 
 #### - Create a New App Script Project
 
-  Simply provide a name for your project.
+  Simply provide a name for your project. This action will generate a file with a doGet(e){ } method so it can deploy as a web app. If you remove this method, you will break your system's functionality.
 
 For your convenience, your Script ID will be stored and loaded automatically for future startup!
 
@@ -64,9 +64,22 @@ For your convenience, your Script ID will be stored and loaded automatically for
 
 ### Download
 
+  Downloading an App Script Project will replace all SourceCode/ files of the same name. If you want to keep your current SourceCode directory for any reason, you can back it up.
+  
+  The files are organized based upon their file types. The directory /SourceCode contains 3 subdirectories:
+  
+Directory | File Type Stored
+------------ | -------------
+SourceCode/HTML | .html
+SourceCode/JAVASCRIPT | .js
+SourceCode/JSON | .json
+  
+  The directories can mix their file types if desired. For example, enabling `<script>` refactoring places .html files next to their derivative .js files in the HTML folder.
+
 #### - Download the latest copy of your Source Code from your Script
 
-  Download the project's entirel current respository.
+  Download the project's entire current respository.
+  
 #### - Download any versioned copy of your Source Code
 
   Useful for reverting, debugging, or retrieving your project history from a version.
@@ -89,13 +102,15 @@ For your convenience, your Script ID will be stored and loaded automatically for
 
 ### Smart File Management
 
-#### - AutoSync (Optional)
+#### - AutoSync 
+ (Optional)
 
   Detects when you make a change to your source code folders and automatically uploads your project.
   A change can be user initiated, impelled by the application, or done by the IDE (like find and replace)
   Has about a 500ms delay to prevent any issues.
   
-#### - HTML File Script Tag Refactoring (Optional)
+#### - HTML File Script Tag Refactoring 
+  (Optional)
   
   For any HTML file, this feature detects a single <script> tag and moves the source code to a corresponding javascript file!
   It creates a placeholder that lets you know where your script was, and has an attribute with the new file's path.
@@ -111,36 +126,37 @@ Creates a new HTML, Javascript, or JSON file with given name.
 
 ### Versions and Deployments
 
-#### - Automatic Webapp deployment and retrieval
+#### - Automatic Webapp Deployment and Retrieval
     
-    The library handles accessing your current Webapp and Head Deployments.
+    The library handles accessing your current Web app and Head Deployments.
     > The Head is used to get the development URL
+    
     > The Webapp Deployment is how you can deploy the project, if desired.
       The library will always use the latest webapp deployment. 
       
     > If this behavior is undesired, delete all unnecessary deployments through
-      Google App Script project-->Publish--Deploy from Manifest-->Delete (only if there's more than one webapp).
+      Google App Script project-->Publish--Deploy from Manifest-->Delete 
+      *(only if there's more than one webapp)*.
       
 #### - List your Version History      
     
-    Lists all saved versions of your project. This function gets ran automatically when certain other functions require you to provide a version number. If you want to delete unused versions, you may at Google App Script project-->File-->Manage Versions
+Lists all saved versions of your project. This function gets ran automatically when certain other functions require you to provide a version number. If you want to delete unused versions, you may at Google App Script project-->File-->Manage Versions
     
 #### - Create New Version
 
-  Creates a new version attached to the current copy of your source code on Google App Script. You can provide whatever name you want, but these are best used as incremental "commits," and not big feature backups. You can always download your project from a [specific version](#Download-any-versioned-copy-of-your-Source-Code) if needed, so the best philosophy here is early-and-oft!
+Creates a new version attached to the current copy of your source code on Google App Script. You can provide whatever name you want, but these are best used as incremental "commits," and not big feature backups. You can always download your project from a [specific version](#Download-any-versioned-copy-of-your-Source-Code) if needed, so the best philosophy here is early-and-oft!
 
 #### - Create New Version and Update Deployment
 
-  Creates a new version and attached your web-app's current deployment. This function first creates a new version, as above, then proceeds to update the deployment that your users see. Use this once a feature is completed/ tested and you want it deployed. 
-  
-#### - Change Deployment's Version Number
-
-  Changes your web-app's current version number. Use this in the event that a newer version has affected the live functionality of your application.
+Creates a new version and attached your web-app's current deployment. This function first creates a new version, as above, then proceeds to update the deployment that your users see. Use this once a feature is completed/ tested and you want it deployed. 
 
 #### - Sync and Deploy for Live Version
 
-  This is a chained-call that first [uploads](#Upload) your source code, then creates a new version and updates the deployment, as specified above.
+  This is a chained-call that first [ uploads ](#upload) your source code, then creates a new version and updates the deployment, as specified above.
 
+#### - Change Deployment's Version Number
+
+  Changes your web-app's current version number. Use this in the event that a newer version has affected the live functionality of your application.
 
 
 
