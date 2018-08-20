@@ -1,5 +1,5 @@
 
-<p align="center"><img src="https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png" height="125" width="125"></p>
+<p align="center"><img src="https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png" height="150" width="150"></p>
 
 <h1 align="center"> Self-Help at Wooster Open Source Editor Client/ Webapp </h1>
 
@@ -15,10 +15,14 @@
 
 * #### This Project was founded by [Ryan Toner](https://github.com/RyanTonerCode).
 
+## Interested in the client and library?
+
+   **Another generic version of this project will be availible soon, without all the bells and whistles needed for Wooster School!**
+
 ## First
   > 1. [Enable the Google App Script API](https://script.google.com/home/usersettings)
   > 1. Make sure you review the basic of [Web Apps](https://developers.google.com/apps-script/guides/web)
-  > 1. In particular, learn about the *doGet(e)* function and note the differences between the */exec* and */dev* URLS!
+  > 1. In particular, learn about the *__doGet(e)__* function and note the differences between the *__/exec__* and *__/dev__* URLS!
   
 ## Clarifying Terms
   > Your Google App Script Project is your online project from https://script.google.com/..., not your local solution.
@@ -47,7 +51,12 @@ Clears all current resources from your application and destroys your access toke
 
 ### Script Access
 
-#### - Paste any Script ID
+####  Understand
+
+  Your Google App Script projects (that you provide or create) will be automatically transferred to a shared Team Drive.
+  In this Drive, you can view and even grab source code for other projects using this client; however, only you can directly edit your     own projects! You may share editing access to other members of the Team Drive.
+
+- #### Paste any Script ID
 
   Viewing access allows you to download files, and Write access lets you upload.
   
@@ -55,7 +64,7 @@ Clears all current resources from your application and destroys your access toke
   
   Your Script ID is automatically validated to check if it's correct.
 
-#### - Create a New App Script Project
+- #### Create a New App Script Project
 
   Simply provide a name for your project. 
   
@@ -92,46 +101,54 @@ Latest Project Version, Current Deployment Version | The highest version your pr
   
   The directories can mix their file types if desired. For example, enabling `<script>` refactoring places .html files next to their derivative .js files in the HTML folder.
 
-#### - Download the latest copy of your Source Code from your Script
+- #### Download the latest copy of your Source Code from your Script
 
   Download the project's entire current respository.
   
-#### - Download any versioned copy of your Source Code
+- #### Download any versioned copy of your Source Code
 
   Useful for reverting, debugging, or retrieving your project history from a version.
   
-#### - Download the Self-Help Source Code
+- #### Download the Self-Help Source Code
 
   You can easily access the [Source Code](https://github.com/Self-Help-at-Wooster/Self-Help-at-Wooster-Webapp/tree/master/Self%20Help%20Open%20Source%20Editor%20Client/SourceCode) from GitHub, but this feature easily allows you to download it directly from your app. It always comes from the current version reflected on the Self-Help website.
 
 ### Upload
 
-#### - Upload your current changes
+- #### Upload your current changes
 
   Clears your Google App Script's current code and replaces it with your local source code.
   
-#### - Upload with  a new version
+- #### Upload with  a new version
 
   Uploads your current changes, and creates a new version.
   
-#### - Upload and Deploy for Live (#Sync-and-Deploy-for-Live-Version)
+- #### Upload and Deploy for Live (#Sync-and-Deploy-for-Live-Version)
 
 ### Smart File Management
 
-#### - AutoSync 
+- #### AutoSync 
  (Optional)
 
   Detects when you make a change to your source code folders and automatically uploads your project.
   A change can be user initiated, impelled by the application, or done by the IDE (like find and replace)
   Has about a 500ms delay to prevent any issues.
   
-#### - HTML File Script Tag Refactoring 
+- #### HTML File Script Tag Refactoring 
   (Optional)
   
   For any HTML file, this feature detects a single <script> tag and moves the source code to a corresponding javascript file!
   It creates a placeholder that lets you know where your script was, and has an attribute with the new file's path.
   This lets you edit the file using Visual Studio's features for Javascript!
   When you sync your files back, no problem, it simply ignores the generated files and substitues their code back into the HTML
+  
+- Auto Backup
+
+  Before you [download](#download) any file from your Google App Script Project, it will automatically backup all your files into a temporary backup location in your bin/debug folder. This is intended to be a temporary backup, and not a valid form of version control.
+  
+- Perilous Action Warnings
+
+  The client is tuned to make you confirm certain actions with their potential consequences displayed. Because of the pathology of Google App Script, if you do not exercise caution you can easily obliterate your work, especially from your IDE during [upload](#upload).
 
 ### Create Source Code Files
 
@@ -142,35 +159,36 @@ Creates a new HTML, Javascript, or JSON file with given name.
 
 ### Versions and Deployments
 
-#### - Automatic Webapp Deployment and Retrieval
+- #### Automatic Webapp Deployment and Retrieval
     
-    The library handles accessing your current Web app and Head Deployments.
-    > The Head is used to get the development URL
+    ##### The library handles accessing your current Web app and Head Deployments.
     
-    > The Webapp Deployment is how you can deploy the project, if desired.
-      The library will always use the latest webapp deployment. 
+    - The "Head" Version is used to get the development URL. It is immutable and created with your project.
+    
+    - The Webapp Deployment is how you can deploy the project, if desired.
+      The library will always use a personal webapp deployment it creates for you.
+      The description of this deployment is ` web app meta-version_[your email] `
       
-    > If this behavior is undesired, delete all unnecessary deployments through
-      project > Publish--Deploy from Manifest > Delete Icon
-      *(only if there's more than one webapp)*.
+    - You may delete all unnecessary or unwanted deployments through
+      ` Publish--Deploy from Manifest > Delete Icon ` on your Google App Script Project
       
-#### - List your Version History      
+- #### List your Version History      
     
 Lists all saved versions of your project. This function gets ran automatically when certain other functions require you to provide a version number. If you want to delete unused versions, you may at `project > File > Manage Versions` from [Google App Script](script.google.com)
     
-#### - Create New Version
+- #### Create New Version
 
 Creates a new version attached to the current copy of your source code on [Google App Script](script.google.com). You can provide whatever name you want, but these are best used as incremental "commits," and not big feature backups. You can always download your project from a [specific version](#Download-any-versioned-copy-of-your-Source-Code) if needed, so the best philosophy here is early-and-oft!
 
-#### - Create New Version and Update Deployment
+- #### Create New Version and Update Deployment
 
 Creates a new version and attached your web-app's current deployment. This function first creates a new version, as above, then proceeds to update the deployment that your users see. Use this once a feature is completed/ tested and you want it deployed. 
 
-#### - Sync and Deploy for Live Version
+- #### Sync and Deploy for Live Version
 
   This is a chained-call that first [ uploads ](#upload) your source code, then creates a new version and updates the deployment, as specified above.
 
-#### - Change Deployment's Version Number
+- #### Change Deployment's Version Number
 
   Changes your web-app's current version number. Use this in the event that a newer version has affected the live functionality of your application.
 
