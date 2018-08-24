@@ -114,25 +114,25 @@ function getSetupData() {
 
 function getParameterData() {
 
-    var transform = [];
     var SlipID = PropertiesService.getUserProperties().getProperty("SlipID");
     if (!SlipID) {
         var slipVal = getSpecificSlip(parseInt(SlipID));
 
         if (slipVal !== -1) {
-            var oSlipID = {};
-            oSlipID.name = "SlipID";
-            oSlipID.value = slipVal;
+            var slipObject = {};
+            slipObject.name = "SlipID";
+            slipObject.value = slipVal;
 
-            transform.push(oSlipID);
+            //transform.push(oSlipID);
+            return slipObject; 
         }
-        return transform;
+        //return transform;
     }
 
-    if (transform.length > 0)
-        return transform;
-    else
-        return -1;
+    //if (transform.length > 0)
+    //    return transform;
+    //else
+     return -1;
 }
 
 /**

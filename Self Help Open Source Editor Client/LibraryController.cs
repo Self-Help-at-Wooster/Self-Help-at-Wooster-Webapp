@@ -1,4 +1,4 @@
-﻿using SelfHelpManager;
+﻿using SelfHelpSourceCodeManager;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,11 +40,11 @@ namespace SelfHelpOpenSourceEditor
 
         public static void GetWatchers()
         {
-            if (AutoSync)
+            if (AutoSync && watchers == null)
             {
-                watchers = AppsScriptsSourceCodeManager.GetWatchers();
+                watchers = SelfHelpManager.GetWatchers();
 
-                watchers.ForEach(fw =>
+                watchers?.ForEach(fw =>
                 {
                     fw.NotifyFilter = System.IO.NotifyFilters.LastWrite;
                     fw.Changed += fw_Changed;
@@ -56,7 +56,7 @@ namespace SelfHelpOpenSourceEditor
 
         public static void SetHTMLScriptParse()
         {
-            AppsScriptsSourceCodeManager.ParseHTMLScriptTagToJS = ParseScriptTag;
+            SelfHelpManager.ParseHTMLScriptTagToJS = ParseScriptTag;
         }
 
 
@@ -114,7 +114,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.Initialize(SourceCode).Result;
+                var res = SelfHelpManager.Initialize(SourceCode).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
                 DisplayInfo();
             }
@@ -128,20 +128,20 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                foreach (string str in AppsScriptsSourceCodeManager.GetScriptInfo())
+                foreach (string str in SelfHelpManager.GetScriptInfo())
                     PrintCentered(str);
             }
-            catch { }
+            catch (Exception ex) { Debug.WriteLine(ex); }
         }
 
         public static void ProvideScriptID(string ID)
         {
             try
             {
-                AppsScriptsSourceCodeManager.ScriptID = ID;
+                SelfHelpManager.ScriptID = ID;
                 PrintCentered("Success!");
             }
-            catch (AppsScriptsSourceCodeManager.InfoException ex)
+            catch (SelfHelpManager.InfoException ex)
             {
                 PrintAgain = false;
                 PrintErrorCentered(ex.Message);
@@ -152,7 +152,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.CreateNewGASProject(Name).Result;
+                var res = SelfHelpManager.CreateNewGASProject(Name).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -165,7 +165,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.DownloadFiles().Result;
+                var res = SelfHelpManager.DownloadFiles().Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -178,7 +178,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.DownloadFiles(VersionNumber).Result;
+                var res = SelfHelpManager.DownloadFiles(VersionNumber).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -191,7 +191,22 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.SyncChanges().Result;
+                var res = SelfHelpManager.SyncChanges().Result;
+                printTaskResult(res.ToString(), res.IsSuccess);
+                return res.IsSuccess;
+            }
+            catch (Exception ex)
+            {
+                PrintErrorCentered(ex.Message);
+                return false;
+            }
+        }
+
+        public static bool VersionBackupThenUploadFiles()
+        {
+            try
+            {
+                var res = SelfHelpManager.PreVersionAndSyncChanges().Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
                 return res.IsSuccess;
             }
@@ -206,7 +221,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.DownloadSelfHelpSourceFiles().Result;
+                var res = SelfHelpManager.DownloadSelfHelpSourceFiles().Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -215,11 +230,11 @@ namespace SelfHelpOpenSourceEditor
             }
         }
 
-        public static void CreateSourceCodeFile(string Name, AppsScriptsSourceCodeManager.FILE_TYPES F, bool Sync)
+        public static void CreateSourceCodeFile(string Name, SelfHelpManager.FILE_TYPES F, bool Sync)
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.AddNewSourceFile(Name, F, Sync).Result;
+                var res = SelfHelpManager.AddNewSourceFile(Name, F, Sync).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -232,7 +247,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.CreateNewAppsScriptManifestJSONFile().Result;
+                var res = SelfHelpManager.CreateNewAppsScriptManifestJSONFile().Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -245,7 +260,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.CreateVersion(Description).Result;
+                var res = SelfHelpManager.CreateVersion(Description).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
                 return res.IsSuccess;
             }
@@ -260,7 +275,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.CreateNewVersionAndUpdateDeployment(Description).Result;
+                var res = SelfHelpManager.CreateNewVersionAndUpdateDeployment(Description).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
                 return res.IsSuccess;
             }
@@ -269,39 +284,12 @@ namespace SelfHelpOpenSourceEditor
                 PrintErrorCentered(ex.Message);
                 return false;
             }
-        }
-
-        public static void UploadAndCreateNewVersion(string Description)
-        {
-            if (UploadFiles() && CreateNewVersion(Description))
-                PrintCentered("Operation Successful!");
-        }
-
-        public static void SyncAndDeployForTesting()
-        {
-            if (UploadFiles() && DeployForTesting())
-                PrintCentered("Operation Successful!");
         }
 
         public static void SyncAndDeployForLiveVersion(string Description)
         {
             if (UploadFiles() && CreateNewVersionAndUpdateDeployment(Description))
                 PrintCentered("Operation Successful!");
-        }
-
-        public static bool DeployForTesting()
-        {
-            try
-            {
-                var res = AppsScriptsSourceCodeManager.DeveloperUpdateDeployment().Result;
-                printTaskResult(res.ToString(), res.IsSuccess);
-                return res.IsSuccess;
-            }
-            catch (Exception ex)
-            {
-                PrintErrorCentered(ex.Message);
-                return false;
-            }
         }
 
         /// <summary>
@@ -312,7 +300,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var result = AppsScriptsSourceCodeManager.ListVersions().Result;
+                var result = SelfHelpManager.ListVersions().Result;
                 if (result.IsSuccess)
                 {
                     versions = result.MyResult;
@@ -336,7 +324,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.UpdateDeploymentVersionNumber(VersionNumber).Result;
+                var res = SelfHelpManager.UpdateDeploymentVersionNumber(VersionNumber).Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)
@@ -349,7 +337,7 @@ namespace SelfHelpOpenSourceEditor
         {
             try
             {
-                var res = AppsScriptsSourceCodeManager.ClearCredentials().Result;
+                var res = SelfHelpManager.ClearCredentials().Result;
                 printTaskResult(res.ToString(), res.IsSuccess);
             }
             catch (Exception ex)

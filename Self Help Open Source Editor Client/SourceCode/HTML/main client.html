@@ -8,6 +8,7 @@
      <?!= include('spinner'); ?>
      <?!= include('modal'); ?>
      <?!= include('main script'); ?>
+     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css">
     </head>
   
     <body>
@@ -40,8 +41,7 @@
 
         <p id="mobile"> </p>
 
-        <div><a target="_blank" href="https://goo.gl/forms/HoLqNZ7SypTivcIL2">Please complete this questionnaire to provide feedback! Thank you!</a></div>
-        <br>
+        <!--div><a target="_blank" href="https://goo.gl/forms/HoLqNZ7SypTivcIL2">Please complete this questionnaire to provide feedback! Thank you!</a></!--div>-->
         <div id="showfunc">
             <form>
                 <h4>Please select a Function:</h4>
@@ -53,8 +53,7 @@
         </div>
 
         <div id="showcit">
-            <form>
-                <br>
+            <form>  
                 <h4 id="citperlbl">Please select a Citizenship Period:</h4>
                 <select class="cbx" id="citper" oninput="getPeriod(); getSlipType();">
                     <option value="0"></option>

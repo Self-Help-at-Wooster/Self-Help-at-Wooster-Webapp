@@ -69,21 +69,18 @@ function getSpecificSlip(Row) {
     var UserData = retrieveUserData();
 
     var advisorlists = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('faclistURL')).getActiveSheet();
-    var maxadvisor = advisorlists.getLastRow();
-    var advisordata = advisorlists.getSheetValues(2, 1, maxadvisor, STUDENT_DATA["FIRST"]);
+    var advisordata = advisorlists.getSheetValues(2, 1, advisorlists.getLastRow(), STUDENT_DATA.FIRST);
 
     var alladv = {}; //associative object
     var num = 0;
     for (var setadv = 0; setadv < advisordata.length; setadv++) {
-        if (!advisordata[setadv][STUDENT_DATA["FIRST"] - 1] || !advisordata[setadv][STUDENT_DATA["LAST"] - 1]) {
-            alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA["FIRST"] - 1] + " " + advisordata[setadv][STUDENT_DATA["LAST"] - 1];
+        if (!advisordata[setadv][STUDENT_DATA.FIRST - 1] || !advisordata[setadv][STUDENT_DATA.LAST - 1]) {
+            alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA.FIRST - 1] + " " + advisordata[setadv][STUDENT_DATA.LAST - 1];
             num++;
         }
     }
 
     var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL')).getActiveSheet();
-
-    var maxslips = curslips.getLastRow();
 
     var slipdata;
 
@@ -149,13 +146,13 @@ function getSpecificSlip(Row) {
 
     if (num > 0) {
 
-        if (slipID != UserData[STUDENT_DATA.UUID - 1] && UserData[STUDENT_DATA.ACCESS - 1] > ACCESS_LEVELS.FACULTY) {
+        if (slipID !== UserData[STUDENT_DATA.UUID - 1] && UserData[STUDENT_DATA.ACCESS - 1] > ACCESS_LEVELS.FACULTY) {
             writeLog("User lacks privilege: View Slip Parameter: " + Row);
             //throw new Error( "User lacks privilege");
             console.log("User lacks privilege: View Slip Parameter: " + Row);
             return -1;
         } else {
-            writeParamter(Row);
+            writeParameter(Row);
             return returndata;
         }
     } else {
@@ -163,7 +160,7 @@ function getSpecificSlip(Row) {
     }
 }
 
-function writeParamter(Row) {
+function writeParameter(Row) {
     //Utilities.sleep(10);
     writeLog("Slip Parameter Accessed: " + Row);
 }

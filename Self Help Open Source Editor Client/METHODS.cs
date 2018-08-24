@@ -20,8 +20,6 @@
             CREATE_MANIFEST,
             CREATE_VERSION,
             CREATE_VERSION_UPDATE_DEPLOYMENT,
-            DEPLOY_TEST_DEP,
-            SYNC_DEPLOY_TEST_DEP,
             SYNC_DEPLOY_LIVE,
             LIST_VERSIONS,
             CHANGE_DEPLOYMENT_VERSION_NUM,
@@ -68,10 +66,6 @@
                     return "Create New Version";
                 case METHODS.CREATE_VERSION_UPDATE_DEPLOYMENT:
                     return "Create New Version and Update Deployment";
-                case METHODS.DEPLOY_TEST_DEP:
-                    return "Deploy for Testing";
-                case METHODS.SYNC_DEPLOY_TEST_DEP:
-                    return "Sync and Deploy for Testing";
                 case METHODS.SYNC_DEPLOY_LIVE:
                     return "Sync and Deploy for Live Version";
                 case METHODS.LIST_VERSIONS:

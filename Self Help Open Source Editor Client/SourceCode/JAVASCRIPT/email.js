@@ -1,47 +1,51 @@
 //var myURL = "https://script.google.com/a/macros/woosterschool.org/s/AKfycbwekMjjfWNzrHSV5Oac-mUwTIyzaYjokPcJ4CNacsArvmIUPJk/exec";
 /**
  * Emails Job Recommendation Request
- * @param UUID UUID of student missing Job Rec
- * @param Cit For What Citizenship Period
+ * @param {string} UUID UUID of student missing Job Rec
+ * @param {number} Cit For What Citizenship Period
  */
 function SubmitRecRequest(UUID, Cit) {
 
     var UserData = retrieveUserData();
     if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.FACULTY) {
 
-        var Nick = "";
-        var First = "";
-        var Last = "";
+        
+        var fromFirst = "";
+        var fromNickname = "";
+        var fromLast = "";
 
-        if (UserData[STUDENT_DATA["NICKNAME"] - 1]) //check not empty
-            Nick = "(" + UserData[STUDENT_DATA["NICKNAME"] - 1] + ") ";
-        if (UserData[STUDENT_DATA["FIRST"] - 1] != "" && UserData[STUDENT_DATA["FIRST"] - 1])
-            First = UserData[STUDENT_DATA["FIRST"] - 1] + " ";
-        if (UserData[STUDENT_DATA["LAST"] - 1] != "" && UserData[STUDENT_DATA["LAST"] - 1])
-            Last = UserData[STUDENT_DATA["LAST"] - 1] + " ";
+        if (UserData[STUDENT_DATA.FIRST - 1])
+            fromFirst = UserData[STUDENT_DATA.FIRST - 1] + " ";
+        if (UserData[STUDENT_DATA.NICKNAME - 1])
+            fromNickname = "(" + UserData[STUDENT_DATA.NICKNAME - 1] + ") ";
+        if (UserData[STUDENT_DATA.LAST - 1])
+            fromLast = UserData[STUDENT_DATA.LAST - 1];
 
         //Person who requested the rec
-        var From = First + Nick + Last;
-        var FromEmail = UserData[STUDENT_DATA["EMAIL"] - 1];
+        var fromFullName = fromFirst + fromNickname + fromLast;
+
+        var fromEmail = UserData[STUDENT_DATA.EMAIL - 1];
 
         //Student who is missing their rec
-        var Miss = getColumnData(STUDENT_DATA.UUID, UUID, false)[0];
-        var Nick = "";
-        if (Miss[STUDENT_DATA["NICKNAME"] - 1])
-            Nick = " (" + Miss[STUDENT_DATA["NICKNAME"] - 1] + ")";
+        var johnDoe = getColumnData(STUDENT_DATA.UUID, UUID, false)[0];
+        var johnDoeNickname = "";
+        if (johnDoe[STUDENT_DATA.NICKNAME - 1])
+            johnDoeNickname = " (" + johnDoe[STUDENT_DATA.NICKNAME - 1] + ")";
 
-        var MissName = Miss[STUDENT_DATA["FIRST"] - 1] + Nick + " " + Miss[STUDENT_DATA["LAST"] - 1];
-        var job = Miss[STUDENT_DATA["JOB" + Cit] - 1];
+        var johnDoeName = johnDoe[STUDENT_DATA.FIRST - 1] + johnDoeNickname + " " + johnDoe[STUDENT_DATA.LAST - 1];
+        var job = johnDoe[STUDENT_DATA["JOB" + Cit] - 1];
 
-        var jobdata = getJobData(job, false, Miss, Cit);
+        var jobdata = getJobData(job, false, johnDoe, Cit);
 
         var Capt1 = jobdata[JOB_DATA.C1 - 1];
         var Capt2 = jobdata[JOB_DATA.C2 - 1];
 
+        var siteURL = PropertiesService.getScriptProperties().getProperty('execURL');
+
         if (Capt1)
-            notifyCaptain_(Capt1, From, FromEmail, Cit, MissName);
+            notifyCaptain_(Capt1, fromFullName, fromEmail, Cit, johnDoeName, siteURL);
         if (Capt2)
-            notifyCaptain_(Capt2, From, FromEmail, Cit, MissName);
+            notifyCaptain_(Capt2, fromFullName, fromEmail, Cit, johnDoeName, siteURL);
     } else {
         writeLog("User lacks privilege: Request job recs");
         throw new Error("User lacks privilege");
@@ -51,12 +55,10 @@ function SubmitRecRequest(UUID, Cit) {
 
 /**
  * Sends Request to Captain and their Advisor
- * @param Capt 
- * @returns
+ * @param {array} Capt student data
  */
-function notifyCaptain_(Capt, From, FromEmail, Cit, MissName) {
-    var siteURL = PropertiesService.getScriptProperties().getProperty('execURL');
-
+function notifyCaptain_(Capt, From, FromEmail, Cit, MissName, siteURL) {
+    
     var CaptData = getColumnData(STUDENT_DATA.UUID, Capt, false)[0];
     var CEmail = CaptData[STUDENT_DATA["EMAIL"] - 1];
     var CName = CaptData[STUDENT_DATA["FIRST"] - 1];
@@ -84,7 +86,9 @@ function notifyCaptain_(Capt, From, FromEmail, Cit, MissName) {
                 htmlBody: template
             });
         }
-    } catch (ex) { }
+    } catch (ex) {
+        console.log("Failed send stu rec request: " + ex);
+    }
 
     try { //advisor
         if (AEmail) {
@@ -100,43 +104,48 @@ function notifyCaptain_(Capt, From, FromEmail, Cit, MissName) {
                 htmlBody: template
             });
         }
-    } catch (ex) { }
+    } catch (ex) {
+        console.log("Failed send adv rec request: " + ex);
+    }
 }
 
 //sends notice to student
 function writeEmail_(UUID, SlipType) {
 
-       var UserData = retrieveUserData();
+    var UserData = retrieveUserData();
     if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.CAPTAIN) {
 
         var siteURL = PropertiesService.getScriptProperties().getProperty('execURL');
         var SlipID;
         var address;
 
-        var Nick = "";
-        var First = "";
-        var Last = "";
+        var nickname = "";
+        var firstname = "";
+        var lastname = "";
 
-        if (UserData[STUDENT_DATA["FIRST"] - 1])
-            First = UserData[STUDENT_DATA["FIRST"] - 1] + " ";
-        if (UserData[STUDENT_DATA["LAST"] - 1])
-            Last = UserData[STUDENT_DATA["LAST"] - 1] + " ";
-        if (UserData[STUDENT_DATA["NICKNAME"] - 1])
-            Nick = "(" + UserData[STUDENT_DATA["NICKNAME"] - 1] + ") ";
+        if (UserData[STUDENT_DATA.FIRST - 1])
+            firstname = UserData[STUDENT_DATA.FIRST - 1] + " ";
+        if (UserData[STUDENT_DATA.LAST - 1])
+            lastname = UserData[STUDENT_DATA.LAST - 1] + " ";
+        if (UserData[STUDENT_DATA.NICKNAME - 1])
+            nickname = "(" + UserData[STUDENT_DATA.NICKNAME - 1] + ") ";
 
-        var From = First + Nick + Last;
-        var FromEmail = UserData[STUDENT_DATA.EMAIL - 1];
+        var fromName = firstname + nickname + lastname;
+        var fromEmail = UserData[STUDENT_DATA.EMAIL - 1];
 
-        var Recip = getColumnData(STUDENT_DATA.UUID, String(UUID), false)[0];
+        var recipData = getColumnData(STUDENT_DATA.UUID, String(UUID), false)[0];
 
-        var RecipName = Recip[STUDENT_DATA.FIRST - 1];
-        var RecipEmail = Recip[STUDENT_DATA["EMAIL"] - 1];
+        var recipName = recipData[STUDENT_DATA.FIRST - 1];
+        var recipEmail = recipData[STUDENT_DATA["EMAIL"] - 1];
 
-        var Nick = "";
-        if (Recip[STUDENT_DATA["NICKNAME"] - 1] != "")
-            Nick = " (" + Recip[STUDENT_DATA["NICKNAME"] - 1] + ")";
-        RecipName += Nick;
-        var RecipFullName = RecipName + " " + Recip[STUDENT_DATA["LAST"] - 1];
+        var FromNick = "";
+        if (recipData[STUDENT_DATA.NICKNAME - 1])
+            FromNick = " (" + recipData[STUDENT_DATA.NICKNAME - 1] + ")";
+
+        recipName += FromNick;
+
+        var RecipFullName = recipName + " " + recipData[STUDENT_DATA["LAST"] - 1];
+
         try {
 
             var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL'));
@@ -144,37 +153,45 @@ function writeEmail_(UUID, SlipType) {
             SlipID = String(cursheet.getLastRow() - 1);
             address = PropertiesService.getScriptProperties().getProperty('execURL') + '?SlipID=' + SlipID;
 
-            var returnData = [RecipName, SlipType, From, FromEmail, address, siteURL];
-            var html = HtmlService.createTemplateFromFile('stuSlip');
-
-            html.data = returnData;
-            var template = html.evaluate().getContent();
+            var stuSlipData = { Name: recipName, Slip: SlipType, From: fromName, FromEmail: fromEmail, SlipURL: address, SiteURL:siteURL };
+            var stuSlipHtml = HtmlService.createTemplateFromFile('e_StuSlip');
+            stuSlipHtml.data = stuSlipData;
+            var stuSlipContent = stuSlipHtml.evaluate().getContent();
 
             MailApp.sendEmail({
-                to: RecipEmail,
+                to: recipEmail,
                 subject: "New ESlip! (Self Help At Wooster)",
-                htmlBody: template
+                htmlBody: stuSlipContent
             });
         } catch (ex) {
             console.log("Failed send stu slip: " + ex);
         }
 
         try {
-            if (Recip) {
-                var Adv = Recip[STUDENT_DATA["ADVISOR"] - 1];
+            if (recipData) {
+                var Adv = recipData[STUDENT_DATA.ADVISOR - 1];
 
-                var advisor = getFacultyData(STUDENT_DATA.UUID, Adv);
+                var advisor = getFacultyData(STUDENT_DATA.UUID, Adv)[0];
 
-                var returnData = [advisor[0][STUDENT_DATA["FIRST"] - 1], RecipFullName, SlipType, From, FromEmail, address, siteURL];
-                var html = HtmlService.createTemplateFromFile('advSlip');
+                var advSlipData = {
+                    Name: advisor[STUDENT_DATA.FIRST - 1],
+                    Student: RecipFullName,
+                    Slip: SlipType,
+                    From: fromName,
+                    FromEmail: fromEmail,
+                    SlipURL: address,
+                    SiteURL: siteURL
+                };
 
-                html.data = returnData;
-                var template = html.evaluate().getContent();
+                var advSlipHtml = HtmlService.createTemplateFromFile('e_AdvSlip');
+
+                advSlipHtml.data = advSlipData;
+                var advSlipContent = advSlipHtml.evaluate().getContent();
 
                 MailApp.sendEmail({
-                    to: advisor[0][STUDENT_DATA["EMAIL"] - 1],
+                    to: advisor[STUDENT_DATA.EMAIL - 1],
                     subject: "New ESlip! (Self Help At Wooster)",
-                    htmlBody: template
+                    htmlBody: advSlipContent
                 });
 
             }
@@ -202,7 +219,7 @@ function massEmail(recip, header, text) {
             if (str.indexOf("woosternet.org") >= 0 || str.indexOf("woosterschool.org") >= 0)
                 modrecip += str + " ,";
         }
-        if (modrecip != "") { //sanitize user input to remove any non-wooster emails, weird spacing, and formatting
+        if (modrecip) { //sanitize user input to remove any non-wooster emails, weird spacing, and formatting
             modrecip = modrecip.substring(0, modrecip.length - 1);
 
             Logger.log(recip);

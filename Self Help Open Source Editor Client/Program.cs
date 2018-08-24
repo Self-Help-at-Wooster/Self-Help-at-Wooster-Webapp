@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SelfHelpSourceCodeManager;
+using System;
 using System.IO;
 
 namespace SelfHelpOpenSourceEditor
@@ -144,6 +145,7 @@ namespace SelfHelpOpenSourceEditor
                         break;
                     case METHODS.UPLOAD_AND_VERSION:
                         AutoSync = false;
+                        LibraryController.UploadFiles();
                         if (getConfirmInput("This will upload current Source Code folder to your Apps Script project.", "This will overwrite your work within GAS. Are you sure?"))
                         {
                             goto case METHODS.CREATE_VERSION;
@@ -156,11 +158,11 @@ namespace SelfHelpOpenSourceEditor
                         version = getIntInput();
                         if (version != null)
                         {
-                            SelfHelpManager.AppsScriptsSourceCodeManager.FILE_TYPES? f = null;
+                            SelfHelpManager.FILE_TYPES? f = null;
                             if (version == 1)
-                                f = SelfHelpManager.AppsScriptsSourceCodeManager.FILE_TYPES.SERVER_JS;
+                                f = SelfHelpManager.FILE_TYPES.SERVER_JS;
                             else if (version == 2)
-                                f = SelfHelpManager.AppsScriptsSourceCodeManager.FILE_TYPES.HTML;
+                                f = SelfHelpManager.FILE_TYPES.HTML;
                             else if (version == 3)
                                 PrintCentered("Please use create manifest to generate an appsscript.json file");
 
@@ -187,12 +189,6 @@ namespace SelfHelpOpenSourceEditor
                     case METHODS.CREATE_VERSION_UPDATE_DEPLOYMENT:
                         PrintCentered("Enter a non-empty description for this version:");
                         getInput((s) => LibraryController.CreateNewVersionAndUpdateDeployment(s));
-                        break;
-                    case METHODS.DEPLOY_TEST_DEP:
-                        LibraryController.DeployForTesting();
-                        break;
-                    case METHODS.SYNC_DEPLOY_TEST_DEP:
-                        LibraryController.SyncAndDeployForTesting();
                         break;
                     case METHODS.SYNC_DEPLOY_LIVE:
                         PrintCentered("Enter a non-empty description for this version:");
@@ -303,9 +299,12 @@ namespace SelfHelpOpenSourceEditor
                     PrintCentered(string.Format("{4} {2}{3}{1}{0} |", i, hyphen(i), GetDescription(method), buffer.ToString(), column1));
                     buffer.Clear();
                     //Prints in-between spacing
-                    for (int spacing = 0; spacing < bufferSpace + otherSpace; spacing++)
-                        buffer.Append(" ");
-                    PrintCentered(string.Format("| {0} | {1} |", buffer.ToString(), buffer.ToString()));
+                    if (i < methods.Length - 1)
+                    {
+                        for (int spacing = 0; spacing < bufferSpace + otherSpace; spacing++)
+                            buffer.Append(" ");
+                        PrintCentered(string.Format("| {0} | {1} |", buffer.ToString(), buffer.ToString()));
+                    }
                 }
                 else
                 {

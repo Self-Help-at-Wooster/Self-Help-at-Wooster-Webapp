@@ -9,15 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Remove="Properties\Resources.resx" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.35.1.1316" />
+    <PackageReference Include="Google.Apis.Script.v1" Version="1.35.1.1323" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Google.Apis.Script.v1" Version="1.35.1.1314" />
   </ItemGroup>
 
   <ItemGroup>

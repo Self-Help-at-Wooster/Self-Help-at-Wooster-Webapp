@@ -11,7 +11,6 @@
     const ACTIVITY_DATA = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
     const NUM_TO_ACTIVITY = ["","Sport","Art Intensive","Monday Art","Independent Activity"];
     
-    
     function getAccessLevel(){
         return activeUser[STUDENT_DATA.ACCESS-1];
     }
@@ -45,7 +44,7 @@
             var prop = obj[name];
 
             // Freeze prop if it is an object
-            if (typeof prop == 'object' && prop !== null)
+            if (typeof prop === 'object' && prop !== null)
                 deepFreeze(prop);
         });
 
@@ -87,6 +86,25 @@
 
     window.addEventListener("load", function() {
 
+         google.script.run
+            .withFailureHandler(() => {
+                showModal(0, "Failed to load User Email");
+            })
+            .withSuccessHandler(updateButton)
+            .withUserObject(document.getElementById("btnload"))
+            .getEmail();
+
+        google.script.run
+            .withFailureHandler(() => {
+                showModal(0, "Failed to setup data");
+            })
+            .withSuccessHandler(getSetup)
+            .getSetupData();
+
+        google.script.run
+            .withSuccessHandler(checkParameters)
+            .getParameterData();
+
         var setList = ["StudentList", "JobList"];
 
         for (var set = 0; set < setList.length; set++) {
@@ -119,25 +137,6 @@
                 }
             });
         }
-
-        google.script.run
-            .withFailureHandler(() => {
-                showModal(0, "Failed to load User Email");
-            })
-            .withSuccessHandler(updateButton)
-            .withUserObject(document.getElementById("btnload"))
-            .getEmail();
-
-        google.script.run
-            .withFailureHandler(() => {
-                showModal(0, "Failed to setup data");
-            })
-            .withSuccessHandler(getSetup)
-            .getSetupData();
-
-        google.script.run
-            .withSuccessHandler(checkParameters)
-            .getParameterData();
 
     });
 
@@ -302,17 +301,16 @@
     }
 
     function checkParameters(parameterData) {
-        if (parameterData != -1) {
-            var cbxfunc = document.getElementById("cbxFunction");
+        if (parameterData !== -1) {
 
-            if (parameterData[0].name == "SlipID") {
+            if (parameterData[0].name === "SlipID") {
                 document.getElementById("viewslips").style.display = "block";
                 document.getElementById("spins").style.display = "block";
 
                 var slip = parameterData[0].value;
-                displaySlips(slip);	
-            } else if (parameterData[0].name == "WriteID") {
-
+                displaySlips([slip]);	
+            } else if (parameterData[0].name === "WriteID") {
+                //not implemented
             }
         }
     }
