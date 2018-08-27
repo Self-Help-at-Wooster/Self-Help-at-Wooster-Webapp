@@ -25,11 +25,10 @@
                 <?= data.Name;?>, you are missing a job recommendation for
                 <?=data.Worker;?> (CIT:
                 <?=data.CitPer;?>). This was requested by:
-                <?=data.Requester;?> (
-                <a target="_blank" href="mailto:<?=data.RequesterEmail;?>">
-                    <?=data.RequesterEmail;?>
-                </a>).
-                <a target="_blank" href="<?= data.SiteURL;?>">Please submit as soon as possible!</a>
+                <?=data.Requester;?> 
+                (<a target="_blank" href="mailto:<?=data.RequesterEmail;?>"><?=data.RequesterEmail;?></a>).
+                <br><br>
+                <b>Please submit <a target="_blank" href="<?= data.RequestURL;?>">here</a> as soon as possible!</b>
 
             </td>
 

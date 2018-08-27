@@ -18,12 +18,25 @@ var NUM_TO_ACTIVITY = ["","Sport","Art Intensive","Monday Art","Independent Acti
  */
 function doGet(e) {
 
+    var properties = PropertiesService.getUserProperties();
+
     //Slip ID Parameter used to open specific slips by link for quick access. 
     //In form ?SlipID=... at end of URL
-    if (!e.parameter.SlipID)
-        PropertiesService.getUserProperties().setProperty("SlipID", e.parameter.SlipID);
+    if (e.parameter.SlipID)
+        properties.setProperty("SlipID", e.parameter.SlipID);
     else
-        PropertiesService.getUserProperties().setProperty("SlipID", "");
+        properties.setProperty("SlipID", "");
+
+    if (e.parameter.WriteID && e.parameter.Cit && e.parameter.JobID) {
+        properties.setProperty("WriteID", e.parameter.WriteID);
+        properties.setProperty("Cit", e.parameter.Cit);
+        properties.setProperty("JobID", e.parameter.JobID);
+    }
+    else {
+        properties.setProperty("WriteID", "");
+        properties.setProperty("Cit", "");
+        properties.setProperty("JobID", "");
+    }
 
     if (e.parameter.update)
         updateURLS_();
@@ -113,26 +126,40 @@ function getSetupData() {
 }
 
 function getParameterData() {
+    var properties = PropertiesService.getUserProperties();
 
-    var SlipID = PropertiesService.getUserProperties().getProperty("SlipID");
-    if (!SlipID) {
-        var slipVal = getSpecificSlip(parseInt(SlipID));
+    var transform = [];
 
+    var SlipID = properties.getProperty("SlipID");
+    if (SlipID) {
+        var slipVal = getSpecificSlip_(parseInt(SlipID));
+        console.log(slipVal);
         if (slipVal !== -1) {
             var slipObject = {};
             slipObject.name = "SlipID";
             slipObject.value = slipVal;
 
-            //transform.push(oSlipID);
-            return slipObject; 
+            transform.push(slipObject);
+            return transform;
         }
-        //return transform;
+    }
+    var WriteID = properties.getProperty("WriteID");
+    var Cit = properties.getProperty("Cit");
+    var JobID = properties.getProperty("JobID");
+
+    if (WriteID && Cit) {
+        var writeObject = {};
+        writeObject.name = "WriteID";
+        writeObject.id = WriteID;
+        writeObject.cit = Cit;
+        writeObject.jid = JobID;
+
+        transform.push(writeObject);
+
+        return transform;
     }
 
-    //if (transform.length > 0)
-    //    return transform;
-    //else
-     return -1;
+    return -1;
 }
 
 /**

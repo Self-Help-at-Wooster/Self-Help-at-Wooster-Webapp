@@ -298,19 +298,30 @@
 
         document.getElementById("myftrp").innerHTML += ", Song of the week: " + '<a target="_blank" href="' + setup[setupData["SOTWURL"] - 1] + '">' + setup[setupData["SOTWTXT"] - 1] + "</a>";
 
-    }
+}
+
+var autoWriteID;
+var autoWriteCit;
+var autoWriteJID;
 
     function checkParameters(parameterData) {
         if (parameterData !== -1) {
 
-            if (parameterData[0].name === "SlipID") {
+            var param = parameterData[0];
+
+            if (param.name === "SlipID") {
                 document.getElementById("viewslips").style.display = "block";
                 document.getElementById("spins").style.display = "block";
 
-                var slip = parameterData[0].value;
-                displaySlips([slip]);	
-            } else if (parameterData[0].name === "WriteID") {
-                //not implemented
+                var slip = param.value;
+                displaySlips(slip);	
+            } else if (param.name === "WriteID") {
+
+                autoWriteID = param.id;
+                autoWriteCit = param.cit;
+                autoWriteJID = param.jid;
+                getFunction();
+                
             }
         }
     }
@@ -356,6 +367,8 @@
                             studentOptions();
                         } else
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: None";
+
+                        getFunction();
 
                         document.getElementById("showfunc").style.display = "block";
                     } else {
@@ -422,10 +435,18 @@
         createOption("Compose Email", FunctionType.WriteEmail);
     }
 
-    var SelectedFunction = 0;
-
     function getFunction() {
+
         var cbxfunc = document.getElementById("cbxFunction");
+
+        if (autoWriteID && cbxfunc.selectedIndex <= 0) {
+
+            for (var i = 0; i < cbxfunc.options.length; i++) {
+                if (cbxfunc.options[i].value == FunctionType.JobSnap)
+                    cbxfunc.options[i].selected = true;
+            }
+        }
+
         if (SelectedFunction != cbxfunc.options[cbxfunc.selectedIndex].value) {
 
             clearElements();
@@ -465,6 +486,8 @@
                     document.getElementById("showjdata").style.display = "none";
                     document.getElementById("showadvdata").style.display = "block";
                     getPeriod();
+                    if (autoWriteCit)
+                        document.getElementById("citper").selectedIndex = autoWriteCit;
                 }
             } else if (SelectedFunction == FunctionType.AllSlips) { //dean viewing all slips in system
                 if (getAccessLevel() == ACCESS_LEVELS.DEAN || getAccessLevel() == ACCESS_LEVELS.ADMIN) {
@@ -870,6 +893,11 @@
         else if (cbxcit.options[cbxcit.selectedIndex].value < 1)
             document.getElementById("citper").selectedIndex = citper;
 
+        if (autoWriteCit) {
+            document.getElementById("citper").selectedIndex = autoWriteCit;
+            autoWriteCit = null;
+        }
+
         if (SelectedFunction == FunctionType.CreateJobs) {
 
             if (citper >= 1 && citper <= 6) {
@@ -961,7 +989,10 @@
     }
     
     function JobsListFilter(jobs){
-      if (jobs != -1) {
+        if (jobs != -1) {
+
+            var autoSelect;
+
           var cbxjobs = document.getElementById("filterbyarea");
           for (var i = 0; i < jobs.length; i++) {
               if (jobs[i][JOB_DATA.NAME - 1] != "") {
@@ -969,11 +1000,18 @@
 
                   option.text = jobs[i][JOB_DATA.NAME - 1];
                   option.value = jobs[i][JOB_DATA["UJID"] - 1];
+                  if (option.value === autoWriteJID)
+                      autoSelect = option;
                   cbxjobs.add(option);
               }
           }
-          loadit();
-          loadingad = false;
+            loadit();
+            if (autoSelect) {
+                autoWriteJID = null;
+                loadingad = false;
+                autoSelect.selected = true;
+                getJobAreas();
+            }
       } else {
           document.getElementById("spinj").style.display = "none";
           loadingad = false;
@@ -1177,7 +1215,9 @@
         document.getElementById("studentsearch").removeAttribute("disabled");
    }
     
-    function PopulateJobSnapshot(Workers){
+function PopulateJobSnapshot(Workers) {
+    var autoSelect;
+
         for (var set = Workers.length - 1; set >= 0; set--) {
             var worker = Workers[set];
             if (worker != [] && worker) {//empty array
@@ -1204,7 +1244,14 @@
                 radioInput.dataset.valuename = worker[0] + worker[1] + worker[2] + worker[3] + " (" + worker[4] + ")";
                 radioInput.style.display = "inline-block";
                 writebtn.dataset.loopvalue = set;
-               
+
+                if (worker[6] === autoWriteID) {
+                    autoSelect = radioInput;
+                    autoWriteID = null;
+                    autoWriteJID = null;
+                    autoWriteCit = null;
+                }
+
                 writebtn.style.textAlign = "center";
                 writebtn.appendChild(radioInput);
                 if (worker[5] == "No") {
@@ -1223,6 +1270,11 @@
         enableinput();
         loadingad = false;
         document.getElementById("spinj").style.display = "none";
+    if (autoSelect) {
+            autoWriteID = null;
+            autoSelect.checked = true;
+            autoSelect.click();
+        }
      }
     
     function PopulateAdvisorySnapshot(Advisees){

@@ -32,4 +32,4 @@
 				document.getElementById("myModal").style.display = "table";
 			}, 10);
 		}
-	}
+	}

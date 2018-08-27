@@ -64,7 +64,7 @@ function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {
 }
 
 
-function getSpecificSlip(Row) {
+function getSpecificSlip_(Row) {
 
     var UserData = retrieveUserData();
 
@@ -74,7 +74,7 @@ function getSpecificSlip(Row) {
     var alladv = {}; //associative object
     var num = 0;
     for (var setadv = 0; setadv < advisordata.length; setadv++) {
-        if (!advisordata[setadv][STUDENT_DATA.FIRST - 1] || !advisordata[setadv][STUDENT_DATA.LAST - 1]) {
+        if (advisordata[setadv][STUDENT_DATA.FIRST - 1] || advisordata[setadv][STUDENT_DATA.LAST - 1]) {
             alladv[advisordata[setadv][STUDENT_DATA.UUID - 1]] = advisordata[setadv][STUDENT_DATA.FIRST - 1] + " " + advisordata[setadv][STUDENT_DATA.LAST - 1];
             num++;
         }
@@ -84,7 +84,7 @@ function getSpecificSlip(Row) {
 
     var slipdata;
 
-    if (!Row && curslips.getLastRow() - Row >= 1 && Row >= 1) {
+    if (Row && curslips.getLastRow() - Row >= 1 && Row >= 1) {
         slipdata = curslips.getSheetValues(curslips.getLastRow() - Row + 1, 1, 1, SLIP_DATA.LENGTH);
     } else {
         //throw new Error( "Slip Index out of Range. Please Reload Script with " + PropertiesService.getScriptProperties().getProperty('execURL') );
@@ -128,7 +128,7 @@ function getSpecificSlip(Row) {
 
                 returndata[num][SLIP_DATA.UUID - 1] = classdata[check2][STUDENT_DATA["FIRST"] - 1] + " " + nick1 + classdata[check2][STUDENT_DATA["LAST"] - 1];
 
-                var grade = !classdata[check2][STUDENT_DATA["GRADE"] - 1] ? " (" + classdata[check2][STUDENT_DATA["GRADE"] - 1] + ")" : "";
+                var grade = classdata[check2][STUDENT_DATA["GRADE"] - 1] ? " (" + classdata[check2][STUDENT_DATA["GRADE"] - 1] + ")" : "";
 
                 if (alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] != null) {
                     returndata[num][returndata[num].length] = alladv[classdata[check2][STUDENT_DATA["ADVISOR"] - 1]] + grade; //set grade as final (really cheaty method :) )

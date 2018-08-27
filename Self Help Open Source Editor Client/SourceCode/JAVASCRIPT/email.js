@@ -43,9 +43,9 @@ function SubmitRecRequest(UUID, Cit) {
         var siteURL = PropertiesService.getScriptProperties().getProperty('execURL');
 
         if (Capt1)
-            notifyCaptain_(Capt1, fromFullName, fromEmail, Cit, johnDoeName, siteURL);
+            notifyCaptain_(jobdata[JOB_DATA.UJID -1], Capt1, fromFullName, fromEmail, Cit, johnDoe[STUDENT_DATA.UUID - 1], johnDoeName, siteURL);
         if (Capt2)
-            notifyCaptain_(Capt2, fromFullName, fromEmail, Cit, johnDoeName, siteURL);
+            notifyCaptain_(jobdata[JOB_DATA.UJID -1], Capt2, fromFullName, fromEmail, Cit, johnDoe[STUDENT_DATA.UUID - 1], johnDoeName, siteURL);
     } else {
         writeLog("User lacks privilege: Request job recs");
         throw new Error("User lacks privilege");
@@ -55,14 +55,16 @@ function SubmitRecRequest(UUID, Cit) {
 
 /**
  * Sends Request to Captain and their Advisor
+ * @param {array} _jobID The area's captain UUID
  * @param {array} _captain The area's captain UUID
  * @param {array} _fromName student data
  * @param {array} _fromEmail student data
  * @param {array} _cit student data
+ * @param {array} _workerID student data
  * @param {array} _workerName student data
  * @param {array} _siteURL student data
  */
-function notifyCaptain_(_captain, _fromName, _fromEmail, _cit, _workerName, _siteURL) {
+function notifyCaptain_(_jobID, _captain, _fromName, _fromEmail, _cit, _workerID, _workerName, _siteURL) {
     
     var CaptData = getColumnData(STUDENT_DATA.UUID, _captain, false)[0];
     var CEmail = CaptData[STUDENT_DATA["EMAIL"] - 1];
@@ -84,6 +86,7 @@ function notifyCaptain_(_captain, _fromName, _fromEmail, _cit, _workerName, _sit
                 CitPer: _cit,
                 Requester: _fromName,
                 RequesterEmail: _fromEmail,
+                RequestURL: _siteURL + "?WriteID=" + _workerID + "&JobID=" + _jobID + "&Cit=" + _cit,
                 SiteURL: _siteURL
             };
 

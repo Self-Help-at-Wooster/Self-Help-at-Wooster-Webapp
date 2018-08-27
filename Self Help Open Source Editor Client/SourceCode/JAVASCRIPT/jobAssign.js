@@ -229,7 +229,6 @@ function jobMake(citper, school, spreadlink) {
                                 newList.getRange(1 + down, 1 + across, 1, 1).setBackground("#ffff00");
                                 down = locdown + 2;
 
-
                             }
 
                         }

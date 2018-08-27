@@ -9,9 +9,7 @@ function getWorkers(UJID, CIT) {
     var UserData = retrieveUserData();
     if (UserData[STUDENT_DATA.ACCESS - 1] >= ACCESS_LEVELS.ADMIN && UserData[STUDENT_DATA.ACCESS - 1] <= ACCESS_LEVELS.CAPTAIN) {
 
-        var Workers = [
-            []
-        ];
+        var Workers = [["No data Available", "N/A", "N/A", "N/A"]];
 
         var num = 0;
 
@@ -35,14 +33,14 @@ function getWorkers(UJID, CIT) {
                         break;
                     }
                 }
-                num++
+                num++;
             }
 
         }
 
         if (num > 0) {
             Workers.sort(function (x, y) {
-                return sortStudents_(x, y)
+                return sortStudents_(x, y);
             });
             return Workers;
         } else
@@ -260,18 +258,21 @@ function getJobData(UJID, TranslateCaptNames, UUID, Cit) {
  * @returns Array of Info Arrays
  */
 function getJobSnapshot(jobID, Cit) {
-    var JobSnapshot = [
-        []
-    ];
-
     var UserData = retrieveUserData();
     if (UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.ADMIN || UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.PREFECT || UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.PROCTOR || UserData[STUDENT_DATA.ACCESS - 1] == ACCESS_LEVELS.CAPTAIN) {
+
+        var JobSnapshot = [
+            ["No data Available", "", "", "N/A", "N/A", "N/A", "N/A"]
+        ];
 
         var curslips = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('eslipdatURL')).getActiveSheet();
         var maxslips = curslips.getLastRow();
         var slipdata = curslips.getSheetValues(2, 1, maxslips, SLIP_DATA.LENGTH);
 
         var myworkers = getWorkers(jobID, Cit);
+
+        if (myworkers === -1)
+            return JobSnapshot;
 
         var num = 0;
         for (var get = 0; get < myworkers.length; get++) {
@@ -316,6 +317,7 @@ function getJobSnapshot(jobID, Cit) {
                 return x[0].localeCompare(y[0]);
             }
         );
+
         return JobSnapshot;
     } else {
         writeLog("User lacks privilege: Job Snapshot");
