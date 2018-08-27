@@ -1,5 +1,5 @@
 
-<p align="center"><img src="https://image.ibb.co/fQ2igG/new_Self_Help_Logo.png" height="150" width="150"></p>
+<p align="center"><img alt="Self-Help Logo" src="https://image.ibb.co/mP7BiU/Self_Help_Logo.png" height="150" width="150"></p>
 
 <h1 align="center"> Self-Help at Wooster Open Source Editor Client/ Webapp </h1>
 
