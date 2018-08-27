@@ -1,6 +1,6 @@
-function test(){
- SubmitSlip("1", "1", "Test", null, null, null, null, null, "1"); 
-}
+//function test(){
+// SubmitSlip("1", "1", "Test", null, null, null, null, null, "1"); 
+//}
 
 //writes a slip
 function SubmitSlip(UUID, SlipType, Text, P1, P2, P3, P4, R, CitPer) {

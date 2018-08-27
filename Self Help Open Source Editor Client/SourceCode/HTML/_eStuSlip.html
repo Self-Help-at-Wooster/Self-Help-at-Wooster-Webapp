@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <base target="_top">
+    <title>Self-Help Email for Student Slips</title>
+</head>
+
+<body style="text-align: center; max-width: 100%; font-family: Verdana, Geneva, sans-serif; font-size: 16px; line-height: 1.2; margin: 0; padding: 0px; padding-bottom: 50px">
+
+    <table style="text-align: center; width: 100%; max-width: 1000px; margin: 0 auto; color: #0b2b50; border:3px solid black; border-style:groove; padding:0px; border-collapse: collapse;">
+
+        <tr style="background-color: #BD3D3A; color: white; height: 60px; padding:0px; text-shadow: 3px 3px 0px rgba(0,0,0,0.3);">
+
+            <td style="padding: 2px; height: 60px; font-size: 22px; text-decoration: underline;">
+                <b>Self-Help at Wooster E-Notice</b>
+            </td>
+
+        </tr>
+
+        <tr style="min-height: 160px;">
+
+            <td style="font-size: 22px; padding: 5px; padding-top: 20px; padding-bottom: 20px;">
+                Hi
+                <?= data.Name;?>, you have a new <a target="_blank" href="<?= data.SlipURL;?>"><i><?= data.Slip;?></i></a> from <b><?= data.From;?></b> (
+                <a target="_blank" href="mailto:<?= data.FromEmail;?>">
+                    <?= data.FromEmail;?>
+                </a>).
+            </td>
+
+        </tr>
+
+        <tr>
+            <td>
+                <hr>
+            </td>
+        </tr>
+
+        <tr>
+
+            <td style="font-family: Georgia,Times,Times New Roman,serif; font-size: 12px; padding-top: 2px; padding-bottom: 10px; line-height: 1.5;">
+
+                <b>
+                    <a target="_blank" href="<?=data.SiteURL;?>"><i>Self-Help at Wooster</i></a> Developed By <a target="_blank" href="https://plus.google.com/u/0/110468578355422470121"><b>Ryan Toner</b></a>.
+                    <br> Thank you for supporting Wooster's mission.
+                    <br> Please contact a network administrator if you experience any issues.
+                </b>
+
+            </td>
+
+        <tr>
+
+        <tr style="display: inline-block; width: 100%; padding:0px; ">
+
+            <td style="display: block; margin:auto; height: 40px; width: 100%; overflow: visible; padding:0px;">
+                <img style="border-radius:125px; border:0px solid white; margin:0 auto; padding:0px;" alt="Self-Help Logo" src="https://image.ibb.co/mP7BiU/Self_Help_Logo.png" height="125" width="125">
+            </td>
+
+        </tr>
+
+        <tr style="display: block; height: 40px; background-color: #9896A4; padding:0px;">
+            <td></td>
+        </tr>
+
+    </table>
+
+</body>
+
+</html>

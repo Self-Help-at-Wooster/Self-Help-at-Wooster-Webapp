@@ -1,304 +1,357 @@
 <style>
 
-html{
-  scroll-behavior: smooth;
-}
+    html {
+        scroll-behavior: smooth;
+    }
 
-body {
-    background-color: papayawhip;
-    font-family: 'Open Sans', arial, sans;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 22px;
-    margin: 0 auto;
-    text-align: center;
-    left: 50%;
-    top: 50%;
-}
+    body {
+        background-color: papayawhip;
+        font-family: 'Open Sans', arial, sans;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 22px;
+        margin: 0 auto;
+        text-align: center;
+        left: 50%;
+        top: 50%;
+    }
 
-label{
-  margin: 0 auto;
-  text-align: center;
-  vertical-align: middle;
-  font-size: 22px;
-}
+    label {
+        margin: 0 auto;
+        text-align: center;
+        vertical-align: middle;
+        font-size: 22px;
+    }
 
-option{
-	font-family: 'Open Sans', arial, sans;
-}
-select{
-	font-family: 'Open Sans', arial, sans;
-}
+    option {
+        font-family: 'Open Sans', arial, sans;
+    }
 
-h4 { 
-	display: block;
-	padding: 0;
-	padding-bottom:5px;
-	margin: 0;
-}
-/*br {
+    select {
+        font-family: 'Open Sans', arial, sans;
+    }
+
+    h4 {
+        display: block;
+        padding: 0;
+        padding-bottom: 5px;
+        margin: 0;
+    }
+
+
+    /*br {
    display: block;
    margin: 10px 0;
    content: " ";
 }*/
 
-img{
-  display: block;
-  margin: 0 auto;
-  width: 150px;
-  height: 150px;
-  padding-top: 5px;
-}
+    img {
+        display: block;
+        margin: 0 auto;
+        width: 150px;
+        height: 150px;
+        padding-top: 5px;
+    }
 
-.btn {
-	background-color: #8a484a; /* #32CD32;*/
-	color: #FFFFFF;
-	padding: 10px;
-	border-radius: 10px;
-	min-width: 180px;
-	min-height: 55px;
-	font-family: 'Open Sans', arial, sans;
-	font-size: 20px;
-	margin: 0 auto;
-	text-align: center;
-	cursor: pointer;
-}
-.btn:hover {
-	background-color: #a7585b; /*#008000;*/
-}
-.btn:disabled {
-  opacity: .50;
-}
-.cbx{
-  padding: 4px;
-  border-radius: 5px;
-  font-size: 20px;
-  min-width: 250px;
-  margin: 0 auto;
-  text-align:left;
-}
-.multi-cbx{
-  padding: 5px;
-  border-radius: 5px;
-  font-size: 20px;
-  min-width: 350px;
+    .btn {
+        background-color: #8a484a;
+        /* #32CD32;*/
+        color: #FFFFFF;
+        padding: 10px;
+        border-radius: 10px;
+        min-width: 180px;
+        min-height: 55px;
+        font-family: 'Open Sans', arial, sans;
+        font-size: 20px;
+        margin: 0 auto;
+        text-align: center;
+        cursor: pointer;
+    }
 
-  cursor:pointer;
-  margin: 0 auto;
-  text-align:left;
-}
-.chbx{
-  padding: 5px;
-  border-radius: 5px;
-  width: 22px;
-  height: 22px;
-  display: inline;
-  vertical-align: middle;
-}
-.rbtn{
-   height: 22px;
-   width: 22px;
-   display: inline-block;
-   cursor: pointer;
-   padding: 5px;
-   margin: 0 auto;
-   margin-right: 5px;
-   text-align: center;
-   vertical-align: middle;
-}
-.tbx{/*for the blurbs*/
-  color: #000000;
-  margin: 5px;
-  padding-bottom: 5px;
-  border-radius: 10px;
-  font-size: 18px;
-  text-align: justify;
-}
-.tbx:disabled{
-  background-color: #E0F0FF;
-}
-.inbx{
-  padding: 5px;
-  border-radius: 5px;
-  font-family: 'Open Sans', arial, sans;
-  font-size: 20px;
-  height: 22px;
-  min-width: 250px;
-  max-width: 70%;
-}
+        .btn:hover {
+            background-color: #a7585b;
+            /*#008000;*/
+        }
 
-table{
-  margin: 0 auto;
-  text-align:center;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-table, th, td {
-  border: 1px solid grey;
-  border-collapse: collapse;
-}
-th{
-  border: 1px solid grey;
-  border-collapse: collapse;
-  /*background-color: #32CD32;*/
-  background-color: #8a484a;
-  color: white;
-}
-th, td {
-  padding: 5px;
-  text-align: left;
-}
-tr:nth-child(even) {
-  background-color: #e8f3ff;
-}
-tr:nth-child(odd) {
-  background-color:#fff;
-}
+        .btn:disabled {
+            opacity: .50;
+        }
 
-#AuthenticationLevel{
-	color: MediumBlue;
-}
+    .cbx {
+        padding: 4px;
+        border-radius: 5px;
+        font-size: 20px;
+        min-width: 250px;
+        margin: 0 auto;
+        text-align: left;
+    }
 
-#bannerl{
-  display: block; /* Hidden by default */
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 1%;
-  height: 100%;
-  background-color: #800000;
-  z-index: -1;
-}
-#topbtn {
-	display: none; /* Hidden by default */
-	position: fixed; /* Fixed/sticky position */
-	bottom: 20px; /* Place the button at the bottom of the page */
-	right: 15px; /* Place the button 30px from the right */
-	z-index: 99; /* Make sure it does not overlap */
-	border: none; /* Remove borders */
-	outline: none; /* Remove outline */
-	background-color: #32CD32;
-	color: #FFFFFF;
-	padding: 10px;
-	border-radius: 10px;
-	min-width: 85px;
-	min-height: 40px;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 18px;
-}
+    .multi-cbx {
+        padding: 5px;
+        border-radius: 5px;
+        font-size: 20px;
+        min-width: 350px;
+        cursor: pointer;
+        margin: 0 auto;
+        text-align: left;
+    }
 
-#topbtn:hover {
-	background-color: #008000; 
-}
+    .chbx {
+        padding: 5px;
+        border-radius: 5px;
+        width: 22px;
+        height: 22px;
+        display: inline;
+        vertical-align: middle;
+    }
 
-#mobile{
-font-size: 16px;
-}
-#showMsg{
-  display: none;
-  max-width:1200px;
-  margin: auto;
-  /*border: 2px solid #000000;*/
-  padding: 15px;
-}
-#msgRecip{
-  font-size: 15px;
-}
-#shownew{
-display: none;
-}
-#showfunc{
-display:none;
-}
-#showjobinfo{
-display: none;
-}
-#viewslips{ /*for the slip table*/
-	display: none;
-	white-space: nowrap;
-}
-#showcit{
-display: none;
-}
-#showstudents{
-display: none;
-}
-#showsliptype{
-display: none;
-}
-#showrec{ /*this is the recommendation grid*/
-	display: none;
-	padding: 5px;
-	margin: 5px;
-	border-style: solid;
-	background-color: #FFDAD5;
-	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	-webkit-animation-name: animatetop;
-	-webkit-animation-duration: 0.2s;
-	animation-name: animatetop;
-	animation-duration: 0.2s
-}
-	#showblurb {
-		display: none;
-		padding: 5px;
-		margin: 5px;
-		border-style: solid;
-		background-color: #d6fafa; /**#D5FFEF*/
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		-webkit-animation-name: animatetop;
-		-webkit-animation-duration: 0.2s;
-		animation-name: animatetop;
-		animation-duration: 0.2s
-	}
-#showadvdata{
-	display: none;
-	white-space: nowrap;
-}
-#showjdata{
-	display: none;
-	white-space: nowrap;
-}
-#showallslips{
-  display: none;
-}
-#showjobassign{
-  display: none;
-}
+    .rbtn {
+        height: 22px;
+        width: 22px;
+        display: inline-block;
+        cursor: pointer;
+        padding: 5px;
+        margin: 0 auto;
+        margin-right: 5px;
+        text-align: center;
+        vertical-align: middle;
+    }
 
-#submitrequests{
-	margin: 0 auto;
-	text-align:center;
-}
-#submiteslip{
-	margin: 0 auto;
-	text-align:center;
-    margin-bottom: 10px;
-}
-submitMsg{
-	margin: 0 auto;
-	text-align:center;
-}
-#student{
-	margin-top: 5px;
-}
+    .tbx {
+        /*for the blurbs*/
+        color: #000000;
+        margin: 5px;
+        padding-bottom: 5px;
+        border-radius: 10px;
+        font-size: 18px;
+        text-align: justify;
+    }
 
+        .tbx:disabled {
+            background-color: #E0F0FF;
+        }
 
-#ftrcontainer{
-	height:100%;
-	width:100%;
-	border-collapse:collapse;
-	display : table;
-}
-#ftr{
-	display: table-row;
-	vertical-align: bottom;
-	text-align: left;
-	height: 20px;
-	left: 1px;
-	float: bottom;
-}
-#myftrp{
-	margin-left: 3px;
-}
+    .inbx {
+        padding: 5px;
+        border-radius: 5px;
+        font-family: 'Open Sans', arial, sans;
+        font-size: 20px;
+        height: 22px;
+        min-width: 250px;
+        max-width: 70%;
+    }
+
+    table {
+        margin: 0 auto;
+        text-align: center;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+
+    table,
+    th,
+    td {
+        border: 1px solid grey;
+        border-collapse: collapse;
+    }
+
+    th {
+        border: 1px solid grey;
+        border-collapse: collapse;
+        /*background-color: #32CD32;*/
+        background-color: #8a484a;
+        color: white;
+    }
+
+    th,
+    td {
+        padding: 5px;
+        text-align: left;
+    }
+
+    tr:nth-child(even) {
+        background-color: #e8f3ff;
+    }
+
+    tr:nth-child(odd) {
+        background-color: #fff;
+    }
+
+    #AuthenticationLevel {
+        color: MediumBlue;
+    }
+
+    #bannerl {
+        display: block;
+        /* Hidden by default */
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 1%;
+        height: 100%;
+        background-color: #800000;
+        z-index: -1;
+    }
+
+    #topbtn {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Fixed/sticky position */
+        bottom: 20px;
+        /* Place the button at the bottom of the page */
+        right: 15px;
+        /* Place the button 30px from the right */
+        z-index: 99;
+        /* Make sure it does not overlap */
+        border: none;
+        /* Remove borders */
+        outline: none;
+        /* Remove outline */
+        background-color: #32CD32;
+        color: #FFFFFF;
+        padding: 10px;
+        border-radius: 10px;
+        min-width: 85px;
+        min-height: 40px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+    }
+
+        #topbtn:hover {
+            background-color: #008000;
+        }
+
+    #mobile {
+        font-size: 16px;
+    }
+
+    #showMsg {
+        display: none;
+        max-width: 1200px;
+        margin: auto;
+        /*border: 2px solid #000000;*/
+        padding: 15px;
+    }
+
+    #msgRecip {
+        font-size: 15px;
+    }
+
+    #shownew {
+        display: none;
+    }
+
+    #showfunc {
+        display: none;
+    }
+
+    #showjobinfo {
+        display: none;
+    }
+
+    #viewslips {
+        /*for the slip table*/
+        display: none;
+        white-space: nowrap;
+    }
+
+    #showcit {
+        display: none;
+    }
+
+    #showstudents {
+        display: none;
+    }
+
+    #showsliptype {
+        display: none;
+    }
+
+    #showrec {
+        /*this is the recommendation grid*/
+        display: none;
+        padding: 5px;
+        margin: 5px;
+        border-style: solid;
+        background-color: #FFDAD5;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.2s;
+        animation-name: animatetop;
+        animation-duration: 0.2s
+    }
+
+    #showblurb {
+        display: none;
+        padding: 5px;
+        margin: 5px;
+        border-style: solid;
+        background-color: #d6fafa;
+        /**#D5FFEF*/
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        -webkit-animation-name: animatetop;
+        -webkit-animation-duration: 0.2s;
+        animation-name: animatetop;
+        animation-duration: 0.2s
+    }
+
+    #showadvdata {
+        display: none;
+        white-space: nowrap;
+    }
+
+    #showjdata {
+        display: none;
+        white-space: nowrap;
+    }
+
+    #showallslips {
+        display: none;
+    }
+
+    #showjobassign {
+        display: none;
+    }
+
+    #submitrequests {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    #submiteslip {
+        margin: 0 auto;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    submitMsg {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    #student {
+        margin-top: 5px;
+    }
+
+    #ftrcontainer {
+        height: 100%;
+        width: 100%;
+        border-collapse: collapse;
+        display: table;
+    }
+
+    #ftr {
+        display: table-row;
+        vertical-align: bottom;
+        text-align: left;
+        height: 20px;
+        left: 1px;
+        float: bottom;
+    }
+
+    #myftrp {
+        margin-left: 3px;
+    }
 
 
 </style>

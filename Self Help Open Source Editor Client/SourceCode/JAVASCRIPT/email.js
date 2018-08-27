@@ -55,11 +55,16 @@ function SubmitRecRequest(UUID, Cit) {
 
 /**
  * Sends Request to Captain and their Advisor
- * @param {array} Capt student data
+ * @param {array} _captain The area's captain UUID
+ * @param {array} _fromName student data
+ * @param {array} _fromEmail student data
+ * @param {array} _cit student data
+ * @param {array} _workerName student data
+ * @param {array} _siteURL student data
  */
-function notifyCaptain_(Capt, From, FromEmail, Cit, MissName, siteURL) {
+function notifyCaptain_(_captain, _fromName, _fromEmail, _cit, _workerName, _siteURL) {
     
-    var CaptData = getColumnData(STUDENT_DATA.UUID, Capt, false)[0];
+    var CaptData = getColumnData(STUDENT_DATA.UUID, _captain, false)[0];
     var CEmail = CaptData[STUDENT_DATA["EMAIL"] - 1];
     var CName = CaptData[STUDENT_DATA["FIRST"] - 1];
 
@@ -73,17 +78,24 @@ function notifyCaptain_(Capt, From, FromEmail, Cit, MissName, siteURL) {
 
     try { //captain
         if (CEmail) {
+            var stuRecRequestData = {
+                Name: CName,
+                Worker: _workerName,
+                CitPer: _cit,
+                Requester: _fromName,
+                RequesterEmail: _fromEmail,
+                SiteURL: _siteURL
+            };
 
-            var returnData = [CName, MissName, Cit, From, FromEmail, siteURL, siteURL];
-            var html = HtmlService.createTemplateFromFile('stuRecRequest');
+            var stuRecRequestHTML = HtmlService.createTemplateFromFile('_eStuRecRequest');
 
-            html.data = returnData;
-            var template = html.evaluate().getContent();
+            stuRecRequestHTML.data = stuRecRequestData;
+            var stuRecRequestContent = stuRecRequestHTML.evaluate().getContent();
 
             MailApp.sendEmail({
                 to: CEmail,
                 subject: "Missing Job Recommendation (Self Help At Wooster)",
-                htmlBody: template
+                htmlBody: stuRecRequestContent
             });
         }
     } catch (ex) {
@@ -92,16 +104,25 @@ function notifyCaptain_(Capt, From, FromEmail, Cit, MissName, siteURL) {
 
     try { //advisor
         if (AEmail) {
-            var returnData = [AName, CFullName, MissName, Cit, From, FromEmail, siteURL];
-            var html = HtmlService.createTemplateFromFile('advRecRequest');
+            var advRecRequestData = {
+                Name: AName,
+                Advisee: CFullName,
+                Worker: _workerName,
+                CitPer: _cit,
+                Requester: _fromName,
+                RequesterEmail: _fromEmail,
+                SiteURL: _siteURL
+            };
 
-            html.data = returnData;
-            var template = html.evaluate().getContent();
+            var advRecRequestHTML = HtmlService.createTemplateFromFile('_eAdvRecRequest');
+
+            advRecRequestHTML.data = advRecRequestData;
+            var advRecRequestContent = advRecRequestHTML.evaluate().getContent();
 
             MailApp.sendEmail({
                 to: AEmail,
                 subject: "Missing Job Recommendation From " + CFullName + " (Self Help At Wooster)",
-                htmlBody: template
+                htmlBody: advRecRequestContent
             });
         }
     } catch (ex) {
@@ -154,7 +175,7 @@ function writeEmail_(UUID, SlipType) {
             address = PropertiesService.getScriptProperties().getProperty('execURL') + '?SlipID=' + SlipID;
 
             var stuSlipData = { Name: recipName, Slip: SlipType, From: fromName, FromEmail: fromEmail, SlipURL: address, SiteURL:siteURL };
-            var stuSlipHtml = HtmlService.createTemplateFromFile('e_StuSlip');
+            var stuSlipHtml = HtmlService.createTemplateFromFile('_eStuSlip');
             stuSlipHtml.data = stuSlipData;
             var stuSlipContent = stuSlipHtml.evaluate().getContent();
 
@@ -183,7 +204,7 @@ function writeEmail_(UUID, SlipType) {
                     SiteURL: siteURL
                 };
 
-                var advSlipHtml = HtmlService.createTemplateFromFile('e_AdvSlip');
+                var advSlipHtml = HtmlService.createTemplateFromFile('_eAdvSlip');
 
                 advSlipHtml.data = advSlipData;
                 var advSlipContent = advSlipHtml.evaluate().getContent();

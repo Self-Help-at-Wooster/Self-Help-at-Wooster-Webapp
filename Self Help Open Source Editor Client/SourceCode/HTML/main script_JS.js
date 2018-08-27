@@ -332,26 +332,26 @@
 
                         activeUser = deepFreeze(activeUser);
 
-                        if (getAccessLevel() == ACCESS_LEVELS.ADMIN) {
+                        if (getAccessLevel() === ACCESS_LEVELS.ADMIN) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Administrator";
                             adminOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.DEAN) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.DEAN) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Dean";
                             deanOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.FACULTY) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.FACULTY) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Faculty";
                             facultyOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.PREFECT) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.PREFECT) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Prefect";
                             prefectOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.PROCTOR) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.PROCTOR) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Proctor";
                             proctorOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.CAPTAIN) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.CAPTAIN) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Captain";
                             studentOptions();
                             captainOptions();
-                        } else if (getAccessLevel() == ACCESS_LEVELS.STUDENT) {
+                        } else if (getAccessLevel() === ACCESS_LEVELS.STUDENT) {
                             document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Student";
                             studentOptions();
                         } else
@@ -696,6 +696,7 @@
                     name.innerHTML = job[JOB_DATA.NAME - 1];
                     capt.innerHTML = job[JOB_DATA.C1 - 1];
 
+                    
                     if (job[JOB_DATA.C2 - 1] != "")
                         capt.innerHTML += " & " + job[JOB_DATA.C2 - 1];
                 }
@@ -1651,6 +1652,8 @@
                     document.getElementById("modal-btnYes").onclick = function () {
                         document.getElementById('myModal').style.display = 'none';
 
+                        document.getElementById("submitrequests").disabled = true;
+
                         for (var check = 0; check < boxes.length; check++) {
                             if (boxes[check].checked) {
 
@@ -1659,10 +1662,14 @@
 
                                     if (ClickedReqCount == SubmittedReqCount)
                                         showModal(0, "You have successfully submitted your Job Recommendation Requests!");
+                                    document.getElementById("submitrequests").disabled = false;
 
                                 })
-                                    .withFailureHandler(() => showModal(0, "Action Failed"))
-                                    .SubmitRecRequest(boxes[check].value, citper);
+                                .withFailureHandler(() => {
+                                    showModal(0, "Action Failed");
+                                    document.getElementById("submitrequests").disabled = false;
+                                })
+                                .SubmitRecRequest(boxes[check].value, citper);
 
                             }
                         }
