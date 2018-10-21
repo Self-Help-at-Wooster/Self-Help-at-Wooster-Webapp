@@ -146,18 +146,16 @@ function getSpecificSlip_(Row) {
 
     if (num > 0) {
 
-        if (slipID !== UserData[STUDENT_DATA.UUID - 1] && UserData[STUDENT_DATA.ACCESS - 1] > ACCESS_LEVELS.FACULTY) {
+        if (String(slipID) !== String(UserData[STUDENT_DATA.UUID - 1]) && UserData[STUDENT_DATA.ACCESS - 1] > ACCESS_LEVELS.FACULTY) {
             writeLog("User lacks privilege: View Slip Parameter: " + Row);
             //throw new Error( "User lacks privilege");
             console.log("User lacks privilege: View Slip Parameter: " + Row);
-            return -1;
         } else {
             writeParameter(Row);
             return returndata;
         }
-    } else {
-        return -1;
     }
+    return -1;
 }
 
 function writeParameter(Row) {

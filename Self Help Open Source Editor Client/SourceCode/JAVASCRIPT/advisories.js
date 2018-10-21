@@ -131,15 +131,18 @@ function getAdvSnapshot(advisorID, citper) {
                         loctheret[1] = studjob[JOB_DATA.NAME - 1];
                         loctheret[2] = studjob[JOB_DATA.C1 - 1];
                         if (studjob[JOB_DATA.C2 - 1]) //add the other captain
-                            loctheret[2] += " & " + studjob[JOB_DATA.C2 - 1];
+                            loctheret[2] += ", " + studjob[JOB_DATA.C2 - 1];
                     }
 
                     var TotalGood = 0;
                     var TotalBad = 0;
                     var HasJobRec = "No";
 
-                    if (citper == 7)
+                    if (citper == 7) {
+                        loctheret[1] = "N/A";
+                        loctheret[2] = "N/A";
                         HasJobRec = "N/A";
+                    }
 
                     for (var check = 0; check < slipdata.length; check++) {
                         if (stud[STUDENT_DATA.UUID - 1] == slipdata[check][SLIP_DATA.UUID - 1]) {

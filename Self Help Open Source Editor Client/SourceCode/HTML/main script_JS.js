@@ -5,7 +5,7 @@
     //advisorData = STUDENT_DATA until First (where it ends)
     const SLIP_DATA = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
     const JOB_DATA = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
-    const NUM_TO_SLIP = ["","Good Slip", "Bad Slip", "Job Rec"];
+    const NUM_TO_SLIP = ["","Good Slip", "Infraction Slip", "Job Rec"];
     const setupData = Object.freeze({CURCIT: 1, C1: 2, C2: 3, C3: 4, C4: 5, C5: 6, C6: 7, CEND: 8, FALL: 9, WINTER: 10, SPRING: 11,
         SOTWURL: 12, SOTWTXT: 13, CLASSLIST: 14, FACLIST: 15, JOBDAT: 16, ACTURL: 17, ESLIPDAT: 18, LOGURL: 19, EXECURL: 20, MAILGROUP: 21, REGISTER: 22, REGSPREAD: 23, LENGTH: 23});
     const ACTIVITY_DATA = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
@@ -344,29 +344,29 @@ var autoWriteJID;
                         activeUser = deepFreeze(activeUser);
 
                         if (getAccessLevel() === ACCESS_LEVELS.ADMIN) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Administrator";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Administrator";
                             adminOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.DEAN) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Dean";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Dean";
                             deanOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.FACULTY) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Faculty";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Faculty";
                             facultyOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.PREFECT) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Prefect";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Prefect";
                             prefectOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.PROCTOR) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Proctor";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Proctor";
                             proctorOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.CAPTAIN) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Captain";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Captain";
                             studentOptions();
                             captainOptions();
                         } else if (getAccessLevel() === ACCESS_LEVELS.STUDENT) {
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: Student";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: Student";
                             studentOptions();
                         } else
-                            document.getElementById("AuthenticationLevel").innerHTML = "Access Level: None";
+                            document.getElementById("AuthenticationLevel").innerHTML = "Access: None";
 
                         getFunction();
 
@@ -452,6 +452,8 @@ var autoWriteJID;
             clearElements();
             SelectedFunction = cbxfunc.options[cbxfunc.selectedIndex].value;
 
+            google.script.run.writeLog(cbxfunc.options[cbxfunc.selectedIndex].text);
+
             if (SelectedFunction == FunctionType.ViewSlips) { //view E-Slips
                 if (getAccessLevel() >= ACCESS_LEVELS.ADMIN && getAccessLevel() != ACCESS_LEVELS.FACULTY && getAccessLevel() != ACCESS_LEVELS.DEAN) {
                     document.getElementById("viewslips").style.display = "block";
@@ -486,8 +488,6 @@ var autoWriteJID;
                     document.getElementById("showjdata").style.display = "none";
                     document.getElementById("showadvdata").style.display = "block";
                     getPeriod();
-                    if (autoWriteCit)
-                        document.getElementById("citper").selectedIndex = autoWriteCit;
                 }
             } else if (SelectedFunction == FunctionType.AllSlips) { //dean viewing all slips in system
                 if (getAccessLevel() == ACCESS_LEVELS.DEAN || getAccessLevel() == ACCESS_LEVELS.ADMIN) {
@@ -1504,7 +1504,7 @@ function PopulateJobSnapshot(Workers) {
                 document.getElementById("showrec").style.display = "none";
                 document.getElementById("blurb").value = "";
                 document.getElementById("showblurb").style.display = "none";
-                showModal(0, "Sorry, only Faculty and Grades 11-12 can write bad slips. Please contact your advisor if you desire to write a bad slip.");
+                showModal(0, "Sorry, only Faculty and Grades 11-12 can write infraction slips. Please contact your advisor if you desire to write an infraction slip.");
                 for (var i = 0; i < slipbtns.length; i++)
                     slipbtns[i].checked = false;
             }

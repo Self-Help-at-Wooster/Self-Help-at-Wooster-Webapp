@@ -5,7 +5,7 @@ JOB1: 9, JOB2: 10, JOB3: 11, JOB4: 12, JOB5: 13, JOB6: 14, FALL: 15, WINTER: 16,
 //advisorData = STUDENT_DATA until First (where it ends)
 var SLIP_DATA = Object.freeze({UUID: 1, SLIPTYPE: 2, FROM: 3, TEXT: 4, P1: 5, P2: 6, P3: 7, P4: 8, R:9, CIT: 10, DATE: 11, LENGTH: 11 });
 var JOB_DATA = Object.freeze({UJID: 1, NAME: 2, C1: 3, C2: 4, P1: 5, P2: 6, POINTER: 7, LENGTH: 7 });
-var NUM_TO_SLIP = ["","Good Slip", "Bad Slip", "Job Rec"];
+var NUM_TO_SLIP = ["","Good Slip", "Infraction Slip", "Job Rec"];
 var setupData = Object.freeze({CURCIT: 1, C1: 2, C2: 3, C3: 4, C4: 5, C5: 6, C6: 7, CEND: 8, FALL: 9, WINTER: 10, SPRING: 11,
 SOTWURL: 12, SOTWTXT: 13, CLASSLIST: 14, FACLIST: 15, JOBDAT: 16, ACTURL: 17, ESLIPDAT: 18, LOGURL: 19, EXECURL: 20, MAILGROUP: 21, REGISTER: 22, REGSPREAD: 23, LENGTH: 23});
 var ACTIVITY_DATA = Object.freeze({UAID: 1, NAME: 2, TYPE: 3, REQ: 4, CAP: 5, CUR: 6, LENGTH: 6});
@@ -347,8 +347,8 @@ function writeLog(log) {
         var actlist = SpreadsheetApp.openByUrl(PropertiesService.getScriptProperties().getProperty('logURL'));
         var cursheet = actlist.getActiveSheet();
         cursheet.insertRows(2);
+        SpreadsheetApp.flush();
         var time = new Date();
-
         cursheet.getRange(2, 1, 1, 4).setValues([
             [Session.getActiveUser().getEmail(), time.toLocaleTimeString(), time.getMonth() + 1 + "/" + time.getDate() + "/" + time.getYear(), log]
         ]);

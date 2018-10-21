@@ -215,14 +215,18 @@ function getJobData(UJID, TranslateCaptNames, UUID, Cit) {
 
                             for (var studentCheck = 0; studentCheck < classdata.length; studentCheck++) {
                                 if (classdata[studentCheck][STUDENT_DATA.UUID - 1] == returndata[JOB_DATA.C1 - 1] && returndata[JOB_DATA.C1 - 1]) {
-                                    var nick1 = " (" + classdata[studentCheck][STUDENT_DATA.NICKNAME - 1] + ") " || " ";
+                                    var nick1 = " ";
+                                    if (classdata[studentCheck][STUDENT_DATA.NICKNAME - 1])
+                                        nick1 = " (" + classdata[studentCheck][STUDENT_DATA.NICKNAME - 1] + ") ";
 
                                     returndata[JOB_DATA.C1 - 1] = classdata[studentCheck][STUDENT_DATA["FIRST"] - 1] + nick1 + classdata[studentCheck][STUDENT_DATA["LAST"] - 1];
 
-                                    if (returndata[JOB_DATA.C2 - 1])
+                                    if (!returndata[JOB_DATA.C2 - 1]) //break if there's no second captain.
                                         break;
                                 } else if (classdata[studentCheck][STUDENT_DATA.UUID - 1] == returndata[JOB_DATA.C2 - 1] && returndata[JOB_DATA.C2 - 1]) {
-                                    var nick2 = " (" + classdata[studentCheck][STUDENT_DATA.NICKNAME - 1] + ") " || " ";
+                                    var nick2 = " ";
+                                    if (classdata[studentCheck][STUDENT_DATA.NICKNAME - 1])
+                                        nick2 = " (" + classdata[studentCheck][STUDENT_DATA.NICKNAME - 1] + ") ";
                                     returndata[JOB_DATA.C2 - 1] = classdata[studentCheck][STUDENT_DATA["FIRST"] - 1] + nick2 + classdata[studentCheck][STUDENT_DATA["LAST"] - 1];
                                 }
                             

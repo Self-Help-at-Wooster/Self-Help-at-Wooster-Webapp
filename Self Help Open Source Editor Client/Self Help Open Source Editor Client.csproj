@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.35.1.1316" />
-    <PackageReference Include="Google.Apis.Script.v1" Version="1.35.1.1323" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.35.2.1365" />
+    <PackageReference Include="Google.Apis.Script.v1" Version="1.35.2.1373" />
   </ItemGroup>
 
   <ItemGroup>
